@@ -1,23 +1,114 @@
 <template>
-  <div class="">
-    <div id="banner" v-bind:style="{
-      'background-image': 'linear-gradient(30deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.75) 49%, rgba(0,0,0,0.52) 100%), url(https://image.tmdb.org/t/p/original/' + pelicula.backdrop_path + ')',
+  <div class="pelicula-view">
+    <b-row align-v="end" id="banner" class="mx-0" v-bind:style="{
+      'background-image': 'url(https://image.tmdb.org/t/p/original/' + pelicula.backdrop_path + ')',
       'background-size': 'cover',
       'background-repeat': 'no-repeat',
       'background-position': 'center center'
     }">
 
-      <h1 id="titulo">{{ pelicula.title }}</h1>
-      <p id="descripcion">{{ pelicula.overview }}</p>
-      <p><span id="duracion">{{ pelicula.runtime }}</span> min · <span id="annio">{{ pelicula.release_date }}</span></p>
+      <b-col class="info-pelicula text-center">
+        <span id="titulo">{{ pelicula.title }}</span>
 
-      <div class="botones">
-        <button type="button" class="btn btn-primary"><i class="fa-solid fa-plus"></i>Añadir lista</button>
-        <button type="button" class="btn btn-primary"><i class="fa-solid fa-heart"></i>Favorito</button>
-        <button type="button" class="btn btn-primary"><i class="fa-solid fa-calendar"></i>Lista seguimiento</button>
-        <button type="button" class="btn btn-primary"><i class="fa-solid fa-star"></i>Valorar</button>
-      </div>
+        <div class="botones">
+          <b-button id="btn-lista" variant="primary">
+              <i class="fa-solid fa-plus me-2"></i>Añadir lista
+          </b-button>
+          <b-button id="btn-favorito" variant="danger">
+              <i class="fa-solid fa-heart me-2"></i>Favorito
+          </b-button>
+          <b-button id="btn-seguimiento" variant="success">
+              <i class="fa-solid fa-calendar me-2"></i>Lista seguimiento
+          </b-button>
+          <b-button id="btn-valorar">
+              <i class="fa-solid fa-star me-2"></i>Valorar
+          </b-button>
+        </div>
+      </b-col>
+      
+    </b-row>
+
+    <div class="container">
+      <b-row>
+
+        <b-col sm="3" class="menu">
+          <div class="portada my-3">
+            <img :src="'https://image.tmdb.org/t/p/w500/' + pelicula.poster_path" alt="poster">
+          </div>
+          <div class="menu-secciones">
+
+            <ul class="mx-3 p-0 text-center text-info fw-bold">
+              <li>Detalles</li>
+              <li>Sinapsis</li>
+              <li>Reparto</li>
+              <li>Comentarios</li>
+            </ul>
+
+          </div>
+        </b-col>
+        <b-col sm="8">
+
+          <div class="detalles my-3">
+            <h4 class="text-dark ms-2">Detalles</h4>
+            <hr>
+            <div class="ms-3">
+              <b-row class="w-100 my-2">
+                <b-col sm="6"><span class="fw-bold">Titulo original: </span>{{ pelicula.original_title }}</b-col>
+                <b-col sm="6"><span class="fw-bold">Idioma original: </span>{{ pelicula.original_language }}</b-col>
+              </b-row>
+              
+              <b-row class="w-100 my-2">
+                <b-col sm="6"><span class="fw-bold">Fecha de estreno: </span>{{ pelicula.release_date }}</b-col>
+                <b-col sm="6"><span class="fw-bold">Duracion: </span>{{ pelicula.runtime }} min</b-col>
+              </b-row>
+
+              <b-row class="w-100 my-2">
+                <b-col><span class="fw-bold">Generos: </span>{{ obtenerGeneros() }}</b-col>
+              </b-row>
+
+              <b-row class="w-100 my-2">
+                <b-col sm="10">
+                  <span class="fw-bold">Valoracion: </span>
+                  <b-form-rating v-model="pelicula.vote_average" stars="10" color="blueviolet" show-value readonly precision="2"></b-form-rating>
+                </b-col>
+                <b-col sm="6"><span class="fw-bold">Votos realizados: </span>{{ pelicula.vote_count }}</b-col>
+              </b-row>
+
+              <b-row class="w-100 my-2">
+                <b-col><span class="fw-bold">Presupuesto: </span>{{ pelicula.budget.toLocaleString('en-EN', {style: 'currency', currency: 'USD'}) }}</b-col>
+              </b-row>
+
+              <b-row class="w-100 my-2">
+                <b-col><span class="fw-bold">Productoras: </span>{{ obtenerProductoras() }}</b-col>
+              </b-row>
+
+            </div>
+          </div>
+
+          <div class="sinopsis my-3">
+            <h4 class="text-dark ms-2">Sinopsis</h4>
+            <hr>
+            <div class="seccion-cuerpo">
+              <span>{{ pelicula.overview }}</span>
+            </div>
+          </div>
+
+          <div class="sinopsis my-3">
+            <h4 class="text-dark ms-2">Reparto</h4>
+            <hr>
+          </div>
+
+          <div class="sinopsis my-3">
+            <h4 class="text-dark ms-2">Comentarios</h4>
+            <hr>
+          </div>
+
+        </b-col>
+
+      </b-row>
     </div>
+
+
   </div>
 </template>
 
@@ -34,6 +125,30 @@ export default {
       language: 'es-ES',
       peliculaId: null,
       pelicula: {}
+    }
+  },
+  methods: {
+    obtenerProductoras(){
+        let productoras = ""
+
+        if (this.pelicula.production_companies) {
+          for (let i = 0; i < this.pelicula.production_companies.length; i++) {
+            if (i !== 0) productoras += ", "
+            productoras += this.pelicula.production_companies[i].name
+          }
+        }
+        return productoras
+    },
+    obtenerGeneros(){
+        let generos = ""
+
+        if (this.pelicula.genres) {
+          for (let i = 0; i < this.pelicula.genres.length; i++) {
+            if (i !== 0) generos += ", ";
+            generos += this.pelicula.genres[i].name;
+          }
+        }
+        return generos;
     }
   },
   mounted() {
@@ -56,12 +171,55 @@ export default {
 </script>
 
 <style>
+.pelicula-view{
+  background-color: whitesmoke;
+}
 #banner {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
   height: 70vh;
   color: whitesmoke;
-  padding: 20px 20%;
+}
+.info-pelicula{
+  padding: 20px 20% !important;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+#titulo{
+  font-size: xx-large;
+}
+.botones{
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  
+}
+#btn-valorar{
+  background-color: blueviolet;
+}
+.botones .btn{
+  margin: 10px 10px 0px 10px;
+}
+.portada{
+  width: 100%;
+  padding: 5px;
+  background-color: whitesmoke;
+  border-radius: 5px;
+  box-shadow: black 0px 0px 5px;
+}
+.portada img{
+  width: 100%;
+}
+.menu-secciones li{
+  text-decoration: none;
+  list-style: none;
+  border-bottom: black solid 1px;
+  margin: 0;
+  padding: 5px;
+}
+.menu-secciones li:hover{
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: white;
 }
 </style>

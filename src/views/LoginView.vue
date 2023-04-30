@@ -122,6 +122,7 @@ export default {
 
         //devolver a la pagina de inicio
         this.$router.push('/');
+        location.reload();
 
       } catch (error) {
         console.error(error);

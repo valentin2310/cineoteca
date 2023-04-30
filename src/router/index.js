@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import PeliculaView from '../views/PeliculaView.vue';
 import LoginView from '../views/LoginView.vue';
+import Page404 from '../views/Page404View.vue';
 
 Vue.use(VueRouter)
 
@@ -22,6 +23,11 @@ const routes = [
     name: 'pelicula',
     component: PeliculaView
   },
+  {
+    path: '/:catchAll(.*)',
+    name: '404 Not found',
+    component: Page404
+  }
 ]
 
 const router = new VueRouter({

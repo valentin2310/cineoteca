@@ -52,10 +52,19 @@
           <ul v-if="usuarioObj == null" class="navbar-nav text-white">
             <li class="nav-item"><router-link to="/login" href="#" class="nav-link"><i class="fa-solid fa-right-to-bracket"></i> Acceder</router-link></li>
           </ul>
-          <ul v-else class="navbar-nav">
-            <li class="nav-item">
-              <b-avatar variant="info" :src="'https://image.tmdb.org/t/p/w500'+usuarioObj.avatar.tmdb.avatar_path"></b-avatar>
-            </li>
+          <ul v-else class="navbar-nav user-img">
+
+            <b-dropdown variant="link" toggle-class="text-decoration-none" right>
+              <template #button-content>
+                <b-avatar v-if="usuarioObj.avatar.tmdb.avatar_path != null" class="mx-2" :src="'https://image.tmdb.org/t/p/w500'+usuarioObj.avatar.tmdb.avatar_path"></b-avatar>
+                <b-avatar v-else class="mx-2 text-white text-center bg-primary" v-text="'AC'"></b-avatar>
+              </template>
+              <b-dropdown-item><router-link to="/"  class="dropdown-item">Ver perfil</router-link></b-dropdown-item>
+              <b-dropdown-item><router-link to="/"  class="dropdown-item">Mis listas</router-link></b-dropdown-item>
+              <b-dropdown-item><router-link to="/"  class="dropdown-item">Crear lista</router-link></b-dropdown-item>
+              <b-dropdown-item class="dropdawn-item" @click="cerrarSesion()">Cerrar sesion</b-dropdown-item>
+            </b-dropdown>
+
           </ul>
         </div>
       </div>
@@ -96,6 +105,26 @@ import axios from 'axios';
 
         })
         .catch(error => console.log(error));
+      },
+      cerrarSesion() {
+        axios.delete(`${this.apiUrl}/authentication/session`, {
+            params: {
+              api_key: API_KEY
+            },
+            data: {
+              session_id: this.sessionId
+            }
+          })
+          .then(response => {
+
+            console.log(response.data);
+            this.$cookies.remove('sessionId');
+            this.sessionId = null;
+            //devolver a la pagina de inicio
+            location.reload();
+            
+          })
+          .catch(error => console.log(error));
       }
     },
     created () {
@@ -122,6 +151,11 @@ import axios from 'axios';
 
   .logo-img img{
     width: 150px; 
+  }
+
+  .user-img .btn{
+    box-shadow: none;
+    color: black;
   }
 
 </style>
