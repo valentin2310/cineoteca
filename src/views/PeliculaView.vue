@@ -31,18 +31,22 @@
     <div class="container">
       <b-row>
 
-        <b-col sm="3" class="menu">
-          <div class="portada my-3">
-            <img :src="'https://image.tmdb.org/t/p/w500/' + pelicula.poster_path" alt="poster">
-          </div>
-          <div class="menu-secciones">
+        <b-col sm="3">
+          <div class="menu-pelicula">
 
-            <ul class="mx-3 p-0 text-center text-info fw-bold">
-              <li>Detalles</li>
-              <li>Sinapsis</li>
-              <li>Reparto</li>
-              <li>Comentarios</li>
-            </ul>
+            <div class="portada my-3">
+              <img :src="'https://image.tmdb.org/t/p/w500/' + pelicula.poster_path" alt="poster">
+            </div>
+            <div class="menu-secciones">
+  
+              <ul class="mx-3 p-0 text-center text-info fw-bold">
+                <li>Detalles</li>
+                <li>Sinapsis</li>
+                <li>Reparto</li>
+                <li>Comentarios</li>
+              </ul>
+  
+            </div>
 
           </div>
         </b-col>
@@ -101,6 +105,14 @@
           <div class="sinopsis my-3">
             <h4 class="text-dark ms-2">Comentarios</h4>
             <hr>
+            <div class="seccion-cuerpo">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio ducimus necessitatibus sit assumenda quas minus! Quisquam, pariatur veritatis non iste cupiditate, explicabo nesciunt aperiam a quas placeat enim? Suscipit, voluptates?
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Unde accusamus quidem, cumque animi maxime vero! Veritatis beatae placeat consequatur suscipit ullam sint odio, atque unde reiciendis voluptatibus explicabo ipsum tenetur?
+              Temporibus amet quisquam vitae esse obcaecati repellendus veritatis facilis ab dolore modi. Cupiditate officiis quibusdam repudiandae quam voluptatem animi praesentium adipisci, amet, fugiat laboriosam tempore accusamus earum placeat incidunt consequatur?
+              Soluta veniam sapiente dolorum aliquid cumque itaque ea beatae! Est officiis deleniti ea nisi assumenda eligendi quasi, possimus magnam rem fugiat accusantium repudiandae illum in consectetur tempora, iure mollitia! Impedit.
+              Voluptas quia sint rerum consequatur! Sit aliquid iure accusamus ipsam libero praesentium. Eius, quos corrupti maiores vero minima, nostrum consectetur quaerat consequuntur dolores tempore quisquam perferendis laudantium, amet ipsa repellat.
+              Tenetur, qui. Autem consectetur, eveniet distinctio assumenda eius fugiat sapiente optio laudantium libero dicta mollitia est minima! Ullam, natus ducimus tempora aut inventore repellat magnam provident sunt minima impedit architecto?
+            </div>
           </div>
 
         </b-col>
@@ -199,6 +211,10 @@ export default {
 }
 .botones .btn{
   margin: 10px 10px 0px 10px;
+}
+.menu-pelicula{
+  position: sticky;
+  top: 85px;
 }
 .portada{
   width: 100%;

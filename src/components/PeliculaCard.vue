@@ -48,9 +48,9 @@ export default {
 </script>
 
 <style>
-    .card {
+    .peliculaCard .card {
       width: 140px;
-      height: 100%;
+      height: 100% !important;
       border-radius: 5px;
       background-color: whitesmoke;
       border: 3px solid white;

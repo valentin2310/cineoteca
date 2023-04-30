@@ -147,6 +147,7 @@ import axios from 'axios';
     box-shadow: black 0px 0px 5px;
     background: linear-gradient(0deg, rgba(255, 255, 255, 0.95) 0%, rgba(255,255,255,1) 100%);
     font-weight: bold;
+    z-index: 2000;
   }
 
   .logo-img img{

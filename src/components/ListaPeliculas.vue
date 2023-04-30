@@ -57,12 +57,13 @@ export default {
 .seccion-titulo {
   margin-top: 20px;
 }
-
-.seccion-cuerpo, .peliculas {
+.seccion-cuerpo{
   margin: 5px 20px;
+}
+.seccion-cuerpo, .peliculas{
   overflow-x: auto;
   display: flex;
   flex-flow: row nowrap;
-  padding: 5px 0px;
+  padding: 5px 20px 20px 20px;
 }
 </style>
