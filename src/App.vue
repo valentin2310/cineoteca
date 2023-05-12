@@ -1,10 +1,12 @@
 <template>
   <div id="app">
     <!-- Menu -->
-    <nav class="cabecera sticky-top navbar navbar-expand-lg bg-body-tertiary">
-      <div class="container-fluid">
-        <router-link to="/" class="navbar-brand logo-img" href="#"><img src="./assets/img/logo_simple.png" alt="logo"></router-link>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+    <!-- 
+
+      <nav class="cabecera navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <router-link to="/" class="navbar-brand logo-img" href="#"><img src="./assets/img/logo_simple.png" alt="logo"></router-link>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
           aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -17,7 +19,7 @@
               <ul class="dropdown-menu">
                 <li><router-link to="/" class="dropdown-item" href="#">Popular</router-link></li>
                 <li><router-link to="/" class="dropdown-item" href="#">Nuevas</router-link></li>
-                <li><router-link to="/" class="dropdown-item" href="#">Busqueda avanzada</router-link></li>
+                <li><router-link to="/buscar" class="dropdown-item" href="#">Busqueda avanzada</router-link></li>
               </ul>
             </li>
             <li class="nav-item dropdown">
@@ -47,28 +49,130 @@
               <router-link to="/" class="nav-link" href="#">Contacto</router-link>
             </li>
           </ul>
-
+        -->
+          
           <!-- Login/Sing Up -->
-          <ul v-if="usuarioObj == null" class="navbar-nav text-white">
-            <li class="nav-item"><router-link to="/login" href="#" class="nav-link"><i class="fa-solid fa-right-to-bracket"></i> Acceder</router-link></li>
-          </ul>
-          <ul v-else class="navbar-nav user-img">
 
-            <b-dropdown variant="link" toggle-class="text-decoration-none" right>
-              <template #button-content>
-                <b-avatar v-if="usuarioObj.avatar.tmdb.avatar_path != null" class="mx-2" :src="'https://image.tmdb.org/t/p/w500'+usuarioObj.avatar.tmdb.avatar_path"></b-avatar>
-                <b-avatar v-else class="mx-2 text-white text-center bg-primary" v-text="'AC'"></b-avatar>
-              </template>
-              <b-dropdown-item><router-link to="/"  class="dropdown-item">Ver perfil</router-link></b-dropdown-item>
-              <b-dropdown-item><router-link to="/"  class="dropdown-item">Mis listas</router-link></b-dropdown-item>
-              <b-dropdown-item><router-link to="/"  class="dropdown-item">Crear lista</router-link></b-dropdown-item>
-              <b-dropdown-item class="dropdawn-item" @click="cerrarSesion()">Cerrar sesion</b-dropdown-item>
-            </b-dropdown>
+          <!--
 
-          </ul>
+            <ul v-if="usuarioObj == null" class="navbar-nav text-white">
+              <li class="nav-item"><router-link to="/login" href="#" class="nav-link"><i class="fa-solid fa-right-to-bracket"></i> Acceder</router-link></li>
+            </ul>
+            <ul v-else class="navbar-nav user-img">
+              
+              <b-dropdown variant="link" toggle-class="text-decoration-none" right>
+                <template #button-content>
+                  <b-avatar v-if="usuarioObj.avatar.tmdb.avatar_path != null" class="mx-2" :src="'https://image.tmdb.org/t/p/w500'+usuarioObj.avatar.tmdb.avatar_path"></b-avatar>
+                  <b-avatar v-else class="mx-2 text-white text-center bg-primary" v-text="'AC'"></b-avatar>
+                </template>
+                <b-dropdown-item><router-link to="/"  class="dropdown-item">Ver perfil</router-link></b-dropdown-item>
+                <b-dropdown-item><router-link to="/"  class="dropdown-item">Mis listas</router-link></b-dropdown-item>
+                <b-dropdown-item><router-link to="/"  class="dropdown-item">Crear lista</router-link></b-dropdown-item>
+                <b-dropdown-item class="dropdawn-item" @click="cerrarSesion()">Cerrar sesion</b-dropdown-item>
+              </b-dropdown>
+              
+            </ul>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    -->
+      
+      <!-- Nuevo navbar buetify-->
+    <b-navbar class="cabecera">
+        <template #brand>
+            <b-navbar-item tag="router-link" :to="{ path: '/' }">
+                <img
+                    src="./assets/img/logo_simple.png"
+                    alt="Logo MiCineoteca"
+                >
+            </b-navbar-item>
+        </template>
+        <template #start>
+
+          <b-navbar-dropdown label="Peliculas">
+                <b-navbar-item tag="router-link" :to="{ path: '/' }">
+                    Popular
+                </b-navbar-item>
+                <b-navbar-item tag="router-link" :to="{ path: '/' }">
+                    Nuevas
+                </b-navbar-item>
+                <b-navbar-item tag="router-link" :to="{ path: '/buscar' }">
+                    Busqueda avanzada
+                </b-navbar-item>
+            </b-navbar-dropdown>
+
+            <b-navbar-dropdown label="Series">
+              <b-navbar-item tag="router-link" :to="{ path: '/' }">
+                    Popular
+                </b-navbar-item>
+                <b-navbar-item tag="router-link" :to="{ path: '/' }">
+                    Nuevas
+                </b-navbar-item>
+                <b-navbar-item tag="router-link" :to="{ path: '/' }">
+                    Busqueda avanzada
+                </b-navbar-item>
+            </b-navbar-dropdown>
+
+            <b-navbar-dropdown label="Listas">
+              <b-navbar-item tag="router-link" :to="{ path: '/' }">
+                    Popular
+                </b-navbar-item>
+                <b-navbar-item tag="router-link" :to="{ path: '/' }">
+                    Nuevas
+                </b-navbar-item>
+                <b-navbar-item tag="router-link" :to="{ path: '/' }">
+                    Busqueda avanzada
+                </b-navbar-item>
+            </b-navbar-dropdown>
+
+            <b-navbar-item tag="router-link" :to="{ path: '/' }">
+                Sobre nosotros
+            </b-navbar-item>
+
+            <b-navbar-item tag="router-link" :to="{ path: '/' }">
+                Contacto
+            </b-navbar-item>
+        </template>
+
+        <template #end>
+
+          <div class="navbar-end">
+
+                  <div class="navbar-item" v-if="usuarioObj == null">
+                    <router-link to="/login" href="#" class="nav-link"><i class="fa-solid fa-right-to-bracket"></i> Acceder</router-link>
+                  </div>
+
+                  <b-dropdown v-else
+                    position="is-bottom-left"
+                    append-to-body
+                    aria-role="menu"
+                    scrollable
+                    max-height="200"
+                    trap-focus
+                  >
+
+                      <template #trigger>
+                      <div
+                          class="navbar-item user-img"
+                          role="button">
+                          
+                          <span>{{ usuarioObj.username }}</span>
+                          <b-avatar v-if="usuarioObj.avatar.tmdb.avatar_path != null" class="mx-2 px-1" :src="'https://image.tmdb.org/t/p/w500'+usuarioObj.avatar.tmdb.avatar_path"></b-avatar>
+                          <b-avatar v-else class="mx-2 text-white text-center bg-primary" v-text="'AC'"></b-avatar>
+                          
+                        </div>
+                      </template>
+                      
+                      <b-dropdown-item tag="router-link" :to="{ path: '/' }">Ver perfil</b-dropdown-item>
+                      <b-dropdown-item tag="router-link" :to="{ path: '/' }">Mis listas</b-dropdown-item>
+                      <b-dropdown-item tag="router-link" :to="{ path: '/' }">Crear lista</b-dropdown-item>
+                      <b-dropdown-item class="dropdawn-item" @click="cerrarSesion()">Cerrar sesion</b-dropdown-item>
+
+                  </b-dropdown>
+          </div>
+
+        </template>
+    </b-navbar>
 
     <div class="">
       <router-view />
@@ -145,13 +249,10 @@ import axios from 'axios';
 
   .cabecera{
     box-shadow: black 0px 0px 5px;
-    background: linear-gradient(0deg, rgba(255, 255, 255, 0.95) 0%, rgba(255,255,255,1) 100%);
-    font-weight: bold;
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0.95) 0%, rgba(255,255,255,1) 100%) !important;
     z-index: 2000;
-  }
-
-  .logo-img img{
-    width: 150px; 
+    position: sticky !important;
+    top: 0;
   }
 
   .user-img .btn{

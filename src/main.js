@@ -4,13 +4,22 @@ import router from './router'
 import store from './store'
 
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faHatWizard } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import  VueCookies  from 'vue-cookies'
+import Vuesax from 'vuesax'
+import Buefy from 'buefy'
 
 Vue.config.productionTip = false
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import 'vuesax/dist/vuesax.css'; //Vuesax styles
+import 'buefy/dist/buefy.css';
+
+library.add(faHatWizard)
 
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue)
@@ -20,7 +29,13 @@ Vue.use(IconsPlugin)
 // default options config: { expires: '1d', path: '/', domain: '', secure: '', sameSite: 'Lax' }
 Vue.use(VueCookies, { expires: '7d'})
 
-import "bootstrap/dist/js/bootstrap";
+Vue.use(Vuesax);
+
+Vue.component('vue-fontawesome', FontAwesomeIcon);
+
+Vue.use(Buefy);
+
+//import "bootstrap/dist/js/bootstrap";
 
 new Vue({
   router,

@@ -58,17 +58,17 @@ export default {
       margin: 0px 5px;
     }
 
-    .card:hover {
+    .peliculaCard .card:hover {
       box-shadow: blueviolet 0px 0px 8px;
       transition: 0.5s;
       cursor: pointer;
     }
 
-    .card-body {
+    .peliculaCard .card-body {
       padding: 5px;
     }
 
-    .card-poster {
+    .peliculaCard .card-poster {
       background: url('https://www.themoviedb.org/t/p/w220_and_h330_face/q6j9Dn3iiXoCjpVitDppNNZXwVq.jpg');
       background-size: cover;
       background-repeat: no-repeat;
@@ -78,22 +78,22 @@ export default {
 
     }
 
-    .card .detalles {
+    .peliculaCard .card .detalles {
       display: flex;
       flex-direction: row nowrap;
       justify-content: space-between;
     }
 
-    .card .valoracion i {
+    .peliculaCard .card .valoracion i {
       color: blueviolet;
     }
 
-    .card .valoracion,
-    .card .info {
+    .peliculaCard .card .valoracion,
+    .peliculaCard .card .info {
       margin: 3px 0px;
     }
 
-    .card-title span {
+    .peliculaCard .card-title span {
         font-weight: bold;
         font-size: 0.9em;
         display: -webkit-box;

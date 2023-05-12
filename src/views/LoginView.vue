@@ -1,5 +1,5 @@
 <template>
-    <div class="">
+    <div class="loginView">
 
 
         <div class="row m-0">
@@ -142,7 +142,7 @@ export default {
 
 <style>
 
-label {
+.loginView label {
     color:white;
     margin-left: 5px;
   }

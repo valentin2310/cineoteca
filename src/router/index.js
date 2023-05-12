@@ -4,6 +4,7 @@ import HomeView from '../views/HomeView.vue'
 import PeliculaView from '../views/PeliculaView.vue';
 import LoginView from '../views/LoginView.vue';
 import Page404 from '../views/Page404View.vue';
+import BuscarView from '../views/BuscarView.vue';
 
 Vue.use(VueRouter)
 
@@ -22,6 +23,11 @@ const routes = [
     path: '/pelicula/:id',
     name: 'pelicula',
     component: PeliculaView
+  },
+  {
+    path: '/buscar',
+    name: 'buscar',
+    component: BuscarView
   },
   {
     path: '/:catchAll(.*)',
