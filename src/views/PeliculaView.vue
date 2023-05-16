@@ -7,7 +7,7 @@
       'background-position': 'center center'
     }">
 
-      <b-col class="info-pelicula text-center">
+      <b-col class="info-pelicula text-start">
         <span id="titulo">{{ pelicula.title }}</span>
 
         <div class="botones">
@@ -31,7 +31,7 @@
     <div class="container">
       <b-row>
 
-        <b-col sm="3">
+        <b-col sm="3" class="columna-portada">
           <div class="menu-pelicula">
 
             <div class="portada my-3">
@@ -182,7 +182,11 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.columna-portada{
+  position: relative;
+  transform: translate(0px, -220px);
+}
 .pelicula-view{
   background-color: whitesmoke;
 }
@@ -194,8 +198,8 @@ export default {
   color: whitesmoke;
 }
 .info-pelicula{
-  padding: 20px 20% !important;
-  background-color: rgba(0, 0, 0, 0.75);
+  padding: 10px 20% 10px 32% !important;
+  background: linear-gradient(0deg, rgba(15,15,15,1) 0%, rgba(0,0,0,0.75) 100%);
 }
 #titulo{
   font-size: xx-large;
@@ -203,8 +207,11 @@ export default {
 .botones{
   display: flex;
   flex-flow: row wrap;
-  justify-content: center;
+  justify-content: flex-start;
   
+}
+.botones button{
+  margin: 5px;
 }
 #btn-valorar{
   background-color: blueviolet;
@@ -214,7 +221,7 @@ export default {
 }
 .menu-pelicula{
   position: sticky;
-  top: 85px;
+  top: 300px;
 }
 .portada{
   width: 100%;

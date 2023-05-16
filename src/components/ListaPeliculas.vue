@@ -49,7 +49,7 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 .seccion {
   padding: 10px 30px;
 }

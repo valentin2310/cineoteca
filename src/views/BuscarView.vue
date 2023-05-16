@@ -1,205 +1,255 @@
 <template  lang="html">
     <div class="buscar-view">
 
-        <div class="sidebar-buscar w-25 p-2">
-            
-            <b-button type="is-primary" expanded class="my-2 text-start" @click="getListaPeliculas">
-                <i class="fa-solid fa-magnifying-glass me-2"></i> BUSCAR
-            </b-button>
+        <b-row class="p-2">
 
-            <!-- Opciones para buscar -->
-            <div class="accordion" role="tablist">
-                <!-- Ordenar -->
-                <b-card no-body class="mb-1">
-                    <b-card-header header-tag="header" class="p-1" role="tab">
-                        <b-button block v-b-toggle.accordion-ordenar type="is-primary is-light" expanded class="text-start">
-                            <i class="fa-solid fa-arrow-up-wide-short me-2"></i> Ordenar
-                        </b-button>
-                    </b-card-header>
-                    <b-collapse id="accordion-ordenar" visible accordion="my-accordion" role="tabpanel">
-                        <b-card-body class="center con-selects">
+            <b-col sm="3" class="sidebar-buscar">
+    
+                <b-button type="is-primary" expanded class="my-2 text-start btn-buscar" @click="getListaPeliculas()">
+                    <i class="fa-solid fa-magnifying-glass me-2"></i> BUSCAR
+                </b-button>
 
-                            <b-field label="Ordenar por:">
-                                <b-select placeholder="Select a character">
-                                    <optgroup 
-                                        v-for="[keyGrupo, valorGrupo] in Object.entries(criterios_ordenar)" 
-                                        :key="keyGrupo" 
-                                        :label="keyGrupo"
-                                        >
-                                        <option v-for="valor in valorGrupo" :key="valor" :value="`${keyGrupo}.${valor}`">{{ `${keyGrupo}.${valor}` }}</option>
-                                    </optgroup>
-                                </b-select>
-                            </b-field>
+                <!-- Opciones para buscar -->
+                <div class="accordion" role="tablist">
+                    <!-- Ordenar -->
+                    <b-card no-body class="mb-1">
+                        <b-card-header header-tag="header" class="p-1" role="tab">
+                            <b-button block v-b-toggle.accordion-ordenar type="is-primary is-light" expanded class="text-start">
+                                <i class="fa-solid fa-arrow-up-wide-short me-2"></i> Ordenar
+                            </b-button>
+                        </b-card-header>
+                        <b-collapse id="accordion-ordenar" visible accordion="my-accordion" role="tabpanel">
+                            <b-card-body class="center con-selects">
 
-                        </b-card-body>
-                    </b-collapse>
-                </b-card>
-                <!-- Donde ver -->
-                <b-card no-body class="mb-1">
-                    <b-card-header header-tag="header" class="p-1" role="tab">
-                        <b-button block v-b-toggle.accordion-dondeVer type="is-primary is-light" expanded class="text-start">
-                            <i class="fa-solid fa-earth-americas me-2"></i> Donde ver
-                        </b-button>
-                    </b-card-header>
-                    <b-collapse id="accordion-dondeVer" accordion="my-accordion" role="tabpanel">
-                        <b-card-body>
-                            <!-- paises -->
+                                <b-field label="Ordenar por:">
+                                    <b-select placeholder="Select a character"
+                                        v-model="b_ordenar"
+                                        expanded>
+                                        <optgroup 
+                                            v-for="[keyGrupo, valorGrupo] in Object.entries(criterios_ordenar)" 
+                                            :key="keyGrupo" 
+                                            :label="keyGrupo"
+                                            >
+                                            <option v-for="valor in valorGrupo" :key="valor" :value="`${keyGrupo}.${valor}`">{{ `${keyGrupo}.${valor}` }}</option>
+                                        </optgroup>
+                                    </b-select>
+                                </b-field>
 
-                            <!-- Esta oculto pero el de abajo no funciona sin este :) -->
-                            <vs-select
-                                class="d-none"
-                                placeholder="Paises"
-                                v-model="b_pais"
-                                @change="getProveedores()"
-                            >
-                                <vs-option v-for="pais in paises" :key="pais.iso_3166_1" :label="'hola'" :value="`${pais.iso_3166_1}`">
-                                    {{ pais.native_name }}
-                                </vs-option>
-                            </vs-select>
+                            </b-card-body>
+                        </b-collapse>
+                    </b-card>
+                    <!-- Donde ver -->
+                    <b-card no-body class="mb-1">
+                        <b-card-header header-tag="header" class="p-1" role="tab">
+                            <b-button block v-b-toggle.accordion-dondeVer type="is-primary is-light" expanded class="text-start">
+                                <i class="fa-solid fa-earth-americas me-2"></i> Donde ver
+                            </b-button>
+                        </b-card-header>
+                        <b-collapse id="accordion-dondeVer" accordion="my-accordion" role="tabpanel">
+                            <b-card-body>
+                                <!-- paises -->
 
-                            <b-field label="Paises">
-                                <b-select 
-                                    placeholder="Seleciona un pais"
+                                <!-- Esta oculto pero el de abajo no funciona sin este :) -->
+                                <vs-select
+                                    class="d-none"
+                                    placeholder="Paises"
                                     v-model="b_pais"
-                                    expanded
                                     @change="getProveedores()"
-                                    >
-                                    <option
-                                        v-for="pais in paises"
-                                        :value="pais.iso_3166_1"
-                                        :key="pais.iso_3166_1">
+                                >
+                                    <vs-option v-for="pais in paises" :key="pais.iso_3166_1" :label="'hola'" :value="`${pais.iso_3166_1}`">
                                         {{ pais.native_name }}
-                                    </option>
-                                </b-select>
-                            </b-field>
+                                    </vs-option>
+                                </vs-select>
 
-                            <!-- Plataformas streaming -->
-                            <b-field label="Plataforma">
-                                <b-taginput
-                                    v-model="b_streaming"
-                                    :data="proveedores_filtro"
-                                    autocomplete
-                                    :allow-new="false"
-                                    :open-on-focus="true"
-                                    field="provider_name"
-                                    placeholder="Elige una plataforma"
-                                    @typing="getProveedoresFiltrados"
-                                    expanded>
-                                    <template #empty>
-                                        No hay plataformas
-                                    </template>
-                                </b-taginput>
-                            </b-field>
+                                <b-field label="Paises">
+                                    <b-select 
+                                        placeholder="Seleciona un pais"
+                                        v-model="b_pais"
+                                        expanded
+                                        @change="getProveedores()"
+                                        >
+                                        <option
+                                            v-for="pais in paises"
+                                            :value="pais.iso_3166_1"
+                                            :key="pais.iso_3166_1">
+                                            {{ pais.native_name }}
+                                        </option>
+                                    </b-select>
+                                </b-field>
 
-                        </b-card-body>
-                    </b-collapse>
-                </b-card>
-                <!-- Filtros -->
-                <b-card no-body class="mb-1">
-                    <b-card-header header-tag="header" class="p-1" role="tab">
-                        <b-button block v-b-toggle.accordion-filtro type="is-primary is-light" expanded class="text-start">
-                            <i class="fa-solid fa-filter me-2"></i> Filtros
-                        </b-button>
-                    </b-card-header>
-                    <b-collapse id="accordion-filtro" accordion="my-accordion" role="tabpanel">
-                        <b-card-body>
+                                <!-- Plataformas streaming -->
+                                <b-field label="Plataforma">
+                                    <b-taginput
+                                        v-model="b_streaming"
+                                        :data="proveedores_filtro"
+                                        autocomplete
+                                        :allow-new="false"
+                                        :open-on-focus="true"
+                                        field="provider_name"
+                                        placeholder="Elige una plataforma"
+                                        @typing="getProveedoresFiltrados"
+                                        expanded>
+                                        <template #empty>
+                                            No hay plataformas
+                                        </template>
+                                    </b-taginput>
+                                </b-field>
 
-                            <b-field label="Palabras clave">
-                                <b-taginput
-                                    v-model="b_palabras_clave"
-                                    ellipsis
-                                    expanded
-                                    placeholder="palabras clave"
-                                    aria-close-label="eliminar tag">
-                                </b-taginput>
-                            </b-field>
+                            </b-card-body>
+                        </b-collapse>
+                    </b-card>
+                    <!-- Filtros -->
+                    <b-card no-body class="mb-1">
+                        <b-card-header header-tag="header" class="p-1" role="tab">
+                            <b-button block v-b-toggle.accordion-filtro type="is-primary is-light" expanded class="text-start">
+                                <i class="fa-solid fa-filter me-2"></i> Filtros
+                            </b-button>
+                        </b-card-header>
+                        <b-collapse id="accordion-filtro" accordion="my-accordion" role="tabpanel">
+                            <b-card-body>
 
-                            <b-field label="Fecha estreno">
-                                <b-datepicker
-                                    placeholder="Selecciona un rango de fechas..."
-                                    v-model="b_estreno"
-                                    range>
-                                </b-datepicker>
-                            </b-field>
+                                <b-field label="Palabras clave">
+                                    <b-taginput
+                                        v-model="b_palabras_clave"
+                                        ellipsis
+                                        expanded
+                                        placeholder="palabras clave"
+                                        aria-close-label="eliminar tag">
+                                    </b-taginput>
+                                </b-field>
 
-                            <b-field label="Generos">
-                                <b-taginput
-                                    v-model="b_generos"
-                                    :data="generos"
-                                    autocomplete
-                                    :allow-new="false"
-                                    :open-on-focus="true"
-                                    field="name"
-                                    placeholder="Elige un genero"
-                                    expanded>
-                                    <template #empty>
-                                        No hay generos
-                                    </template>
-                                </b-taginput>
-                            </b-field>
+                                <b-field label="Fecha estreno">
+                                    <b-datepicker
+                                        placeholder="Selecciona un rango de fechas..."
+                                        v-model="b_estreno"
+                                        range
+                                        icon-pack="fas"
+                                        icon="calendar-day"
+                                        :icon-right="b_estreno ? 'close-circle' : ''"
+                                        icon-right-clickable
+                                        @icon-right-click="clearDate()">
+                                    </b-datepicker>
+                                </b-field>
 
-                            <b-field label="Duración">
-                                <b-slider v-model="b_duracion" :min="0" :max="400" :step="15" ticks>
-                                </b-slider>
-                            </b-field>
-                            <p class="content">Entre: {{ b_duracion[0] }} y {{ b_duracion[1] }} min</p>
+                                <b-field label="Generos">
+                                    <b-taginput
+                                        v-model="b_generos"
+                                        :data="generos"
+                                        autocomplete
+                                        :allow-new="false"
+                                        :open-on-focus="true"
+                                        field="name"
+                                        placeholder="Elige un genero"
+                                        expanded>
+                                        <template #empty>
+                                            No hay generos
+                                        </template>
+                                    </b-taginput>
+                                </b-field>
 
-                            <b-field label="Certificados">
-                                <b-taginput
-                                    v-model="b_certificados"
-                                    :data="certificaciones"
-                                    autocomplete
-                                    :allow-new="false"
-                                    :open-on-focus="true"
-                                    field="certification"
-                                    placeholder="Elige una certificacion"
-                                    expanded>
-                                    <template #empty>
-                                        No hay certificaciones
-                                    </template>
-                                </b-taginput>
-                            </b-field>
+                                <b-field label="Duración">
+                                    <b-slider v-model="b_duracion" :min="0" :max="400" :step="15" ticks>
+                                    </b-slider>
+                                </b-field>
+                                <p class="content">Entre: {{ b_duracion[0] }} y {{ b_duracion[1] }} min</p>
 
-                            <b-field label="Idioma">
-                                <b-select 
-                                    placeholder="Seleciona un idioma"
-                                    v-model="b_idioma"
-                                    expanded
-                                    >
-                                    <option
-                                        v-for="idioma in idiomas"
-                                        :value="idioma.iso_639_1"
-                                        :key="idioma.iso_639_1">
-                                        {{ idioma.english_name }}
-                                    </option>
-                                </b-select>
-                            </b-field>
+                                <b-field label="Certificados">
+                                    <b-taginput
+                                        v-model="b_certificados"
+                                        :data="certificaciones"
+                                        autocomplete
+                                        :allow-new="false"
+                                        :open-on-focus="true"
+                                        field="certification"
+                                        placeholder="Elige una certificacion"
+                                        expanded>
+                                        <template #empty>
+                                            No hay certificaciones
+                                        </template>
+                                    </b-taginput>
+                                </b-field>
 
-                            <b-field label="Valoración">
-                                <b-slider v-model="b_valoracion" :min="0" :max="10" :step="0.5" ticks>
-                                </b-slider>
-                            </b-field>
-                            <p class="content">Entre: {{ b_valoracion[0] }} y {{ b_valoracion[1] }} <i class="fa-solid fa-star"></i></p>
+                                <b-field label="Idioma">
+                                    <b-select 
+                                        placeholder="Seleciona un idioma"
+                                        v-model="b_idioma"
+                                        expanded
+                                        >
+                                        <option
+                                            v-for="idioma in idiomas"
+                                            :value="idioma.iso_639_1"
+                                            :key="idioma.iso_639_1">
+                                            {{ idioma.english_name }}
+                                        </option>
+                                    </b-select>
+                                </b-field>
 
-                            <b-field label="Votos minimos">
-                                <b-slider v-model="b_votos" :min="0" :max="500" :step="10"></b-slider>
-                            </b-field>
+                                <b-field label="Valoración">
+                                    <b-slider v-model="b_valoracion" :min="0" :max="10" :step="0.5" ticks>
+                                    </b-slider>
+                                </b-field>
+                                <p class="content">Entre: {{ b_valoracion[0] }} y {{ b_valoracion[1] }} <i class="fa-solid fa-star"></i></p>
 
-                        </b-card-body>
-                    </b-collapse>
-                </b-card>
-            </div>
+                                <b-field label="Votos minimos">
+                                    <b-slider v-model="b_votos" :min="0" :max="500"></b-slider>
+                                </b-field>
 
-        </div>
-        <!-- Contenido -->
-        <ListaPeliculas :peliculas="listaPeliculas" :titulo="'Busqueda de peliculas'"/>
+                                <b-field label="Contenido adulto">
+                                    <b-checkbox 
+                                    v-model="b_adulto"
+                                    :value="false"
+                                    type="is-danger">
+                                        Mostrar contenido adulto
+                                    </b-checkbox>
+                                </b-field>
+
+                            </b-card-body>
+                        </b-collapse>
+                    </b-card>
+                </div>
+
+            </b-col>
+
+            <b-col sm="8">
+
+                <!-- Contenido -->
+                <PantallaPeliculas :peliculas="listaPeliculas" :titulo="'Busqueda de peliculas'" :total_paginas="total_paginas" :total_resultados="total_resultados"/>
+
+                <b-pagination
+                    @change="getListaPeliculas()"
+                    :total="total_paginas"
+                    v-model="pagina_actual"
+                    range-before="2"
+                    range-after="1"
+                    order="is-centered"
+                    size="default"
+                    :simple="false"
+                    :rounded="true"
+                    :per-page="20"
+                    icon-pack="fas"
+                    icon-prev="chevron-left"
+                    icon-next="chevron-right"
+                    aria-next-label="Next page"
+                    aria-previous-label="Previous page"
+                    aria-page-label="Page"
+                    aria-current-label="Current page"
+                    :page-input="true"
+                    page-input-position="dafault"
+                    :debounce-page-input="0">
+                </b-pagination>
+
+            </b-col>
+
+        </b-row>
+        
+
 
     </div>
 </template>
 
 <script>
 import axios from 'axios';
-import ListaPeliculas from '@/components/ListaPeliculas.vue';
+import PantallaPeliculas from '@/components/PantallaPeliculas.vue';
 import { BCollapse } from 'bootstrap-vue';
 
 
@@ -217,6 +267,10 @@ export default {
         certificaciones: [],
         listaPeliculas: [],
         idiomas: [],
+        total_paginas: 0,
+        total_resultados: 0,
+
+        pagina_actual: 1,
 
         proveedores_filtro: this.proveedores,
 
@@ -254,12 +308,13 @@ export default {
         b_certificados: [],
         b_idioma: '',
         b_valoracion: [],
-        b_votos: []
+        b_votos: 0,
+        b_adulto: false
         
     }
   },
   components: {
-    ListaPeliculas,
+    PantallaPeliculas,
     BCollapse,
   },
   created () {
@@ -268,6 +323,7 @@ export default {
       this.getGeneros();
       this.getCertificaciones();
       this.getIdiomas();
+      this.getPeliculasPopulares();
   },
   methods: {
     getPaises(){
@@ -355,32 +411,59 @@ export default {
     },
     getProveedoresFiltrados(text) {
         this.proveedores_filtro = this.proveedores.filter((option) => {
-            console.log(option);
+            //console.log(option);
             return option.provider_name
                 .toString()
                 .toLowerCase()
                 .indexOf(text.toLowerCase()) >= 0
         })
     },
+    getPeliculasPopulares() {
+      axios.get(`${this.apiUrl}/movie/popular`, {
+        params: {
+          api_key: API_KEY,
+          language: this.language
+        }
+      })
+        .then(response => {
+          this.listaPeliculas = response.data.results;
+          this.total_paginas = response.data.total_pages;
+          this.total_resultados = response.data.total_results;
+        }
+
+        )
+        .catch(error => console.log(error))
+    },
     getListaPeliculas(){
 
         let orden = this.b_ordenar?? "popularity.asc";
-        
+        let generos = this.b_generos.map(genero => genero.id).join(',');
+        let proveedores = this.b_streaming.map(proveedor => proveedor.provider_id).join('|');
+        let keywords = this.b_palabras_clave.join(',');
+        let certification_country = "ES";
+        let certification = this.b_certificados.map(certificado => certificado.certification).join(',');
+
+        console.log("Certificados: ");
+        console.log(certification);
 
         axios.get(`${this.apiUrl}/discover/movie`, {
             params: {
                 api_key: API_KEY,
                 language: this.language,
-                page: 1,
-                include_adult: true,
+                page: this.pagina_actual,
+                include_adult: this.b_adulto,
                 sort_by: orden,
+                certification_country: certification_country,
+                certifaction: certification,
                 'release_date.gte': this.b_estreno[0],
                 'release_date.lte': this.b_estreno[1],
-                'vote_count.gte': this.b_votos[0],
-                'vote_count.lte': this.b_votos[1],
+                'vote_count.gte': this.b_votos,
                 'vote_average.gte': this.b_valoracion[0],
                 'vote_average.lte': this.b_valoracion[1],
-
+                with_genres: generos,
+                region: this.b_pais,
+                with_watch_providers: proveedores,
+                with_keywords: keywords,
 
             }
             })
@@ -388,10 +471,17 @@ export default {
                 console.log("listaPeliculas")
                //console.log(response);
                 this.listaPeliculas = response.data.results;
-                console.log(this.listaPeliculas)
+                this.total_paginas = response.data.total_pages;
+                console.log(this.listaPeliculas);
+                this.total_resultados = response.data.total_results;
+                console.log("Total paginas: "+this.total_paginas);
+                console.log("Total resultados: "+this.total_resultados);
             })
             .catch(error => console.log(error));
     },
+    clearDate(){
+        this.b_estreno = []
+    }
   }
 }
 </script>
@@ -399,6 +489,22 @@ export default {
 <style>
     .buscar-view .vs-select-content, .buscar-view .vs-select {
         max-width: 100% !important;
+    }
+    .buscar-view .accordion{
+        position: sticky;
+        top: 125px;
+        z-index: 1 !important;
+    }
+    .buscar-view .btn-buscar{
+        position: sticky;
+        top: 80px;
+        z-index: 2 !important;
+    }
+    .buscar-view  .dropdown-menu {
+        --bs-dropdown-link-active-bg: none !important;
+    }
+    .buscar-view .pagination{
+        margin: 30px 10px;
     }
 
 </style>
