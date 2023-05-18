@@ -32,7 +32,7 @@
                     <h4 class="text-info">Inicia sesion con tu cuenta</h4>
 
                     <!-- form login -->
-                    <form @submit.prevent="getToken">
+                    <form @submit.prevent="iniciarSesion">
                         <div class="row">
                             <div class="col-12 seccion">
                                 <label>Usuario</label>
@@ -43,6 +43,8 @@
                                 <input class="form-control" type="password" v-model="password" name="contrasenia" required>
                             </div>
                         </div>
+
+                        <a :href="'https://www.themoviedb.org/auth/access?request_token='+this.tokenV4" target="_blank">Dar permiso a usar tus datos de TMDB</a>
                         
                         <!-- Mensaje de error -->
                         <b-alert v-model="showAlertaAcceso" variant="danger" dismissible>
@@ -69,18 +71,27 @@
 import axios from "axios";
 
 const API_KEY = "d5970548f1728e977459ef0ac8c8b5df";
+const TOKEN_LECTURA_V4 = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNTk3MDU0OGYxNzI4ZTk3NzQ1OWVmMGFjOGM4YjVkZiIsInN1YiI6IjYyYTc0NmI3ODc1ZDFhMDA2NmZmZDlhZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.4WOT6JsCCbc-ntV27ty9YseclVDBqcR3OESBENb55WE";
 
 export default {
   data() {
     return {
       token: null,
       sessionId: null,
+      tokenV4: null,
+      access_token: null,
       username: '',
       password: '',
       showAlertaAcceso: false
     };
   },
   methods: {
+    async iniciarSesion(){
+      //login v4
+      this.crearTokenAcceso();
+      //login v3
+      this.getToken();
+    },
     async getToken () {
       try {
         const response = await axios.get(`https://api.themoviedb.org/3/authentication/token/new?api_key=${API_KEY}`)
@@ -91,7 +102,7 @@ export default {
         console.error(error)
       }
     },
-    async validarToken () {
+    async validarToken () { 
       try {
         const response = await axios.post(`https://api.themoviedb.org/3/authentication/token/validate_with_login?api_key=${API_KEY}`, {
           username: this.username,
@@ -107,7 +118,7 @@ export default {
 
         //mandar un mensaje de error al usuario
         this.showAlertaAcceso = true;
-      }
+      } 
     },
     async crearSesion () {
       try {
@@ -127,14 +138,68 @@ export default {
       } catch (error) {
         console.error(error);
       }
+    },
+    async getTokenV4 () {
+      const options = {
+        method: 'POST',
+        url: 'https://api.themoviedb.org/4/auth/request_token',
+        headers: {
+          accept: 'application/json',
+          'content-type': 'application/json',
+          Authorization: 'Bearer '+TOKEN_LECTURA_V4
+        }
+      };
+      try {
+        const response = await axios.request(options);
+        this.tokenV4 = response.data.request_token
+        console.log(response);
+
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    async crearTokenAcceso() {
+      const options = {
+        method: 'POST',
+        url: 'https://api.themoviedb.org/4/auth/access_token',
+        headers: {
+          accept: 'application/json',
+          'content-type': 'application/json',
+          Authorization: 'Bearer '+TOKEN_LECTURA_V4
+        },
+        data: {
+          request_token: this.tokenV4
+        }
+      };
+      try {
+        const response = await axios.request(options);
+        const access_token = response.data.access_token;
+        console.log(response);
+
+        this.$cookies.set('access_token', access_token, 60 * 60 * 24 * 7) // la sessionId caduca despues de 7 dias
+        this.access_token = access_token;
+
+      } catch (error) {
+        console.error(error)
+      }
     }
   },
   created () {
-    const sessionId = this.$cookies.get('sessionId') // "ada564802fc409daf6add800ae7ec3d826c06c2c"
+    const sessionId = this.$cookies.get('sessionId') // 
+    const access_token = this.$cookies.get('access_token') // 
+
     if (sessionId) {
       this.sessionId = sessionId
       console.log('Ya esta iniciada la sesion, sessionId: '+this.sessionId);
     }
+    if (access_token) {
+      this.access_token = access_token
+      console.log('Ya esta iniciada la sesion, access_token: '+this.access_token);
+    }else{
+      //pedir request_token V4
+      this.getTokenV4();
+    }
+
   }
 };
 

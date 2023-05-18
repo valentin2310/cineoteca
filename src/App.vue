@@ -183,14 +183,15 @@
 <script>
 import axios from 'axios';
 
-
   const API_KEY = 'd5970548f1728e977459ef0ac8c8b5df';
+  const TOKEN_LECTURA_V4 = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNTk3MDU0OGYxNzI4ZTk3NzQ1OWVmMGFjOGM4YjVkZiIsInN1YiI6IjYyYTc0NmI3ODc1ZDFhMDA2NmZmZDlhZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.4WOT6JsCCbc-ntV27ty9YseclVDBqcR3OESBENb55WE";
 
   export default{
     data() {
       return {
         apiUrl: 'https://api.themoviedb.org/3',
-        sessionId: '',
+        sessionId: null,
+        access_token: null,
         usuarioObj: null
       }
     },
@@ -222,23 +223,57 @@ import axios from 'axios';
           .then(response => {
 
             console.log(response.data);
+            //eliminar session_id
             this.$cookies.remove('sessionId');
             this.sessionId = null;
+
+            //eliminar access_token
+            this.eliminarAccessToken();
+            
             //devolver a la pagina de inicio
             location.reload();
             
           })
           .catch(error => console.log(error));
+      },
+      eliminarAccessToken() {
+        axios.delete(`https://api.themoviedb.org/4/auth/access_token`, {
+          headers: {
+            accept: 'application/json',
+            'content-type': 'application/json',
+            Authorization: `Bearer ${TOKEN_LECTURA_V4}`
+          },
+          data: {
+            access_token: this.access_token
+          }
+        })
+        .then(response => {
+
+          console.log(response.data);
+
+          //eliminar access_token
+          this.$cookies.remove('access_token');
+          this.access_token = null;
+
+        })
+        .catch(error => console.log(error));
       }
     },
     created () {
-      const sessionId = this.$cookies.get('sessionId') // "ada564802fc409daf6add800ae7ec3d826c06c2c"
+      const sessionId = this.$cookies.get('sessionId') // 
+      const access_token = this.$cookies.get('access_token') // 
+
       if (sessionId) {
         console.log('Ya esta iniciada la sesion, sessionId: '+sessionId);
         this.sessionId = sessionId;
         //mostrar info del usuario
         this.getDatosUsuario();
 
+      }
+    
+      if (access_token) {
+        this.access_token = access_token;
+        console.log('Ya esta iniciada la sesion, access_token: '+this.access_token);
       }
     }
   }

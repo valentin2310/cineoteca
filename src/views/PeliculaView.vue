@@ -1,7 +1,8 @@
 <template>
   <div class="pelicula-view">
     <b-row align-v="end" id="banner" class="mx-0" v-bind:style="{
-      'background-image': 'url(https://image.tmdb.org/t/p/original/' + pelicula.backdrop_path + ')',
+      'background-image': pelicula.backdrop_path ? 'url(https://image.tmdb.org/t/p/original/' + pelicula.backdrop_path + ')' : '',
+      'background-color': '#17202A',
       'background-size': 'cover',
       'background-repeat': 'no-repeat',
       'background-position': 'center center'
@@ -10,18 +11,18 @@
       <b-col class="info-pelicula text-start">
         <span id="titulo">{{ pelicula.title }}</span>
 
-        <div class="botones">
-          <b-button id="btn-lista" variant="primary">
-              <i class="fa-solid fa-plus me-2"></i>Añadir lista
+        <div class="buttons botones">
+          <b-button id="btn-lista" type="is-info is-light" icon-pack="fas" icon-left="plus">
+              Añadir lista
           </b-button>
-          <b-button id="btn-favorito" variant="danger">
-              <i class="fa-solid fa-heart me-2"></i>Favorito
+          <b-button id="btn-favorito" type="is-danger" icon-pack="fas" icon-left="heart">
+              Favorito
           </b-button>
-          <b-button id="btn-seguimiento" variant="success">
-              <i class="fa-solid fa-calendar me-2"></i>Lista seguimiento
+          <b-button id="btn-seguimiento" type="is-success" icon-pack="fas" icon-left="calendar">
+             Lista seguimiento
           </b-button>
-          <b-button id="btn-valorar">
-              <i class="fa-solid fa-star me-2"></i>Valorar
+          <b-button id="btn-valorar" type="is-primary" icon-pack="fas" icon-left="star">
+              Valorar
           </b-button>
         </div>
       </b-col>
@@ -35,13 +36,18 @@
           <div class="menu-pelicula">
 
             <div class="portada my-3">
-              <img :src="'https://image.tmdb.org/t/p/w500/' + pelicula.poster_path" alt="poster">
+
+              <img v-if="pelicula.poster_path" :src="'https://image.tmdb.org/t/p/w500/' + pelicula.poster_path"
+                alt="poster">
+              <img v-else src="./../assets/img/poster_fail.png">
+
             </div>
             <div class="menu-secciones">
   
               <ul class="mx-3 p-0 text-center text-info fw-bold">
                 <li>Detalles</li>
                 <li>Sinapsis</li>
+                <li>Multimedia</li>
                 <li>Reparto</li>
                 <li>Comentarios</li>
               </ul>
@@ -52,10 +58,11 @@
         </b-col>
         <b-col sm="8">
 
-          <div class="detalles my-3">
-            <h4 class="text-dark ms-2">Detalles</h4>
-            <hr>
-            <div class="ms-3">
+          <div class="seccion detalles my-3">
+            <h4 class="title is-4 text-dark ms-2">
+              <b-icon pack="fas" icon="hashtag"></b-icon> Detalles
+            </h4>
+            <div class="seccion-cuerpo">
               <b-row class="w-100 my-2">
                 <b-col sm="6"><span class="fw-bold">Titulo original: </span>{{ pelicula.original_title }}</b-col>
                 <b-col sm="6"><span class="fw-bold">Idioma original: </span>{{ pelicula.original_language }}</b-col>
@@ -67,51 +74,208 @@
               </b-row>
 
               <b-row class="w-100 my-2">
-                <b-col><span class="fw-bold">Generos: </span>{{ obtenerGeneros() }}</b-col>
+                <b-col sm="6"><span class="fw-bold">Estado: </span>{{ pelicula.status }}</b-col>
               </b-row>
 
               <b-row class="w-100 my-2">
-                <b-col sm="10">
+                <b-col>
+                  <span class="fw-bold">Generos: </span>
+                  <b-taglist>
+                    <b-tag v-for="genero in pelicula.genres" :key="genero.id" type="is-primary is-light" rounded>
+                      {{ genero.name }}
+                    </b-tag>
+                  </b-taglist>
+                </b-col>
+              </b-row>
+
+              <b-row class="w-100 my-2">
+                <b-col sm="6">
                   <span class="fw-bold">Valoracion: </span>
-                  <b-form-rating v-model="pelicula.vote_average" stars="10" color="blueviolet" show-value readonly precision="2"></b-form-rating>
+                  <b-rate
+                    class="ms-2"
+                    v-model="pelicula.vote_average"
+                    icon-pack="fas"
+                    icon="star"
+                    :max="10"
+                    locale="es-ES"
+                    :show-score="true"
+                    :rtl="true"
+                    :disabled="true">
+                </b-rate>
                 </b-col>
                 <b-col sm="6"><span class="fw-bold">Votos realizados: </span>{{ pelicula.vote_count }}</b-col>
               </b-row>
 
               <b-row class="w-100 my-2">
-                <b-col><span class="fw-bold">Presupuesto: </span>{{ pelicula.budget.toLocaleString('en-EN', {style: 'currency', currency: 'USD'}) }}</b-col>
+                <b-col><span class="fw-bold">Presupuesto: </span>{{ getFormatoDinero(pelicula.budget) }}</b-col>
+                <b-col><span class="fw-bold">Ganancia: </span>{{ getFormatoDinero(pelicula.revenue) }}</b-col>
               </b-row>
 
               <b-row class="w-100 my-2">
-                <b-col><span class="fw-bold">Productoras: </span>{{ obtenerProductoras() }}</b-col>
+                <b-col>
+                  <span class="fw-bold">Productoras: </span>
+                  <b-taglist>
+                    <b-tag v-for="productora in pelicula.production_companies" :key="productora.id" type="is-info is-light" rounded>
+                      {{ productora.name }}
+                    </b-tag>
+                  </b-taglist>
+                </b-col>
               </b-row>
 
             </div>
           </div>
 
-          <div class="sinopsis my-3">
-            <h4 class="text-dark ms-2">Sinopsis</h4>
-            <hr>
+          <div class="seccion sinopsis my-3">
+            <h4 class="title is-4 text-dark ms-2">
+              <b-icon pack="fas" icon="hashtag"></b-icon> Sinopsis
+            </h4>
             <div class="seccion-cuerpo">
               <span>{{ pelicula.overview }}</span>
             </div>
           </div>
 
-          <div class="sinopsis my-3">
-            <h4 class="text-dark ms-2">Reparto</h4>
-            <hr>
+          <div class="seccion multimedia my-3">
+            <h4 class="title is-4 text-dark ms-2">
+              <b-icon pack="fas" icon="hashtag"></b-icon> Multimedia
+            </h4>
+
+            <div class="seccion-cuerpo">
+
+              <b-tabs type="is-boxed">
+                  <b-tab-item  label="Portadas" icon-pack="fas" icon="image">
+  
+                    <!-- Carousel de portadas-->
+                    <b-carousel class="carousel-portada" :autoplay="false" indicator-custom :indicator-inside="false" :overlay="galleryPortada" icon-pack="fas" @click="switchGalleryPortada(true)">
+                          <b-carousel-item v-for="(img, i) in imagenes.posters" :key="i">
+                              <a class="image ">
+                                  <img :src="urlImg+img.file_path">
+                              </a>
+                          </b-carousel-item>
+                          <span v-if="galleryPortada" @click="switchGalleryPortada(false)" class="modal-close is-large"/>
+                          <template #indicators="props">
+                              <figure class="al image" :draggable="false">
+                                  <img :draggable="false" :src="urlImg+imagenes.posters[props.i].file_path" :title="props.i">
+                              </figure>
+                          </template>
+                      </b-carousel>
+  
+                  </b-tab-item>
+  
+                  <b-tab-item label="Fondos" icon-pack="fas" icon="images">
+  
+                    <!-- Carousel de fondos -->
+                      <b-carousel :autoplay="false" indicator-custom :indicator-inside="false" :overlay="galleryFondo" icon-pack="fas" @click="switchGalleryFondo(true)">
+                          <b-carousel-item v-for="(img, i) in imagenes.backdrops" :key="i">
+                              <a class="image ">
+                                  <img :src="urlImg+img.file_path">
+                              </a>
+                          </b-carousel-item>
+                          <span v-if="galleryFondo" @click="switchGalleryFondo(false)" class="modal-close is-large"/>
+                          <template #indicators="props">
+                              <figure class="al image" :draggable="false">
+                                  <img :draggable="false" :src="urlImg+imagenes.backdrops[props.i].file_path" :title="props.i">
+                              </figure>
+                          </template>
+                      </b-carousel>
+  
+  
+                  </b-tab-item>
+  
+                  <b-tab-item label="Videos" icon-pack="fas" icon="video">
+                    
+                    <!-- ♂Carousel de videos -->
+                    <b-carousel
+                    class="carousel-videos"
+                    :arrow="true"
+                    :autoplay="false"
+                    :repeat="true"
+                    :arrow-hover="true"
+                    icon-pack="fas">
+                    <b-carousel-item v-for="(video, i) in videos" :key="i">
+                        <div class="hero-body">
+                          <b-embed
+                            type="iframe"
+                            aspect="16by9"
+                            :src="'https://www.youtube.com/embed/'+video.key"
+                            allowfullscreen
+                            >
+                          </b-embed>
+                        </div>
+                    </b-carousel-item>
+                  </b-carousel>
+  
+  
+                  </b-tab-item>
+  
+              </b-tabs>
+
+            </div>
+
           </div>
 
-          <div class="sinopsis my-3">
-            <h4 class="text-dark ms-2">Comentarios</h4>
-            <hr>
+          <div class="seccion reparto my-3">
+            <h4 class="title is-4 text-dark ms-2">
+              <b-icon pack="fas" icon="hashtag"></b-icon> Reparto
+            </h4>
             <div class="seccion-cuerpo">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio ducimus necessitatibus sit assumenda quas minus! Quisquam, pariatur veritatis non iste cupiditate, explicabo nesciunt aperiam a quas placeat enim? Suscipit, voluptates?
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Unde accusamus quidem, cumque animi maxime vero! Veritatis beatae placeat consequatur suscipit ullam sint odio, atque unde reiciendis voluptatibus explicabo ipsum tenetur?
-              Temporibus amet quisquam vitae esse obcaecati repellendus veritatis facilis ab dolore modi. Cupiditate officiis quibusdam repudiandae quam voluptatem animi praesentium adipisci, amet, fugiat laboriosam tempore accusamus earum placeat incidunt consequatur?
-              Soluta veniam sapiente dolorum aliquid cumque itaque ea beatae! Est officiis deleniti ea nisi assumenda eligendi quasi, possimus magnam rem fugiat accusantium repudiandae illum in consectetur tempora, iure mollitia! Impedit.
-              Voluptas quia sint rerum consequatur! Sit aliquid iure accusamus ipsam libero praesentium. Eius, quos corrupti maiores vero minima, nostrum consectetur quaerat consequuntur dolores tempore quisquam perferendis laudantium, amet ipsa repellat.
-              Tenetur, qui. Autem consectetur, eveniet distinctio assumenda eius fugiat sapiente optio laudantium libero dicta mollitia est minima! Ullam, natus ducimus tempora aut inventore repellat magnam provident sunt minima impedit architecto?
+
+            </div>
+          </div>
+
+          <div class="seccion comentarios my-3">
+            <h4 class="title is-4 text-dark ms-2">
+              <b-icon pack="fas" icon="hashtag"></b-icon> Comentarios
+            </h4>
+            <div class="seccion-cuerpo">
+
+              <article class="media">
+                <figure class="media-left">
+                  <p class="image is-64x64">
+                    <b-avatar :src="urlImg+usuarioObj.avatar.tmdb.avatar_path"></b-avatar>
+                  </p>
+                </figure>
+                <div class="media-content">
+                  <div class="field">
+                    <p class="control">
+                      <textarea class="textarea" placeholder="Añade una reseña..."></textarea>
+                    </p>
+                  </div>
+                  <nav class="level">
+                    <div class="level-left">
+                    </div>
+                    <div class="level-right">
+                      <div class="level-item">
+                        <a class="button is-info">Enviar</a>
+                      </div>
+                    </div>
+                  </nav>
+                </div>
+              </article>
+
+              <div class="title is-5 mt-5">Reviews de otros usuarios:</div>
+
+              <div class="card box my-2" v-for="review in reviews" :key="review.id">
+                <div class="card-content">
+                  <div class="media">
+                    <div class="media-left">
+                      <figure class="image is-48x48">
+                        <b-avatar :src="obtenerImagenAvatar(review.author_details.avatar_path)" alt="Foto perfil"></b-avatar>
+                      </figure>
+                    </div>
+                    <div class="media-content">
+                      <p class="title is-5">{{ review.author }}</p>
+                      <p class="subtitle is-6">@{{ review.author_details.username }}</p>
+                    </div>
+                  </div>
+
+                  <div class="content fs-6 mb-3">
+                    {{ review.content }}
+                  </div>
+                  <time class="fw-bold float-end">{{ obtenerFecha(review.created_at) }}</time>
+                </div>
+              </div>
+              
+
             </div>
           </div>
 
@@ -133,51 +297,196 @@ const API_KEY = 'd5970548f1728e977459ef0ac8c8b5df';
 export default {
   data() {
     return {
+      usuarioObj: {},
+      sessionId: null,
+      access_token: null,
       apiUrl: 'https://api.themoviedb.org/3',
+      urlImg: 'https://image.tmdb.org/t/p/original',
       language: 'es-ES',
       peliculaId: null,
-      pelicula: {}
+      pelicula: {},
+      imagenes: {},
+      videos: {},
+      reviews: {},
+      similares: {},
+      credits: {},
+
+      galleryFondo: false,
+      galleryPortada: false,
+
     }
   },
+  components: {
+  },
   methods: {
-    obtenerProductoras(){
-        let productoras = ""
-
-        if (this.pelicula.production_companies) {
-          for (let i = 0; i < this.pelicula.production_companies.length; i++) {
-            if (i !== 0) productoras += ", "
-            productoras += this.pelicula.production_companies[i].name
-          }
+    getDatosUsuario(){
+      axios.get(`${this.apiUrl}/account`, {
+        params: {
+          api_key: API_KEY,
+          session_id: this.sessionId
         }
-        return productoras
+      })
+      .then(response => {
+        
+        this.usuarioObj = response.data;
+
+      })
+      .catch(error => console.log(error));
     },
-    obtenerGeneros(){
-        let generos = ""
+    obtenerDatosPelicula() {
+      this.peliculaId = this.$route.params.id;
+      axios.get(`${this.apiUrl}/movie/${this.peliculaId}`, {
+        params: {
+          api_key: API_KEY,
+          language: this.language,
+        },
+      })
+        .then(response => {
+          this.pelicula = response.data;
+          console.log(this.pelicula);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
+    getFormatoDinero(dinero){
+        let num = ""
 
-        if (this.pelicula.genres) {
-          for (let i = 0; i < this.pelicula.genres.length; i++) {
-            if (i !== 0) generos += ", ";
-            generos += this.pelicula.genres[i].name;
-          }
+        if (dinero) {
+          num = dinero.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
         }
-        return generos;
+        return num;
+    },
+    obtenerImagenes() {
+      axios.get(`${this.apiUrl}/movie/${this.peliculaId}/images`, {
+        params: {
+          api_key: API_KEY,
+        },
+      })
+        .then(response => {
+          this.imagenes = response.data;
+          console.log("imagenes:")
+          console.log(this.imagenes);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
+    obtenerVideos() {
+      axios.get(`${this.apiUrl}/movie/${this.peliculaId}/videos`, {
+        params: {
+          api_key: API_KEY,
+        },
+      })
+        .then(response => {
+          this.videos = response.data.results;
+          console.log("videos:")
+          console.log(this.videos);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
+    obtenerReviews(){
+      axios.get(`${this.apiUrl}/movie/${this.peliculaId}/reviews`, {
+        params: {
+          api_key: API_KEY,
+        },
+      })
+        .then(response => {
+          this.reviews = response.data.results;
+          console.log("reviews:")
+          console.log(this.reviews);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
+    getPeliculasSimilares(){
+      axios.get(`${this.apiUrl}/movie/${this.peliculaId}/similar`, {
+        params: {
+          api_key: API_KEY,
+        },
+      })
+        .then(response => {
+          this.similares = response.data.results;
+          console.log("similares:")
+          console.log(this.similares);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
+    getCreditos(){
+      axios.get(`${this.apiUrl}/movie/${this.peliculaId}/credits`, {
+        params: {
+          api_key: API_KEY,
+        },
+      })
+        .then(response => {
+          this.creditos = response.data.results;
+          console.log("creditos:")
+          console.log(this.creditos);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
+    obtenerImagenAvatar(path) {
+      if(path.includes('gravatar')){
+        return path.substring(1);
+      }else{
+        return this.urlImg+path;
+      }
+    },
+    obtenerFecha(fecha){
+      const fechaObj = new Date(fecha);
+      const dia = fechaObj.getDate().toString().padStart(2, '0');
+      const mes = (fechaObj.getMonth() + 1).toString().padStart(2, '0');
+      const año = fechaObj.getFullYear();
+      const horas = fechaObj.getHours().toString().padStart(2, '0');
+      const minutos = fechaObj.getMinutes().toString().padStart(2, '0');
+
+      return `${dia}/${mes}/${año} ${horas}:${minutos}h`;
+    },
+    switchGalleryFondo(value) {
+        this.galleryFondo = value
+        if (value) {
+            return document.documentElement.classList.add('is-clipped')
+        } else {
+            return document.documentElement.classList.remove('is-clipped')
+        }
+    },
+    switchGalleryPortada(value) {
+        this.galleryPortada = value
+        if (value) {
+            return document.documentElement.classList.add('is-clipped')
+        } else {
+            return document.documentElement.classList.remove('is-clipped')
+        }
     }
   },
   mounted() {
-    this.peliculaId = this.$route.params.id;
-    axios.get(`${this.apiUrl}/movie/${this.peliculaId}`, {
-      params: {
-        api_key: API_KEY,
-        language: this.language,
-      },
-    })
-      .then(response => {
-        this.pelicula = response.data;
-        console.log(this.pelicula);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    const sessionId = this.$cookies.get('sessionId') // 
+    const access_token = this.$cookies.get('access_token') // 
+
+    if (sessionId) {
+      this.sessionId = sessionId;
+
+      this.getDatosUsuario();
+    }
+    
+    if (access_token) {
+      this.access_token = access_token;
+    }
+
+    this.obtenerDatosPelicula();
+    this.obtenerImagenes();
+    this.obtenerVideos();
+    this.obtenerReviews();
+    this.getPeliculasSimilares();
+    this.getCreditos();
+
   }
 }
 </script>
@@ -188,7 +497,7 @@ export default {
   transform: translate(0px, -220px);
 }
 .pelicula-view{
-  background-color: whitesmoke;
+  background-color: white;
 }
 #banner {
   background-size: cover;
@@ -204,6 +513,11 @@ export default {
 #titulo{
   font-size: xx-large;
 }
+h4{
+  color: blueviolet !important;
+  margin-top: 40px !important;
+  margin-bottom: 15px !important;
+}
 .botones{
   display: flex;
   flex-flow: row wrap;
@@ -212,9 +526,6 @@ export default {
 }
 .botones button{
   margin: 5px;
-}
-#btn-valorar{
-  background-color: blueviolet;
 }
 .botones .btn{
   margin: 10px 10px 0px 10px;
@@ -245,4 +556,58 @@ export default {
   background-color: rgba(0, 0, 0, 0.2);
   color: white;
 }
+.seccion{
+  padding: 5px;
+}
+.seccion-cuerpo{
+  margin-left: 2rem;
+}
+.carousel-item {
+  /* Estilos personalizados para sobrescribir los estilos de BootstrapVue */
+  position: static;
+  display: block;
+  float: none;
+  width: 100%;
+  margin-right: 0;
+  backface-visibility: visible;
+  transition: none;
+  max-height: 400px;
+}
+.carousel-portada .carousel-item .image{
+  display: flex;
+  justify-content: center;
+}
+.carousel-portada .carousel-item .image img{
+  width: 250px;
+}
+.carousel-videos .carousel-indicator{
+  font-display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  justify-content: flex-start;
+}
+.is-active .al img {
+    border: 1px solid #fff;
+    filter: grayscale(0%);
+}
+.al img {
+    border: 1px solid transparent;
+    filter: grayscale(100%);
+}
+.embed-responsive{
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 800px) {
+  .columna-portada{
+  position: static;
+  transform: translate(0px, 0px);
+}
+.menu-pelicula{
+  position: sticky;
+  top: 100px;
+}
+}
+
 </style>

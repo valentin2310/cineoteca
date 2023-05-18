@@ -323,7 +323,7 @@ export default {
       this.getGeneros();
       this.getCertificaciones();
       this.getIdiomas();
-      this.getPeliculasPopulares();
+      this.getListaPeliculas();
   },
   methods: {
     getPaises(){
@@ -417,22 +417,6 @@ export default {
                 .toLowerCase()
                 .indexOf(text.toLowerCase()) >= 0
         })
-    },
-    getPeliculasPopulares() {
-      axios.get(`${this.apiUrl}/movie/popular`, {
-        params: {
-          api_key: API_KEY,
-          language: this.language
-        }
-      })
-        .then(response => {
-          this.listaPeliculas = response.data.results;
-          this.total_paginas = response.data.total_pages;
-          this.total_resultados = response.data.total_results;
-        }
-
-        )
-        .catch(error => console.log(error))
     },
     getListaPeliculas(){
 

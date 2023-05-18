@@ -1,26 +1,34 @@
 <template>
   <div class="peliculaCard">
 
-      <div class="card d-block" @click="verDetalles">
-        
-        <div class="card-poster"
-        v-bind:style="{ 'background-image': 'url(https://image.tmdb.org/t/p/w500/' + pelicula.poster_path + ')' }">
-      </div>
-      
-      <div class="card-body p-2">
-        
-        <div class="detalles">
-          <div class="valoracion">
-            <i class="fa-solid fa-star"></i> <span>{{ pelicula.vote_average }}</span>
+      <div class="card d-block">
+        <router-link :to="`/pelicula/${pelicula.id}`" class="router-link-reset">
+
+          <div v-if="pelicula.poster_path" class="card-poster"
+            v-bind:style="{ 'background-image': 'url(https://image.tmdb.org/t/p/w500/' + pelicula.poster_path + ')' }">
+            
           </div>
-          <div class="info">
-            <i v-b-popover.hover.right="pelicula.overview" :title="pelicula.title" class="fa-solid fa-circle-info"></i>
+          <div v-else class="card-poster">
+            
+          </div>
+
+        
+        <div class="card-body p-2">
+          
+          <div class="detalles">
+            <div class="valoracion">
+              <i class="fa-solid fa-star"></i> <span>{{ pelicula.vote_average }}</span>
+            </div>
+            <div class="info">
+              <i v-b-popover.hover.right="pelicula.overview" :title="pelicula.title" class="fa-solid fa-circle-info"></i>
+            </div>
+          </div>
+          <div class="card-title">
+            <span>{{ pelicula.title }}</span>
           </div>
         </div>
-        <div class="card-title">
-          <span>{{ pelicula.title }}</span>
-        </div>
-      </div>
+
+        </router-link>
     </div>
   
   </div>
@@ -47,7 +55,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
     .peliculaCard .card {
       width: 140px;
       height: 100% !important;
@@ -69,7 +77,7 @@ export default {
     }
 
     .peliculaCard .card-poster {
-      background: url('https://www.themoviedb.org/t/p/w220_and_h330_face/q6j9Dn3iiXoCjpVitDppNNZXwVq.jpg');
+      background-image: url('./../assets/img/poster_fail.png');
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center center;
@@ -101,5 +109,14 @@ export default {
         overflow: hidden;
         text-overflow: ellipsis;
         -webkit-line-clamp: 2; /* número máximo de líneas */
+    }
+    .peliculaCard .card-title span:hover{
+      color: blueviolet;
+      transition: 0.5ms;
+    }
+    .router-link-reset {
+      color: inherit;
+      text-decoration: none;
+      /* Otros estilos personalizados */
     }
 </style>

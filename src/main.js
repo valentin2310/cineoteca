@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 
 import { BootstrapVue } from 'bootstrap-vue'
+import { EmbedPlugin } from 'bootstrap-vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faHatWizard } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -25,6 +26,7 @@ library.add(faHatWizard)
 
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue)
+Vue.use(EmbedPlugin)
 // Optionally install the BootstrapVue icon components plugin
 //Vue.use(IconsPlugin)
 
