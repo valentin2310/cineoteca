@@ -45,12 +45,12 @@
             </div>
             <div class="menu-secciones">
   
-              <ul class="mx-3 p-0 text-center text-info fw-bold">
-                <li>Detalles</li>
-                <li>Sinapsis</li>
-                <li>Multimedia</li>
-                <li>Reparto</li>
-                <li>Comentarios</li>
+              <ul class="mx-3 p-0 text-center fw-bold">
+                <li><a href="#detalles">Detalles</a></li>
+                <li><a href="#sinopsis">Sinopsis</a></li>
+                <li><a href="#multimedia">Multimedia</a></li>
+                <li><a href="#reparto">Reparto</a></li>
+                <li><a href="#comentarios">Comentarios</a></li>
               </ul>
   
             </div>
@@ -59,7 +59,7 @@
         </b-col>
         <b-col sm="8">
 
-          <div class="seccion detalles my-3">
+          <div id="detalles" class="seccion my-3">
             <h4 class="title is-4 text-dark ms-2">
               <b-icon pack="fas" icon="hashtag"></b-icon> Detalles
             </h4>
@@ -126,7 +126,7 @@
             </div>
           </div>
 
-          <div class="seccion sinopsis my-3">
+          <div id="sinopsis" class="seccion my-3">
             <h4 class="title is-4 text-dark ms-2">
               <b-icon pack="fas" icon="hashtag"></b-icon> Sinopsis
             </h4>
@@ -135,7 +135,7 @@
             </div>
           </div>
 
-          <div class="seccion multimedia my-3">
+          <div id="multimedia" class="seccion my-3">
             <h4 class="title is-4 text-dark ms-2">
               <b-icon pack="fas" icon="hashtag"></b-icon> Multimedia
             </h4>
@@ -214,7 +214,7 @@
 
           </div>
 
-          <div class="seccion reparto my-3">
+          <div id="reparto" class="seccion my-3">
             <h4 class="title is-4 text-dark ms-2">
               <b-icon pack="fas" icon="hashtag"></b-icon> Reparto
             </h4>
@@ -223,7 +223,7 @@
             </div>
           </div>
 
-          <div class="seccion comentarios my-3">
+          <div id="comentarios" class="seccion my-3">
             <h4 class="title is-4 text-dark ms-2">
               <b-icon pack="fas" icon="hashtag"></b-icon> Comentarios
             </h4>
@@ -256,12 +256,13 @@
             </div>
             <div v-else class="">
               Para poder hacer una review debes estar registrado
-              <b-button tag="router-link" to="/login">Ir al login</b-button>
+              <br>
+              <b-button type="primary is-light" tag="router-link" to="/login">Ir al login</b-button>
             </div>
               
               <div class="title is-5 mt-5">Reviews de otros usuarios:</div>
 
-              <div v-if="reviews" class="">
+              <div v-if="reviews.length > 0" class="">
 
                 <div  class="card box my-2" v-for="review in reviews" :key="review.id">
                   <div class="card-content">

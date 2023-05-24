@@ -6,7 +6,7 @@
             <div class="col-md-7 p-0">
                 <div class="welcome text-white p-5">
                     <div class="welcome-body">
-                        <h1 class="mb-5 text-info text-center">Bienvenido a MiCineoteca :)</h1>
+                        <h1 class="mb-5 title text-info text-center">Bienvenido a MiCineoteca :)</h1>
                         <p class="mx-5">¡Bienvenido/a a MiCineoteca! Nos encanta que hayas decidido unirte a nuestra
                             comunidad de amantes del cine y las series.</p>
                         <p class="mx-5">Para poder acceder a todas las funcionalidades que ofrecemos en nuestra página, como
@@ -29,7 +29,7 @@
                         <img src="../assets/img/logo_banner.png" alt="banner logo">
                     </div>
 
-                    <h4 class="text-info">Inicia sesion con tu cuenta</h4>
+                    <h4 class="title is-4 text-info">Inicia sesion con tu cuenta</h4>
 
                     <!-- form login -->
                     <form @submit.prevent="iniciarSesion">

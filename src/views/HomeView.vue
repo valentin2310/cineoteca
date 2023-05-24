@@ -2,7 +2,7 @@
   <div class="home">
 
     <div class="banner bg-dark p-5">
-      <h3 class="text-center text-white pt-3">MiCineoteca</h3>
+      <h3 class="title is-3 text-center text-white pt-3">MiCineoteca</h3>
       <div class="banner-cuerpo text-center text-white">
         <p>¡Bienvenidos a MiCineoteca! En nuestra página web, podrás encontrar una amplia selección de películas y series
           para ver en cualquier momento y lugar. Desde clásicos hasta las últimas novedades, en MiCineoteca tenemos todo

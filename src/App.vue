@@ -1,83 +1,6 @@
 <template>
   <div id="app">
-    <!-- Menu -->
-    <!-- 
-
-      <nav class="cabecera navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-          <router-link to="/" class="navbar-brand logo-img" href="#"><img src="./assets/img/logo_simple.png" alt="logo"></router-link>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-          aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-between" id="navbarNavDropdown">
-          <ul class="navbar-nav">
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Peliculas
-              </a>
-              <ul class="dropdown-menu">
-                <li><router-link to="/" class="dropdown-item" href="#">Popular</router-link></li>
-                <li><router-link to="/" class="dropdown-item" href="#">Nuevas</router-link></li>
-                <li><router-link to="/buscar" class="dropdown-item" href="#">Busqueda avanzada</router-link></li>
-              </ul>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Series
-              </a>
-              <ul class="dropdown-menu">
-                <li><router-link to="/" class="dropdown-item" href="#">Popular</router-link></li>
-                <li><router-link to="/" class="dropdown-item" href="#">Nuevas</router-link></li>
-                <li><router-link to="/" class="dropdown-item" href="#">Busqueda avanzada</router-link></li>
-              </ul>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Listas
-              </a>
-              <ul class="dropdown-menu">
-                <li><router-link to="/" class="dropdown-item" href="#">Ver mis listas</router-link></li>
-                <li><router-link to="/" class="dropdown-item" href="#">Another action</router-link></li>
-                <li><router-link to="/" class="dropdown-item" href="#">Something else here</router-link></li>
-              </ul>
-            </li>
-            <li class="nav-item">
-              <router-link to="/" class="nav-link" href="#">Sobre Nosotros</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/" class="nav-link" href="#">Contacto</router-link>
-            </li>
-          </ul>
-        -->
-          
-          <!-- Login/Sing Up -->
-
-          <!--
-
-            <ul v-if="usuarioObj == null" class="navbar-nav text-white">
-              <li class="nav-item"><router-link to="/login" href="#" class="nav-link"><i class="fa-solid fa-right-to-bracket"></i> Acceder</router-link></li>
-            </ul>
-            <ul v-else class="navbar-nav user-img">
-              
-              <b-dropdown variant="link" toggle-class="text-decoration-none" right>
-                <template #button-content>
-                  <b-avatar v-if="usuarioObj.avatar.tmdb.avatar_path != null" class="mx-2" :src="'https://image.tmdb.org/t/p/w500'+usuarioObj.avatar.tmdb.avatar_path"></b-avatar>
-                  <b-avatar v-else class="mx-2 text-white text-center bg-primary" v-text="'AC'"></b-avatar>
-                </template>
-                <b-dropdown-item><router-link to="/"  class="dropdown-item">Ver perfil</router-link></b-dropdown-item>
-                <b-dropdown-item><router-link to="/"  class="dropdown-item">Mis listas</router-link></b-dropdown-item>
-                <b-dropdown-item><router-link to="/"  class="dropdown-item">Crear lista</router-link></b-dropdown-item>
-                <b-dropdown-item class="dropdawn-item" @click="cerrarSesion()">Cerrar sesion</b-dropdown-item>
-              </b-dropdown>
-              
-            </ul>
-          </div>
-        </div>
-      </nav>
-    -->
-      
-      <!-- Nuevo navbar buetify-->
+    <!-- Nuevo navbar buetify-->
     <b-navbar class="cabecera">
         <template #brand>
             <b-navbar-item tag="router-link" :to="{ path: '/' }">
@@ -113,18 +36,6 @@
                 </b-navbar-item>
             </b-navbar-dropdown>
 
-            <b-navbar-dropdown label="Listas">
-              <b-navbar-item tag="router-link" :to="{ path: '/' }">
-                    Popular
-                </b-navbar-item>
-                <b-navbar-item tag="router-link" :to="{ path: '/' }">
-                    Nuevas
-                </b-navbar-item>
-                <b-navbar-item tag="router-link" :to="{ path: '/' }">
-                    Busqueda avanzada
-                </b-navbar-item>
-            </b-navbar-dropdown>
-
             <b-navbar-item tag="router-link" :to="{ path: '/' }">
                 Sobre nosotros
             </b-navbar-item>
@@ -137,6 +48,41 @@
         <template #end>
 
           <div class="navbar-end">
+
+                  <b-autocomplete
+                  class="navbar-item"
+                      :data="data"
+                      placeholder="Busca una pelicula o serie... "
+                      icon-pack="fas"
+                      icon="magnifying-glass"
+                      clearable
+                      :expanded="true"
+                      :loading="isFetching"
+                      :check-infinite-scroll="true"
+                      @typing="getAsyncData"
+                      @select="option => selected = option"
+                      @infinite-scroll="getMoreAsyncData">
+
+                      <template slot-scope="props">
+                          <div class="media">
+                              <div class="media-left">
+                                  <img v-if="props.option.poster_path" width="32" :src="`https://image.tmdb.org/t/p/w500/${props.option.poster_path}`">
+                                  <img v-else src="./assets/img/poster_fail.png" alt="no tiene poster">
+                              </div>
+                              <div class="media-content">
+                                  {{ props.option.media_type == 'movie'? props.option.title : props.option.name }}
+                                  <br>
+                                  <small>
+                                      {{ props.option.release_date }}<b-icon pack="fas" icon="calendar"></b-icon> 
+                                      <b>{{ props.option.vote_average }}</b><b-icon pack="fas" icon="star" type="is-primary"></b-icon>
+                                  </small>
+                              </div>
+                          </div>
+                      </template>
+                      <template #footer>
+                          <span v-show="page > totalPages" class="has-text-grey"> Eso es todo!! Ya no hay mas resultados </span>
+                      </template>
+                  </b-autocomplete>
 
                   <div class="navbar-item" v-if="usuarioObj == null">
                     <router-link to="/login" href="#" class="nav-link"><i class="fa-solid fa-right-to-bracket"></i> Acceder</router-link>
@@ -182,6 +128,7 @@
 
 <script>
 import axios from 'axios';
+import { debounce } from 'vue-debounce'
 
   const API_KEY = 'd5970548f1728e977459ef0ac8c8b5df';
   const TOKEN_LECTURA_V4 = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNTk3MDU0OGYxNzI4ZTk3NzQ1OWVmMGFjOGM4YjVkZiIsInN1YiI6IjYyYTc0NmI3ODc1ZDFhMDA2NmZmZDlhZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.4WOT6JsCCbc-ntV27ty9YseclVDBqcR3OESBENb55WE";
@@ -192,7 +139,15 @@ import axios from 'axios';
         apiUrl: 'https://api.themoviedb.org/3',
         sessionId: null,
         access_token: null,
-        usuarioObj: null
+        usuarioObj: null,
+
+
+        data: [],
+                selected: null,
+                isFetching: false,
+                name: '',
+                page: 1,
+                totalPages: 1
       }
     },
     methods: {
@@ -257,7 +212,56 @@ import axios from 'axios';
 
         })
         .catch(error => console.log(error));
-      }
+      },
+      getAsyncData: debounce(function (name) {
+                // String update
+                if (this.name !== name) {
+                    this.name = name
+                    this.data = []
+                    this.page = 1
+                    this.totalPages = 1
+                }
+                // String cleared
+                if (!name.length) {
+                    this.data = []
+                    this.page = 1
+                    this.totalPages = 1
+                    return
+                }
+                // Reached last page
+                if (this.page > this.totalPages) {
+                    return
+                }
+                this.isFetching = true
+                axios.get(`${this.apiUrl}/search/multi`, {
+                  params: {
+                    api_key: API_KEY,
+                    language: this.language,
+                    page: this.page,
+                    include_adult: true,
+                    query: this.name
+                  }
+                })
+                    .then(({ data }) => {
+                        data.results.forEach((item) => {
+                          console.log(item)
+                          if(item.media_type == 'movie' || item.media_type == 'tv')
+                            this.data.push(item)
+                        })
+
+                        this.page++
+                        this.totalPages = data.total_pages
+                    })
+                    .catch((error) => {
+                        throw error
+                    })
+                    .finally(() => {
+                        this.isFetching = false
+                    })
+            }, 500),
+            getMoreAsyncData: debounce(function () {
+                this.getAsyncData(this.name)
+            }, 250)
     },
     created () {
       const sessionId = this.$cookies.get('sessionId') // 

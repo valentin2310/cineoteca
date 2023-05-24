@@ -14,6 +14,7 @@ import Buefy from 'buefy'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiAccount } from '@mdi/js'
 import VueSweetalert2 from 'vue-sweetalert2';
+import vueDebounce from 'vue-debounce'
 
 
 Vue.config.productionTip = false
@@ -47,6 +48,8 @@ Vue.use(SvgIcon);
 
 Vue.use(Buefy);
 Vue.use(VueSweetalert2);
+
+Vue.use(vueDebounce);
 
 //import "bootstrap/dist/js/bootstrap";
 
