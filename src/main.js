@@ -13,6 +13,8 @@ import Vuesax from 'vuesax'
 import Buefy from 'buefy'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiAccount } from '@mdi/js'
+import VueSweetalert2 from 'vue-sweetalert2';
+
 
 Vue.config.productionTip = false
 
@@ -21,6 +23,8 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import 'vuesax/dist/vuesax.css'; //Vuesax styles
 import 'buefy/dist/buefy.css';
+import 'sweetalert2/dist/sweetalert2.min.css';
+
 
 library.add(faHatWizard)
 
@@ -42,6 +46,7 @@ Vue.component('vue-mdi', mdiAccount);
 Vue.use(SvgIcon);
 
 Vue.use(Buefy);
+Vue.use(VueSweetalert2);
 
 //import "bootstrap/dist/js/bootstrap";
 

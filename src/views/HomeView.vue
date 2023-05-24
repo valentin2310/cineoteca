@@ -10,7 +10,7 @@
       </div>
     </div>
 
-    <ListaPeliculas :peliculas="peliculasPopulares" :titulo="'Peliculas populares'" />
+    <ListaPeliculas :peliculas="peliculasPopulares" :titulo="'Peliculas populares'" ruta="/peliculas/populares" />
     <ListaPeliculas :peliculas="peliculasRecientes" :titulo="'Peliculas recientes'" />
     <ListaPeliculas :peliculas="peliculasMasValoradas" :titulo="'Peliculas mas valoradas'" />
 

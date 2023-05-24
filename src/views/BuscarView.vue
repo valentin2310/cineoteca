@@ -225,7 +225,7 @@
                     size="default"
                     :simple="false"
                     :rounded="true"
-                    :per-page="20"
+                    :per-page="1"
                     icon-pack="fas"
                     icon-prev="chevron-left"
                     icon-next="chevron-right"
@@ -456,6 +456,9 @@ export default {
                //console.log(response);
                 this.listaPeliculas = response.data.results;
                 this.total_paginas = response.data.total_pages;
+
+                if(this.total_paginas > 500) this.total_paginas = 500;
+
                 console.log(this.listaPeliculas);
                 this.total_resultados = response.data.total_results;
                 console.log("Total paginas: "+this.total_paginas);

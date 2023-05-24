@@ -90,13 +90,13 @@
         <template #start>
 
           <b-navbar-dropdown label="Peliculas">
-                <b-navbar-item tag="router-link" :to="{ path: '/' }">
+                <b-navbar-item tag="router-link" :to="{ path: '/peliculas/populares' }">
                     Popular
                 </b-navbar-item>
                 <b-navbar-item tag="router-link" :to="{ path: '/' }">
                     Nuevas
                 </b-navbar-item>
-                <b-navbar-item tag="router-link" :to="{ path: '/buscar' }">
+                <b-navbar-item tag="router-link" :to="{ path: '/peliculas/buscar' }">
                     Busqueda avanzada
                 </b-navbar-item>
             </b-navbar-dropdown>

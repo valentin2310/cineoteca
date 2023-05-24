@@ -3,7 +3,7 @@
 
 
     <div class="seccion-titulo">
-      <h2 class="mx-5 mb-0">{{ titulo }} <b-button class="m-2">Ver mas ...</b-button></h2>
+      <h2 class="title mx-5">{{ titulo }} <b-button v-if="ruta" type="is-primary is-light" class="m-2" tag="router-link" :to="ruta">Ver mas ...</b-button></h2>
     </div>
 
 
@@ -44,6 +44,10 @@ export default {
       type: String,
       required: true
     },
+    ruta: {
+      type: String,
+      required: false
+    }
   },
 };
 

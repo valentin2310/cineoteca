@@ -4,7 +4,8 @@ import HomeView from '../views/HomeView.vue'
 import PeliculaView from '../views/PeliculaView.vue';
 import LoginView from '../views/LoginView.vue';
 import Page404 from '../views/Page404View.vue';
-import BuscarView from '../views/BuscarView.vue';
+import BuscarPelisView from '../views/BuscarView.vue';
+import PelisPopularesView from '../views/PeliculasPopulares.vue';
 
 Vue.use(VueRouter)
 
@@ -25,9 +26,14 @@ const routes = [
     component: PeliculaView
   },
   {
-    path: '/buscar',
-    name: 'buscar',
-    component: BuscarView
+    path: '/peliculas/populares',
+    name: 'peliculas populares',
+    component: PelisPopularesView
+  },
+  {
+    path: '/peliculas/buscar',
+    name: 'buscar peliculas',
+    component: BuscarPelisView
   },
   {
     path: '/:catchAll(.*)',

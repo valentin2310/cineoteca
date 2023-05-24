@@ -11,17 +11,18 @@
       <b-col class="info-pelicula text-start">
         <span id="titulo">{{ pelicula.title }}</span>
 
-        <div class="buttons botones">
-          <b-button id="btn-lista" type="is-info is-light" icon-pack="fas" icon-left="plus">
+        <div v-if="usuarioObj" class="buttons botones">
+          <b-button id="btn-lista" type="is-info is-light" icon-pack="fas" icon-left="plus" @click="añadirLista()">
               Añadir lista
           </b-button>
-          <b-button id="btn-favorito" type="is-danger" icon-pack="fas" icon-left="heart">
+          <b-button id="btn-favorito" :type="'is-danger '+ (enFavorito?'':'is-light')" icon-pack="fas" icon-left="heart" @click="setFavorito()">
               Favorito
           </b-button>
-          <b-button id="btn-seguimiento" type="is-success" icon-pack="fas" icon-left="calendar">
+          <b-button id="btn-seguimiento" :type="'is-success '+ (enListaSeguimiento?'':'is-light')" icon-pack="fas" icon-left="calendar" @click="listaSeguimiento()">
              Lista seguimiento
           </b-button>
-          <b-button id="btn-valorar" type="is-primary" icon-pack="fas" icon-left="star">
+          <b-button id="btn-valorar" :type="'is-primary '+ (valoracion>0?'':'is-light')" icon-pack="fas" icon-left="star" @click="valorar()"
+            v-b-popover.hover.bottom="'Tu valoracion: '+ (valoracion>0?valoracion:'Aun no has hecho ninguna valoración')">
               Valorar
           </b-button>
         </div>
@@ -228,52 +229,65 @@
             </h4>
             <div class="seccion-cuerpo">
 
-              <article class="media">
-                <figure class="media-left">
-                  <p class="image is-64x64">
-                    <b-avatar :src="urlImg+usuarioObj.avatar.tmdb.avatar_path"></b-avatar>
-                  </p>
-                </figure>
-                <div class="media-content">
-                  <div class="field">
-                    <p class="control">
-                      <textarea class="textarea" placeholder="Añade una reseña..."></textarea>
+              <div v-if="usuarioObj != null" class="">
+                <article class="media">
+                  <figure class="media-left">
+                    <p class="image is-64x64">
+                        <b-avatar :src="urlImg+usuarioObj.avatar.tmdb.avatar_path"></b-avatar>
                     </p>
-                  </div>
-                  <nav class="level">
-                    <div class="level-left">
+                  </figure>
+                  <div class="media-content">
+                    <div class="field">
+                      <p class="control">
+                        <textarea class="textarea" placeholder="Añade una reseña..."></textarea>
+                      </p>
                     </div>
-                    <div class="level-right">
-                      <div class="level-item">
-                        <a class="button is-info">Enviar</a>
+                    <nav class="level">
+                      <div class="level-left">
                       </div>
+                      <div class="level-right">
+                        <div class="level-item">
+                          <a class="button is-info">Enviar</a>
+                        </div>
                     </div>
                   </nav>
                 </div>
               </article>
-
+            </div>
+            <div v-else class="">
+              Para poder hacer una review debes estar registrado
+              <b-button tag="router-link" to="/login">Ir al login</b-button>
+            </div>
+              
               <div class="title is-5 mt-5">Reviews de otros usuarios:</div>
 
-              <div class="card box my-2" v-for="review in reviews" :key="review.id">
-                <div class="card-content">
-                  <div class="media">
-                    <div class="media-left">
-                      <figure class="image is-48x48">
-                        <b-avatar :src="obtenerImagenAvatar(review.author_details.avatar_path)" alt="Foto perfil"></b-avatar>
-                      </figure>
-                    </div>
-                    <div class="media-content">
-                      <p class="title is-5">{{ review.author }}</p>
-                      <p class="subtitle is-6">@{{ review.author_details.username }}</p>
-                    </div>
-                  </div>
+              <div v-if="reviews" class="">
 
-                  <div class="content fs-6 mb-3">
+                <div  class="card box my-2" v-for="review in reviews" :key="review.id">
+                  <div class="card-content">
+                    <div class="media">
+                      <div class="media-left">
+                        <figure class="image is-48x48">
+                          <b-avatar v-if="review.author_details.avatar_path" :src="obtenerImagenAvatar(review.author_details.avatar_path)" alt="Foto perfil"></b-avatar>
+                          <b-avatar v-else alt="Foto perfil" ></b-avatar>
+                        </figure>
+                      </div>
+                      <div class="media-content">
+                        <p class="title is-5">{{ review.author }}</p>
+                        <p class="subtitle is-6">@{{ review.author_details.username }}</p>
+                      </div>
+                    </div>
+                    
+                    <div class="content fs-6 mb-3">
                     {{ review.content }}
                   </div>
                   <time class="fw-bold float-end">{{ obtenerFecha(review.created_at) }}</time>
                 </div>
               </div>
+              
+            </div>
+
+            <div v-else>No hay reviews de otros usuarios</div>
               
 
             </div>
@@ -284,7 +298,6 @@
       </b-row>
     </div>
 
-
   </div>
 </template>
 
@@ -293,11 +306,12 @@
 import axios from 'axios';
 
 const API_KEY = 'd5970548f1728e977459ef0ac8c8b5df';
+const TOKEN_LECTURA_V4 = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNTk3MDU0OGYxNzI4ZTk3NzQ1OWVmMGFjOGM4YjVkZiIsInN1YiI6IjYyYTc0NmI3ODc1ZDFhMDA2NmZmZDlhZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.4WOT6JsCCbc-ntV27ty9YseclVDBqcR3OESBENb55WE";
 
 export default {
   data() {
     return {
-      usuarioObj: {},
+      usuarioObj: null,
       sessionId: null,
       access_token: null,
       apiUrl: 'https://api.themoviedb.org/3',
@@ -307,12 +321,18 @@ export default {
       pelicula: {},
       imagenes: {},
       videos: {},
-      reviews: {},
+      reviews: null,
       similares: {},
-      credits: {},
+      creditos: {},
+      stats: {},
 
       galleryFondo: false,
       galleryPortada: false,
+
+      valoracion: 0,
+      enFavorito: false,
+      enListaSeguimiento: false,
+
 
     }
   },
@@ -329,6 +349,10 @@ export default {
       .then(response => {
         
         this.usuarioObj = response.data;
+        console.log("Usuario:");
+        console.log(this.usuarioObj);
+
+        this.obtenerEstadisticasPelicula();
 
       })
       .catch(error => console.log(error));
@@ -347,6 +371,129 @@ export default {
         })
         .catch(error => {
           console.error(error);
+        });
+    },
+    obtenerEstadisticasPelicula() {
+      axios.get(`${this.apiUrl}/movie/${this.peliculaId}/account_states`, {
+        params: {
+          api_key: API_KEY,
+          session_id: this.sessionId
+        },
+      })
+        .then(response => {
+          this.stats = response.data;
+
+          //Guardar la informacion
+          if(this.stats.rated.value) this.valoracion = this.stats.rated.value;
+          this.enFavorito = this.stats.favorite;
+          this.enListaSeguimiento = this.stats.watchlist
+
+          console.log("Estadisticas pelicula:");
+          console.log(this.stats);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
+    añadirLista() {
+      this.$swal('Añadir lista');
+    },
+    setFavorito() {
+      const options = {
+        method: 'POST',
+        url: `${this.apiUrl}/account/${this.usuarioObj.id}/favorite`,
+        params: {session_id: this.sessionId},
+        headers: {
+          accept: 'application/json',
+          'Content-Type': 'application/json;charset=utf-8',
+          Authorization: `Bearer ${TOKEN_LECTURA_V4}`
+        },
+        data: {
+          media_type: 'movie',
+          media_id: this.peliculaId,
+          favorite: !this.enFavorito
+        }
+      };
+
+      axios
+        .request(options)
+        .then(response => {
+          console.log(response);
+          this.enFavorito = !this.enFavorito;
+        })
+        .catch(error => {
+          console.error(error);
+          this.$swal(error.response.data.status_message, '', 'error')
+        });
+    },
+    listaSeguimiento() {
+      this.$swal('iista seguiemiento');
+    },
+    valorar() {
+      this.$swal({
+        title: `Pon una valoracion a ${this.pelicula.title}`,
+        input: 'range',
+        inputLabel: 'Tu valoracion',
+        inputAttributes: {
+          min: 0,
+          max: 10,
+          step: 1
+        },
+        inputValue: this.valoracion,
+        showCancelButton: true,
+        showDenyButton: true,
+        confirmButtonText: 'Guardar',
+        denyButtonText: 'Eliminar valoracion',
+        cancelButtonText: 'Cancelar'
+      })
+      .then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          this.setValoracion(result.value);
+        } else if(result.isDenied){
+          this.deleteValoracion();
+        }
+      })
+    },
+    setValoracion(value) {
+      const options = {
+        method: 'POST',
+        url: `${this.apiUrl}/movie/${this.peliculaId}/rating`,
+        params: {session_id: this.sessionId},
+        headers: {
+          accept: 'application/json',
+          'Content-Type': 'application/json;charset=utf-8',
+          Authorization: `Bearer ${TOKEN_LECTURA_V4}`
+        },
+        data: {value: value}
+      };
+
+      axios
+        .request(options)
+        .then(response => {
+          console.log(response);
+          this.$swal('Guardado!', '', 'success')
+          this.valoracion = value;
+        })
+        .catch(error => {
+          console.error(error);
+          this.$swal(error.response.data.status_message, '', 'error')
+        });
+    },
+    deleteValoracion() {
+      axios.delete(`${this.apiUrl}/movie/${this.peliculaId}/rating`, {
+        params: {
+          api_key: API_KEY,
+          session_id: this.sessionId,
+        }
+      })
+        .then(response => {
+          console.log(response);
+          this.$swal('Borrado exitosamente!', '', 'success')
+        })
+        .catch(error => {
+          console.error(error);
+          this.$swal(error.response.data.status_message, '', 'error')
         });
     },
     getFormatoDinero(dinero){
@@ -424,7 +571,7 @@ export default {
         },
       })
         .then(response => {
-          this.creditos = response.data.results;
+          this.creditos = response.data;
           console.log("creditos:")
           console.log(this.creditos);
         })
@@ -433,6 +580,7 @@ export default {
         });
     },
     obtenerImagenAvatar(path) {
+
       if(path.includes('gravatar')){
         return path.substring(1);
       }else{
@@ -470,6 +618,8 @@ export default {
     const sessionId = this.$cookies.get('sessionId') // 
     const access_token = this.$cookies.get('access_token') // 
 
+    this.obtenerDatosPelicula();
+
     if (sessionId) {
       this.sessionId = sessionId;
 
@@ -480,12 +630,13 @@ export default {
       this.access_token = access_token;
     }
 
-    this.obtenerDatosPelicula();
     this.obtenerImagenes();
     this.obtenerVideos();
     this.obtenerReviews();
     this.getPeliculasSimilares();
     this.getCreditos();
+
+    //this.$swal('Any fool can use a computer');
 
   }
 }
@@ -582,9 +733,7 @@ h4{
 }
 .carousel-videos .carousel-indicator{
   font-display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  justify-content: flex-start;
+  flex-flow: row wrap !important;
 }
 .is-active .al img {
     border: 1px solid #fff;
