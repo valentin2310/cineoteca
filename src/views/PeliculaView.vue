@@ -219,7 +219,7 @@
               <b-icon pack="fas" icon="hashtag"></b-icon> Reparto
             </h4>
             <div class="seccion-cuerpo">
-
+              {{ creditos }}
             </div>
           </div>
 
@@ -262,7 +262,7 @@
               
               <div class="title is-5 mt-5">Reviews de otros usuarios:</div>
 
-              <div v-if="reviews.length > 0" class="">
+              <div v-if="reviews" class="">
 
                 <div  class="card box my-2" v-for="review in reviews" :key="review.id">
                   <div class="card-content">
@@ -280,15 +280,15 @@
                     </div>
                     
                     <div class="content fs-6 mb-3">
-                    {{ review.content }}
+                      {{ review.content }}
+                    </div>
+                    <time class="fw-bold float-end">{{ obtenerFecha(review.created_at) }}</time>
                   </div>
-                  <time class="fw-bold float-end">{{ obtenerFecha(review.created_at) }}</time>
                 </div>
+                
+                <div v-if="reviews.length == 0">No hay reviews de otros usuarios</div>
               </div>
-              
-            </div>
 
-            <div v-else>No hay reviews de otros usuarios</div>
               
 
             </div>
@@ -637,8 +637,6 @@ export default {
     this.getPeliculasSimilares();
     this.getCreditos();
 
-    //this.$swal('Any fool can use a computer');
-
   }
 }
 </script>
@@ -733,8 +731,8 @@ h4{
   width: 250px;
 }
 .carousel-videos .carousel-indicator{
-  font-display: flex;
-  flex-flow: row wrap !important;
+  display: flex;
+  flex-wrap: wrap !important;
 }
 .is-active .al img {
     border: 1px solid #fff;
@@ -754,10 +752,10 @@ h4{
   position: static;
   transform: translate(0px, 0px);
 }
-.menu-pelicula{
-  position: sticky;
-  top: 100px;
-}
+  .menu-pelicula{
+    position: sticky;
+    top: 100px;
+  }
 }
 
 </style>

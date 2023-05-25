@@ -50,7 +50,7 @@
           <div class="navbar-end">
 
                   <b-autocomplete
-                  class="navbar-item"
+                      class="navbar-item"
                       :data="data"
                       placeholder="Busca una pelicula o serie... "
                       icon-pack="fas"
@@ -64,20 +64,24 @@
                       @infinite-scroll="getMoreAsyncData">
 
                       <template slot-scope="props">
-                          <div class="media">
-                              <div class="media-left">
-                                  <img v-if="props.option.poster_path" width="32" :src="`https://image.tmdb.org/t/p/w500/${props.option.poster_path}`">
-                                  <img v-else src="./assets/img/poster_fail.png" alt="no tiene poster">
-                              </div>
-                              <div class="media-content">
-                                  {{ props.option.media_type == 'movie'? props.option.title : props.option.name }}
-                                  <br>
-                                  <small>
-                                      {{ props.option.release_date }}<b-icon pack="fas" icon="calendar"></b-icon> 
-                                      <b>{{ props.option.vote_average }}</b><b-icon pack="fas" icon="star" type="is-primary"></b-icon>
-                                  </small>
-                              </div>
-                          </div>
+                          <a :href="`/pelicula/${props.option.id}`" class="router-link-reset">
+                            <div class="media">
+                                <div class="media-left">
+                                    <img v-if="props.option.poster_path" width="32" :src="`https://image.tmdb.org/t/p/w500/${props.option.poster_path}`">
+                                    <img v-else src="./assets/img/poster_fail.png" alt="no tiene poster">
+                                </div>
+                                <div class="media-content">
+                                  <b-icon v-if="props.option.media_type == 'tv'" pack="fas" icon="tv"></b-icon>
+                                  <b-icon v-else pack="fas" icon="film"></b-icon>
+                                    {{ props.option.media_type == 'movie'? props.option.title : props.option.name }}
+                                    <br>
+                                    <small>
+                                        {{ props.option.release_date }}<b-icon pack="fas" icon="calendar"></b-icon> 
+                                        <b>{{ props.option.vote_average }}</b><b-icon pack="fas" icon="star" type="is-primary"></b-icon>
+                                    </small>
+                                </div>
+                            </div>
+                          </a>
                       </template>
                       <template #footer>
                           <span v-show="page > totalPages" class="has-text-grey"> Eso es todo!! Ya no hay mas resultados </span>
@@ -244,7 +248,6 @@ import { debounce } from 'vue-debounce'
                 })
                     .then(({ data }) => {
                         data.results.forEach((item) => {
-                          console.log(item)
                           if(item.media_type == 'movie' || item.media_type == 'tv')
                             this.data.push(item)
                         })
@@ -298,5 +301,15 @@ import { debounce } from 'vue-debounce'
     box-shadow: none;
     color: black;
   }
+
+  .navbar-end .autocomplete .input{
+    width: 300px;
+  }
+
+  .router-link-reset {
+      color: inherit;
+      text-decoration: none;
+      /* Otros estilos personalizados */
+    }
 
 </style>

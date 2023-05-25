@@ -19,7 +19,7 @@
 
 
       <div v-else>
-        <p>No hay películas populares para mostrar</p>
+        <p>No hay películas para mostrar</p>
       </div>
 
     </div>

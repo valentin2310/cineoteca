@@ -10,8 +10,11 @@
       </div>
     </div>
 
+    <ListaSeries :series="seriesPopulares" :titulo="'Series populares'" />
     <ListaPeliculas :peliculas="peliculasPopulares" :titulo="'Peliculas populares'" ruta="/peliculas/populares" />
+    <ListaSeries :series="seriesTransmitiendoHoy" :titulo="'Series transmitiendose hoy'" />
     <ListaPeliculas :peliculas="peliculasRecientes" :titulo="'Peliculas recientes'" />
+    <ListaSeries :series="seriesMasValoradas" :titulo="'Series mas valoradas'" />
     <ListaPeliculas :peliculas="peliculasMasValoradas" :titulo="'Peliculas mas valoradas'" />
 
 
@@ -23,6 +26,7 @@
 <script>
 import axios from 'axios';
 import ListaPeliculas from '@/components/ListaPeliculas.vue';
+import ListaSeries from '@/components/ListaSeries.vue';
 
 const API_KEY = 'd5970548f1728e977459ef0ac8c8b5df';
 
@@ -33,16 +37,23 @@ export default {
       language: 'es-ES',
       peliculasPopulares: [],
       peliculasRecientes: [],
-      peliculasMasValoradas: []
+      peliculasMasValoradas: [],
+      seriesPopulares: [],
+      seriesMasValoradas: [],
+      seriesTransmitiendoHoy: []
     }
   },
   components: {
-    ListaPeliculas
+    ListaPeliculas,
+    ListaSeries
   },
   mounted() {
     this.getPeliculasPopulares(),
       this.getPeliculasRecientes(),
-      this.getPeliculasMasValoradas()
+      this.getPeliculasMasValoradas(),
+      this.getSeriesPopulares(),
+      this.getSeriesMasValoradas(),
+      this.getSeriesTransmitiendoHoy()
   },
   methods: {
     getPeliculasPopulares() {
@@ -89,6 +100,51 @@ export default {
 
         )
         .catch(error => console.log(error))
+    },
+    getSeriesPopulares() {
+      axios.get(`${this.apiUrl}/tv/popular`, {
+        params: {
+          api_key: API_KEY,
+          language: this.language
+        }
+      })
+        .then(response => {
+          this.seriesPopulares = response.data.results;
+          //console.log(this.seriesPopulares[0].id);
+        }
+
+        )
+        .catch(error => console.log(error))
+    },
+    getSeriesMasValoradas() {
+      axios.get(`${this.apiUrl}/tv/top_rated`, {
+        params: {
+          api_key: API_KEY,
+          language: this.language
+        }
+      })
+        .then(response => {
+          this.seriesMasValoradas = response.data.results;
+          //console.log(this.seriesPopulares[0].id);
+        }
+
+        )
+        .catch(error => console.log(error))
+    },
+    getSeriesTransmitiendoHoy() {
+      axios.get(`${this.apiUrl}/tv/airing_today`, {
+        params: {
+          api_key: API_KEY,
+          language: this.language
+        }
+      })
+        .then(response => {
+          this.seriesTransmitiendoHoy = response.data.results;
+          //console.log(this.seriesPopulares[0].id);
+        }
+
+        )
+        .catch(error => console.log(error))
     }
   }
 }
@@ -98,5 +154,8 @@ export default {
 <style>
 .banner-cuerpo {
   font-size: larger;
+}
+.bg-linear{
+  background: linear-gradient(30deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.05) 100%);
 }
 </style>

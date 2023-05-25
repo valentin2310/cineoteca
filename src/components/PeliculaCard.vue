@@ -59,7 +59,7 @@ export default {
     .peliculaCard .card {
       width: 140px;
       height: 100% !important;
-      border-radius: 5px;
+      border-radius: 15px 0px 15px 0px;
       background-color: whitesmoke;
       border: 3px solid white;
       box-shadow: black 0px 0px 5px;
@@ -81,7 +81,7 @@ export default {
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center center;
-      border-radius: 5px 5px 0px 0px;
+      border-radius: 15px 5px 0px 0px;
       height: 200px;
 
     }
