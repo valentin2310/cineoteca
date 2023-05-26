@@ -6,6 +6,7 @@ import LoginView from '../views/LoginView.vue';
 import Page404 from '../views/Page404View.vue';
 import BuscarPelisView from '../views/BuscarView.vue';
 import PelisPopularesView from '../views/PeliculasPopulares.vue';
+import SerieView from '../views/SerieView.vue';
 
 Vue.use(VueRouter)
 
@@ -24,6 +25,11 @@ const routes = [
     path: '/pelicula/:id',
     name: 'pelicula',
     component: PeliculaView
+  },
+  {
+    path: '/serie/:id',
+    name: 'serie',
+    component: SerieView
   },
   {
     path: '/peliculas/populares',

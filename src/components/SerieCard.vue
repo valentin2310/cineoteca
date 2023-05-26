@@ -8,53 +8,55 @@
             'background-repeat': 'no-repeat',
             'background-position': 'center center'
         }">
-            <div class="card-body">
-                <div class="card-title">
-                    <b-row >
-                        <b-col cols="11" class="title is-4 text-white mb-0 pb-0">
-                            {{ serie.name }}
-                        </b-col>
-                        <b-col cols="1" class="mb-0 pb-0">
-                            <b-icon v-b-popover.hover.right="serie.overview" :title="serie.name" pack="fas" icon="circle-info" size="is-medium" type="is-primary" class="float-end"></b-icon>
-                        </b-col>
-                    </b-row>
-                </div>
-
-                <div :class="'fechas fw-bold ms-2 '+(serie.in_production == true?'text-success':'text-danger')">
-                    {{ serie.first_air_date }} - {{ serie.in_production == true? 'Presente':serie.last_air_date }}
-                </div>
-
-                <div class="datos text-white ms-3">
-                    <b-row >
-                        <b-col cols="5" class="ms-1">
-                            {{ serie.number_of_seasons? serie.number_of_seasons : 'x' }} Temporadas
-                        </b-col>
-                        <b-col cols="5" class="ms-1">
-                            {{ serie.number_of_episodes? serie.number_of_episodes : 'x' }} Epidodios
-                        </b-col>
-                    </b-row>
-                    <b-row>
-                        <b-col cols="5">
-                            <b-icon pack="fas" icon="clock" type="is-primary"></b-icon> 
-                            <span v-if="serie.episode_run_time">
-                                {{ serie.episode_run_time[0]? serie.episode_run_time[0] : 'x' }} min
-                            </span>
-                        </b-col>
-                        <b-col cols="5">
-                            <b-icon pack="fas" icon="star" type="is-primary"></b-icon> {{ serie.vote_average? serie.vote_average : 'x' }}
-                        </b-col>
-                    </b-row>
-
-                    <div class="generos">
-                        <b-taglist class="mt-2 ms-1">
-                            <b-tag v-for="genero in serie.genres" :key="genero.id" type="is-primary is-light" rounded>
-                            {{ genero.name }}
-                            </b-tag>
-                        </b-taglist>
+            <router-link :to="`/serie/${serieId}`" class="router-link-reset">
+                <div class="card-body">
+                    <div class="card-title">
+                        <b-row >
+                            <b-col cols="11" class="title is-4 text-white mb-0 pb-0">
+                                {{ serie.name }}
+                            </b-col>
+                            <b-col cols="1" class="mb-0 pb-0">
+                                <b-icon v-b-popover.hover.right="serie.overview" :title="serie.name" pack="fas" icon="circle-info" size="is-medium" type="is-primary" class="float-end"></b-icon>
+                            </b-col>
+                        </b-row>
                     </div>
+    
+                    <div :class="'fechas fw-bold ms-2 '+(serie.in_production == true?'text-success':'text-danger')">
+                        {{ serie.first_air_date }} - {{ serie.in_production == true? 'Presente':serie.last_air_date }}
+                    </div>
+    
+                    <div class="datos text-white ms-3">
+                        <b-row >
+                            <b-col cols="5" class="ms-1">
+                                {{ serie.number_of_seasons? serie.number_of_seasons : 'x' }} Temporadas
+                            </b-col>
+                            <b-col cols="5" class="ms-1">
+                                {{ serie.number_of_episodes? serie.number_of_episodes : 'x' }} Epidodios
+                            </b-col>
+                        </b-row>
+                        <b-row>
+                            <b-col cols="5">
+                                <b-icon pack="fas" icon="clock" type="is-primary"></b-icon> 
+                                <span v-if="serie.episode_run_time">
+                                    {{ serie.episode_run_time[0]? serie.episode_run_time[0] : 'x' }} min
+                                </span>
+                            </b-col>
+                            <b-col cols="5">
+                                <b-icon pack="fas" icon="star" type="is-primary"></b-icon> {{ serie.vote_average? serie.vote_average : 'x' }}
+                            </b-col>
+                        </b-row>
+    
+                        <div class="generos">
+                            <b-taglist class="mt-2 ms-1">
+                                <b-tag v-for="genero in serie.genres" :key="genero.id" type="is-primary is-light" rounded>
+                                {{ genero.name }}
+                                </b-tag>
+                            </b-taglist>
+                        </div>
+                    </div>
+    
                 </div>
-
-            </div>
+            </router-link>
 
         </div>
     
@@ -116,8 +118,6 @@
         margin: 5px;
         width: 450px;
         height: 200px;
-        display: flex;
-        flex-flow: row wrap;
         border-radius: 15px 0px 15px 0px;
         border: 3px solid white;
         background-color: whitesmoke;
@@ -153,6 +153,12 @@
 
     .text-success{
         color: rgb(9, 219, 6) !important;
+    }
+
+    .router-link-reset {
+      color: inherit;
+      text-decoration: none;
+      /* Otros estilos personalizados */
     }
 
   </style>

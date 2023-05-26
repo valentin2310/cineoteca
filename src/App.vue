@@ -64,7 +64,7 @@
                       @infinite-scroll="getMoreAsyncData">
 
                       <template slot-scope="props">
-                          <a :href="`/pelicula/${props.option.id}`" class="router-link-reset">
+                          <a :href="props.option.media_type == 'movie' ? `/pelicula/${props.option.id}` : `/serie/${props.option.id}`" class="router-link-reset">
                             <div class="media">
                                 <div class="media-left">
                                     <img v-if="props.option.poster_path" width="32" :src="`https://image.tmdb.org/t/p/w500/${props.option.poster_path}`">
