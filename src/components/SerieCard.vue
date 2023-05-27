@@ -66,7 +66,6 @@
   <script>
   
   import axios from 'axios';
-  import router from '@/router'
 
   const API_KEY = 'd5970548f1728e977459ef0ac8c8b5df';
   
@@ -103,10 +102,6 @@
 
                 )
                 .catch(error => console.log(error))
-        },
-        verDetalles() {
-            const id = this.serie.id;
-            router.push({ name: 'serie', params: { id } });
         }
     }
   };

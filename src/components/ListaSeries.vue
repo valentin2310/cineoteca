@@ -12,7 +12,7 @@
         <div v-if="series.length > 0">
   
           <div class="series">
-            <SerieCard v-for="serie in series" :key="serie.id" :serieId="serie.id"></SerieCard>
+            <SerieCard2 v-for="serie in series" :key="serie.id" :serie="serie"></SerieCard2>
           </div>
   
         </div>
@@ -28,12 +28,12 @@
   </template>
   
   <script>
-  import SerieCard from '@/components/SerieCard.vue';
+  import SerieCard2 from '@/components/SerieCard2.vue';
   
   export default {
     name: 'ListaSeries',
     components: {
-      SerieCard,
+      SerieCard2,
     },
     props: {
       series: {

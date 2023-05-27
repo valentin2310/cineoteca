@@ -371,7 +371,7 @@ export default {
           console.log(this.pelicula);
         })
         .catch(error => {
-          console.error(error);
+          console.log(error);
         });
     },
     obtenerEstadisticasPelicula() {

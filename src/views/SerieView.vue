@@ -66,17 +66,27 @@
                     </h4>
                     <div class="seccion-cuerpo">
                     <b-row class="w-100 my-2">
-                        <b-col sm="6"><span class="fw-bold">Titulo original: </span>{{ serie.original_title }}</b-col>
+                        <b-col sm="6"><span class="fw-bold">Titulo original: </span>{{ serie.original_name }}</b-col>
                         <b-col sm="6"><span class="fw-bold">Idioma original: </span>{{ serie.original_language }}</b-col>
                     </b-row>
                     
                     <b-row class="w-100 my-2">
-                        <b-col sm="6"><span class="fw-bold">Fecha de estreno: </span>{{ serie.release_date }}</b-col>
-                        <b-col sm="6"><span class="fw-bold">Duracion: </span>{{ serie.runtime }} min</b-col>
+                        <b-col sm="6"><span class="fw-bold">Primera publicación: </span>{{ serie.first_air_date }}</b-col>
+                        <b-col sm="6"><span class="fw-bold">Última publicación: </span>{{ serie.last_air_date }}</b-col>
+                    </b-row>
+
+                    <b-row class="w-100 my-2">
+                        <b-col sm="6"><span class="fw-bold">Temporadas: </span>{{ serie.number_of_seasons }}</b-col>
+                        <b-col sm="6"><span class="fw-bold">Episodios: </span>{{ serie.number_of_episodes }}</b-col>
+                    </b-row>
+
+                    <b-row v-if="serie.episode_run_time" class="w-100 my-2">
+                        <b-col sm="6"><span class="fw-bold">Duración de los episodios: </span>{{ serie.episode_run_time[0] }} min</b-col>
                     </b-row>
 
                     <b-row class="w-100 my-2">
                         <b-col sm="6"><span class="fw-bold">Estado: </span>{{ serie.status }}</b-col>
+                        <b-col sm="6"><span class="fw-bold">En produccion: </span>{{ serie.in_production? 'Sí':'No' }}</b-col>
                     </b-row>
 
                     <b-row class="w-100 my-2">
@@ -108,9 +118,31 @@
                         <b-col sm="6"><span class="fw-bold">Votos realizados: </span>{{ serie.vote_count }}</b-col>
                     </b-row>
 
+                    <b-row v-if="serie.keywords" class="w-100 my-2">
+                        <b-col>
+                        <span class="fw-bold">Palabras clave: </span>
+                        <b-taglist>
+                            <b-tag v-for="pal in serie.keywords.results" :key="pal.id" type="is-black is-light" rounded>
+                            {{ pal.name }}
+                            </b-tag>
+                        </b-taglist>
+                        </b-col>
+                    </b-row>
+
+                    <b-row v-if="serie.homepage" class="w-100 my-2">
+                        <b-col sm="12"><span class="fw-bold">Página principal: </span><a :href="serie.homepage" target="_blank">{{ serie.homepage }}</a></b-col>
+                    </b-row>
+
                     <b-row class="w-100 my-2">
-                        <b-col><span class="fw-bold">Presupuesto: </span>{{ getFormatoDinero(serie.budget) }}</b-col>
-                        <b-col><span class="fw-bold">Ganancia: </span>{{ getFormatoDinero(serie.revenue) }}</b-col>
+                        <b-col>
+                        <span class="fw-bold">Canales: </span>
+                        <b-taglist>
+                            <b-tag v-for="canal in serie.networks" :key="canal.id" type="is-success is-light" rounded>
+                                <img v-if="canal.logo_path" :width="20" :src="`${urlImgSmall}${canal.logo_path}`">
+                                {{ canal.name }}
+                            </b-tag>
+                        </b-taglist>
+                        </b-col>
                     </b-row>
 
                     <b-row class="w-100 my-2">
@@ -118,7 +150,8 @@
                         <span class="fw-bold">Productoras: </span>
                         <b-taglist>
                             <b-tag v-for="productora in serie.production_companies" :key="productora.id" type="is-info is-light" rounded>
-                            {{ productora.name }}
+                                <img v-if="productora.logo_path" :width="20" :src="`${urlImgSmall}${productora.logo_path}`">
+                                {{ productora.name }}
                             </b-tag>
                         </b-taglist>
                         </b-col>
@@ -317,6 +350,7 @@ export default{
             access_token: null,
             apiUrl: 'https://api.themoviedb.org/3',
             urlImg: 'https://image.tmdb.org/t/p/original',
+            urlImgSmall: 'https://image.tmdb.org/t/p/w45',
             language: 'es-Es',
             SerieId: null,
             serie: {},
@@ -538,27 +572,8 @@ h4{
 .seccion-cuerpo{
   margin-left: 2rem;
 }
-.carousel-item {
-  /* Estilos personalizados para sobrescribir los estilos de BootstrapVue */
-  position: static;
-  display: block;
-  float: none;
-  width: 100%;
-  margin-right: 0;
-  backface-visibility: visible;
-  transition: none;
-  max-height: 400px;
-}
-.carousel-portada .carousel-item .image{
-  display: flex;
-  justify-content: center;
-}
-.carousel-portada .carousel-item .image img{
-  width: 250px;
-}
-.carousel-videos .carousel-indicator{
-  display: flex;
-  flex-wrap: wrap !important;
+.tags{
+    margin: 10px 0px;
 }
 .is-active .al img {
     border: 1px solid #fff;
@@ -582,6 +597,41 @@ h4{
     position: sticky;
     top: 100px;
   }
+}
+
+</style>
+
+<style>
+
+.carousel-item {
+  /* Estilos personalizados para sobrescribir los estilos de BootstrapVue */
+  position: static;
+  display: block;
+  float: none;
+  width: 100%;
+  margin-right: 0;
+  backface-visibility: visible;
+  transition: none;
+  max-height: 400px;
+}
+.carousel-portada .carousel-item .image{
+  display: flex;
+  justify-content: center;
+}
+.carousel-portada .carousel-item .image img{
+  width: 250px;
+}
+.carousel-videos .carousel-indicator{
+  display: flex;
+  flex-wrap: wrap !important;
+}
+.carousel-indicator{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+.carousel-indicator a{
+    max-width: 150px !important;
 }
 
 </style>

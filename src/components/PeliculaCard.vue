@@ -6,10 +6,10 @@
 
           <div v-if="pelicula.poster_path" class="card-poster"
             v-bind:style="{ 'background-image': 'url(https://image.tmdb.org/t/p/w500/' + pelicula.poster_path + ')' }">
-            
+            <b-icon pack="fas" icon="film" class="rounded float-end mx-1 p-1 bg-linear" type="is-white"></b-icon>
           </div>
           <div v-else class="card-poster">
-            
+            <b-icon pack="fas" icon="film" class="rounded float-end mx-1 p-1 bg-linear" type="is-white"></b-icon>
           </div>
 
         

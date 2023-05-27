@@ -25,13 +25,13 @@
             </b-navbar-dropdown>
 
             <b-navbar-dropdown label="Series">
-              <b-navbar-item tag="router-link" :to="{ path: '/' }">
+              <b-navbar-item tag="router-link" :to="{ path: '/series/populares' }">
                     Popular
                 </b-navbar-item>
                 <b-navbar-item tag="router-link" :to="{ path: '/' }">
                     Nuevas
                 </b-navbar-item>
-                <b-navbar-item tag="router-link" :to="{ path: '/' }">
+                <b-navbar-item tag="router-link" :to="{ path: '/series/buscar' }">
                     Busqueda avanzada
                 </b-navbar-item>
             </b-navbar-dropdown>
