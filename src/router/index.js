@@ -9,6 +9,7 @@ import PelisPopularesView from '../views/PeliculasPopulares.vue';
 import SerieView from '../views/SerieView.vue';
 import SeriesPopularesView from '../views/SeriesPopulares.vue';
 import BuscarSeriesView from '../views/BuscarSeriesView.vue';
+import PerfilView from '../views/PerfilView.vue';
 
 Vue.use(VueRouter)
 
@@ -22,6 +23,11 @@ const routes = [
     path: '/login',
     name: 'login',
     component: LoginView
+  },
+  {
+    path: '/perfil',
+    name: 'perfil',
+    component: PerfilView
   },
   {
     path: '/pelicula/:id',

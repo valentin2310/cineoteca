@@ -1,7 +1,7 @@
 <template>
   <div class="pelicula-view">
     <b-row align-v="end" id="banner" class="mx-0" v-bind:style="{
-      'background-image': pelicula.backdrop_path ? 'url(https://image.tmdb.org/t/p/original/' + pelicula.backdrop_path + ')' : '',
+      'background-image': pelicula.backdrop_path ? 'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,8) 100%), url(https://image.tmdb.org/t/p/original/' + pelicula.backdrop_path + ')' : '',
       'background-color': '#17202A',
       'background-size': 'cover',
       'background-repeat': 'no-repeat',
@@ -15,10 +15,10 @@
           <b-button id="btn-lista" type="is-info is-light" icon-pack="fas" icon-left="plus" @click="añadirLista()">
               Añadir lista
           </b-button>
-          <b-button id="btn-favorito" :type="'is-danger '+ (enFavorito?'':'is-light')" icon-pack="fas" icon-left="heart" @click="setFavorito()">
+          <b-button id="btn-favorito" :type="'is-danger '+ (enFavorito?'':'is-light')" icon-pack="fas" icon-left="heart" @click="favorito()">
               Favorito
           </b-button>
-          <b-button id="btn-seguimiento" :type="'is-success '+ (enListaSeguimiento?'':'is-light')" icon-pack="fas" icon-left="calendar" @click="listaSeguimiento()">
+          <b-button id="btn-seguimiento" :type="'is-success '+ (enListaSeguimiento?'':'is-light')" icon-pack="fas" icon-left="calendar" @click="seguimiento()">
              Lista seguimiento
           </b-button>
           <b-button id="btn-valorar" :type="'is-primary '+ (valoracion>0?'':'is-light')" icon-pack="fas" icon-left="star" @click="valorar()"
@@ -233,7 +233,8 @@
                 <article class="media">
                   <figure class="media-left">
                     <p class="image is-64x64">
-                        <b-avatar :src="urlImg+usuarioObj.avatar.tmdb.avatar_path"></b-avatar>
+                        <b-avatar v-if="usuarioObj.img_avatar" :src="urlImg+usuarioObj.img_avatar"></b-avatar>
+                        <b-avatar v-else class="text-white bg-dark"></b-avatar>
                     </p>
                   </figure>
                   <div class="media-content">
@@ -312,12 +313,16 @@ const TOKEN_LECTURA_V4 = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNTk3MDU0OGYxNzI4ZTk3N
 export default {
   data() {
     return {
+      id_usuario: null,
       usuarioObj: null,
+      usuarioTMDB: null,
+      
       sessionId: null,
       access_token: null,
       apiUrl: 'https://api.themoviedb.org/3',
       urlImg: 'https://image.tmdb.org/t/p/original',
       language: 'es-ES',
+
       peliculaId: null,
       pelicula: {},
       imagenes: {},
@@ -325,7 +330,6 @@ export default {
       reviews: null,
       similares: {},
       creditos: {},
-      stats: {},
 
       galleryFondo: false,
       galleryPortada: false,
@@ -333,6 +337,8 @@ export default {
       valoracion: 0,
       enFavorito: false,
       enListaSeguimiento: false,
+      enVisto: false,
+      fechaVisto: null,
 
 
     }
@@ -340,7 +346,28 @@ export default {
   components: {
   },
   methods: {
-    getDatosUsuario(){
+    getDatosUsuario() {
+        const data = {
+            id: this.id_usuario,
+        }
+        axios.post(`https://www.ieslamarisma.net/proyectos/2023/valentinandrei/php/getUsuario.php`, data, {
+            headers: {
+            "Content-Type": "application/json",
+            },
+        }
+        )
+        .then(response => {
+            console.log(response.data);
+
+            if(typeof response.data === "object" && response.data !== null) {
+                console.log("Exito");
+                this.usuarioObj = response.data;
+            }
+
+        })
+        .catch(error => console.log(error));
+    },
+    getDatosUsuarioTMDB(){
       axios.get(`${this.apiUrl}/account`, {
         params: {
           api_key: API_KEY,
@@ -349,17 +376,45 @@ export default {
       })
       .then(response => {
         
-        this.usuarioObj = response.data;
+        this.usuarioTMDB = response.data;
         console.log("Usuario:");
-        console.log(this.usuarioObj);
+        console.log(this.usuarioTMDB);
 
-        this.obtenerEstadisticasPelicula();
+        //this.obtenerEstadisticasPelicula();
 
       })
       .catch(error => console.log(error));
     },
-    obtenerDatosPelicula() {
-      this.peliculaId = this.$route.params.id;
+    getEstadisticasUsuario(){
+        const data = {
+            id: this.id_usuario,
+            id_item: this.peliculaId
+        }
+        axios.post(`https://www.ieslamarisma.net/proyectos/2023/valentinandrei/php/getEstadisticasPelicula.php`, data, {
+            headers: {
+            "Content-Type": "application/json",
+            },
+        }
+        )
+        .then(response => {
+            console.log(response.data);
+
+        if(typeof response.data === "object" && response.data !== null) {
+            console.log("Exito");
+            const stats = response.data;
+            console.log(stats);
+
+            this.enFavorito = stats.favorito;
+            this.enListaSeguimiento = stats.seguimiento;
+            this.valoracion = stats.valoracion;
+            this.enVisto = stats.visto;
+            this.fechaVisto = stats.fecha_visto;
+        }
+
+        })
+        .catch(error => console.log(error));
+    },
+    getDatosPelicula() {
       axios.get(`${this.apiUrl}/movie/${this.peliculaId}`, {
         params: {
           api_key: API_KEY,
@@ -372,129 +427,6 @@ export default {
         })
         .catch(error => {
           console.log(error);
-        });
-    },
-    obtenerEstadisticasPelicula() {
-      axios.get(`${this.apiUrl}/movie/${this.peliculaId}/account_states`, {
-        params: {
-          api_key: API_KEY,
-          session_id: this.sessionId
-        },
-      })
-        .then(response => {
-          this.stats = response.data;
-
-          //Guardar la informacion
-          if(this.stats.rated.value) this.valoracion = this.stats.rated.value;
-          this.enFavorito = this.stats.favorite;
-          this.enListaSeguimiento = this.stats.watchlist
-
-          console.log("Estadisticas pelicula:");
-          console.log(this.stats);
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    },
-    añadirLista() {
-      this.$swal('Añadir lista');
-    },
-    setFavorito() {
-      const options = {
-        method: 'POST',
-        url: `${this.apiUrl}/account/${this.usuarioObj.id}/favorite`,
-        params: {session_id: this.sessionId},
-        headers: {
-          accept: 'application/json',
-          'Content-Type': 'application/json;charset=utf-8',
-          Authorization: `Bearer ${TOKEN_LECTURA_V4}`
-        },
-        data: {
-          media_type: 'movie',
-          media_id: this.peliculaId,
-          favorite: !this.enFavorito
-        }
-      };
-
-      axios
-        .request(options)
-        .then(response => {
-          console.log(response);
-          this.enFavorito = !this.enFavorito;
-        })
-        .catch(error => {
-          console.error(error);
-          this.$swal(error.response.data.status_message, '', 'error')
-        });
-    },
-    listaSeguimiento() {
-      this.$swal('iista seguiemiento');
-    },
-    valorar() {
-      this.$swal({
-        title: `Pon una valoracion a ${this.pelicula.title}`,
-        input: 'range',
-        inputLabel: 'Tu valoracion',
-        inputAttributes: {
-          min: 0,
-          max: 10,
-          step: 1
-        },
-        inputValue: this.valoracion,
-        showCancelButton: true,
-        showDenyButton: true,
-        confirmButtonText: 'Guardar',
-        denyButtonText: 'Eliminar valoracion',
-        cancelButtonText: 'Cancelar'
-      })
-      .then((result) => {
-        /* Read more about isConfirmed, isDenied below */
-        if (result.isConfirmed) {
-          this.setValoracion(result.value);
-        } else if(result.isDenied){
-          this.deleteValoracion();
-        }
-      })
-    },
-    setValoracion(value) {
-      const options = {
-        method: 'POST',
-        url: `${this.apiUrl}/movie/${this.peliculaId}/rating`,
-        params: {session_id: this.sessionId},
-        headers: {
-          accept: 'application/json',
-          'Content-Type': 'application/json;charset=utf-8',
-          Authorization: `Bearer ${TOKEN_LECTURA_V4}`
-        },
-        data: {value: value}
-      };
-
-      axios
-        .request(options)
-        .then(response => {
-          console.log(response);
-          this.$swal('Guardado!', '', 'success')
-          this.valoracion = value;
-        })
-        .catch(error => {
-          console.error(error);
-          this.$swal(error.response.data.status_message, '', 'error')
-        });
-    },
-    deleteValoracion() {
-      axios.delete(`${this.apiUrl}/movie/${this.peliculaId}/rating`, {
-        params: {
-          api_key: API_KEY,
-          session_id: this.sessionId,
-        }
-      })
-        .then(response => {
-          console.log(response);
-          this.$swal('Borrado exitosamente!', '', 'success')
-        })
-        .catch(error => {
-          console.error(error);
-          this.$swal(error.response.data.status_message, '', 'error')
         });
     },
     getFormatoDinero(dinero){
@@ -613,24 +545,387 @@ export default {
         } else {
             return document.documentElement.classList.remove('is-clipped')
         }
-    }
+    },
+    favorito(){
+        if(!this.enFavorito) this.setFavorito();
+        else this.deleteFavorito();
+    },
+    seguimiento(){
+        if(!this.enListaSeguimiento) this.setSeguimiento();
+        else this.deleteSeguimiento();
+    },
+    valorar() {
+        this.$swal({
+            title: `Pon una valoracion a ${this.pelicula.title}`,
+            input: 'range',
+            inputLabel: 'Tu valoracion',
+            inputAttributes: {
+                min: 0,
+                max: 10,
+                step: 1
+            },
+            inputValue: this.valoracion,
+            showCancelButton: true,
+            showDenyButton: true,
+            confirmButtonText: 'Guardar',
+            denyButtonText: 'Eliminar valoracion',
+            cancelButtonText: 'Cancelar'
+        })
+        .then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+            this.setValoracion(result.value);
+            } else if(result.isDenied){
+            this.deleteValoracion();
+            }
+        })
+    },
+    setFavorito(){
+
+        //Si el item esta en favoritos que no siga ejecutando el metodo.
+        if(this.enFavorito) return;
+
+        const data = {
+            id: this.id_usuario,
+            id_item: this.peliculaId,
+            media_type: 'movie'
+        }
+        axios.post(`https://www.ieslamarisma.net/proyectos/2023/valentinandrei/php/setItemFavorito.php`, data, {
+            headers: {
+            "Content-Type": "application/json",
+            },
+        }
+        )
+        .then(response => {
+            console.log(response.data);
+
+        if(!response.data.includes('Error')) {
+            console.log("Exito");
+            this.enFavorito = true;
+            console.log("En favorito: "+this.enFavorito);
+            this.$swal({
+                title: 'Añadido exitosamente en favoritos!',
+                icon: 'success',
+                position: 'top-end',
+                showConfirmaButton: false,
+                timer: 1200
+            })
+
+            //Si esta vinculada la cuenta de TMDB
+            this.setFavoritoTMDB();
+        }
+
+        })
+        .catch(error => console.log(error));
+    },
+    setSeguimiento(){
+
+        //Si el item esta en seguimiento que no siga ejecutando el metodo.
+        if(this.enListaSeguimiento) return;
+
+        const data = {
+            id: this.id_usuario,
+            id_item: this.peliculaId,
+            media_type: 'movie'
+        }
+        axios.post(`https://www.ieslamarisma.net/proyectos/2023/valentinandrei/php/setItemSeguimiento.php`, data, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+        )
+        .then(response => {
+            console.log(response.data);
+
+            if(!response.data.includes('Error')) {
+                console.log("Exito");
+                this.enListaSeguimiento = true;
+                console.log("En seguimiento: "+this.enListaSeguimiento);
+                this.$swal({
+                    title: 'Añadido a la lista de seguimiento exitosamente!',
+                    icon: 'success',
+                    position: 'top-end',
+                    showConfirmaButton: false,
+                    timer: 1200
+                })
+
+                //Si esta vinculada la cuenta de TMDB
+                this.setSeguimientoTMDB();
+            }
+
+        })
+        .catch(error => console.log(error));
+    },
+    setValoracion(value) {
+
+        const data = {
+            id: this.id_usuario,
+            id_item: this.peliculaId,
+            media_type: 'movie',
+            valor: value
+        }
+        axios.post(`https://www.ieslamarisma.net/proyectos/2023/valentinandrei/php/setValoracion.php`, data, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+        )
+        .then(response => {
+            console.log(response.data);
+
+            if(!response.data.includes('Error')) {
+                console.log("Exito");
+                this.valoracion = value;
+                console.log("Valoracion: "+this.valoracion);
+                this.$swal({
+                    title: 'Valoracion guardada exitosamente!',
+                    icon: 'success',
+                    position: 'top-end',
+                    showConfirmaButton: false,
+                    timer: 1200
+                })
+
+                //Si esta vinculada la cuenta de TMDB
+                this.setValoracionTMDB(value);
+            }
+
+        })
+        .catch(error => console.log(error));
+    },
+    deleteFavorito(){
+
+        //Si el item no esta en favoritos que no siga ejecutando el metodo.
+        if(!this.enFavorito) return;
+
+        const data = {
+            id: this.id_usuario,
+            id_item: this.peliculaId,
+            media_type: 'movie'
+        }
+        axios.post(`https://www.ieslamarisma.net/proyectos/2023/valentinandrei/php/eliminarItemFavorito.php`, data, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+        )
+        .then(response => {
+            console.log(response.data);
+
+        if(!response.data.includes('Error')) {
+            console.log("Exito");
+            this.enFavorito = false;
+            console.log("En favorito: "+this.enFavorito);
+            this.$swal({
+                title: 'Eliminado de favoritos exitosamente!',
+                icon: 'success',
+                position: 'top-end',
+                showConfirmaButton: false,
+                timer: 1200
+            })
+
+            //Si esta vinculada la cuenta de TMDB
+            this.setFavoritoTMDB();
+        }
+
+        })
+        .catch(error => console.log(error));
+    },
+    deleteSeguimiento(){
+
+        //Si el item no esta en favoritos que no siga ejecutando el metodo.
+        if(!this.enListaSeguimiento) return;
+
+        const data = {
+            id: this.id_usuario,
+            id_item: this.peliculaId,
+            media_type: 'movie'
+        }
+        axios.post(`https://www.ieslamarisma.net/proyectos/2023/valentinandrei/php/eliminarItemSeguimiento.php`, data, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+        )
+        .then(response => {
+            console.log(response.data);
+
+        if(!response.data.includes('Error')) {
+            console.log("Exito");
+            this.enListaSeguimiento = false;
+            console.log("En Seguimiento: "+this.enListaSeguimiento);
+            this.$swal({
+                title: 'Eliminado de la lista de seguimiento exitosamente!',
+                icon: 'success',
+                position: 'top-end',
+                showConfirmaButton: false,
+                timer: 1200
+            })
+
+            //Si esta vinculada la cuenta de TMDB
+            this.setSeguimientoTMDB();
+        }
+
+        })
+        .catch(error => console.log(error));
+    },
+    deleteValoracion(){
+
+        const data = {
+            id: this.id_usuario,
+            id_item: this.peliculaId,
+            media_type: 'movie'
+        }
+        axios.post(`https://www.ieslamarisma.net/proyectos/2023/valentinandrei/php/eliminarValoracion.php`, data, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+        )
+        .then(response => {
+            console.log(response.data);
+
+        if(!response.data.includes('Error')) {
+            console.log("Exito");
+            this.valoracion = 0;
+            console.log("Valoracion: "+this.valoracion);
+            this.$swal({
+                title: 'Valoracion eliminada exitosamente!',
+                icon: 'success',
+                position: 'top-end',
+                showConfirmaButton: false,
+                timer: 1200
+            })
+
+            //Si esta vinculada la cuenta de TMDB
+            this.deleteValoracionTMDB();
+        }
+
+        })
+        .catch(error => console.log(error));
+    },
+    setFavoritoTMDB() {
+        const options = {
+            method: 'POST',
+            url: `${this.apiUrl}/account/${this.usuarioTMDB.id}/favorite`,
+            params: {session_id: this.sessionId},
+            headers: {
+                accept: 'application/json',
+                'Content-Type': 'application/json;charset=utf-8',
+                Authorization: `Bearer ${TOKEN_LECTURA_V4}`
+            },
+            data: {
+                media_type: 'movie',
+                media_id: this.peliculaId,
+                favorite: !this.enFavorito
+            }
+        };
+
+        axios
+            .request(options)
+            .then(response => {
+                console.log(response);
+            })
+            .catch(error => {
+                console.error(error);
+                this.$swal(error.response.data.status_message, '', 'error')
+            });
+    },
+    setSeguimientoTMDB() {
+        const options = {
+            method: 'POST',
+            url: `${this.apiUrl}/account/${this.usuarioTMDB.id}/watchlist`,
+            params: {session_id: this.sessionId},
+            headers: {
+                accept: 'application/json',
+                'Content-Type': 'application/json;charset=utf-8',
+                Authorization: `Bearer ${TOKEN_LECTURA_V4}`
+            },
+            data: {
+                media_type: 'movie',
+                media_id: this.peliculaId,
+                watchlist: !this.enListaSeguimiento
+            }
+        };
+
+        axios
+            .request(options)
+            .then(response => {
+                console.log(response);
+            })
+            .catch(error => {
+                console.error(error);
+                this.$swal(error.response.data.status_message, '', 'error')
+            });
+    },
+    setValoracionTMDB(value) {
+        const options = {
+            method: 'POST',
+            url: `${this.apiUrl}/movie/${this.peliculaId}/rating`,
+            params: {session_id: this.sessionId},
+            headers: {
+                accept: 'application/json',
+                'Content-Type': 'application/json;charset=utf-8',
+                Authorization: `Bearer ${TOKEN_LECTURA_V4}`
+            },
+            data: {value: value}
+        };
+
+        axios
+            .request(options)
+            .then(response => {
+                console.log(response);
+                //this.$swal('Guardado!', '', 'success')
+                //this.valoracion = value;
+            })
+            .catch(error => {
+                console.error(error);
+                this.$swal(error.response.data.status_message, '', 'error')
+            });
+    },
+    deleteValoracionTMDB() {
+        axios.delete(`${this.apiUrl}/movie/${this.peliculaId}/rating`, {
+            params: {
+            api_key: API_KEY,
+            session_id: this.sessionId,
+            }
+        })
+        .then(response => {
+                console.log(response);
+                //this.$swal('Borrado exitosamente!', '', 'success')
+            })
+        .catch(error => {
+            console.error(error);
+            this.$swal(error.response.data.status_message, '', 'error')
+        });
+    },
   },
   mounted() {
+    const id_usuario = this.$cookies.get('id_usuario');
     const sessionId = this.$cookies.get('sessionId') // 
     const access_token = this.$cookies.get('access_token') // 
 
-    this.obtenerDatosPelicula();
+    this.peliculaId = this.$route.params.id;
+    this.getDatosPelicula();
 
-    if (sessionId) {
-      this.sessionId = sessionId;
+    if(id_usuario){
+        this.id_usuario = id_usuario;
+        this.getDatosUsuario();
+        this.getEstadisticasUsuario();
 
-      this.getDatosUsuario();
-    }
+        // comprobar si tengo acceso a la cuenta de TMDB
+        if (sessionId && access_token) {
     
-    if (access_token) {
-      this.access_token = access_token;
+            this.sessionId = sessionId;
+            this.access_token = access_token;
+    
+            //mostrar info del usuario
+            this.getDatosUsuarioTMDB();
+
+        }
+
     }
 
+    //Obtener resto de datos
     this.obtenerImagenes();
     this.obtenerVideos();
     this.obtenerReviews();
@@ -658,7 +953,6 @@ export default {
 }
 .info-pelicula{
   padding: 10px 20% 10px 32% !important;
-  background: linear-gradient(0deg, rgba(15,15,15,1) 0%, rgba(0,0,0,0.75) 100%);
 }
 #titulo{
   font-size: xx-large;
@@ -721,18 +1015,14 @@ h4{
   margin-right: 0;
   backface-visibility: visible;
   transition: none;
-  max-height: 400px;
 }
 .carousel-portada .carousel-item .image{
-  display: flex;
-  justify-content: center;
+    display: flex;
+    justify-content: center;
+    max-height: 400px;
 }
 .carousel-portada .carousel-item .image img{
   width: 250px;
-}
-.carousel-videos .carousel-indicator{
-  display: flex;
-  flex-wrap: wrap !important;
 }
 .is-active .al img {
     border: 1px solid #fff;

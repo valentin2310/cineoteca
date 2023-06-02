@@ -51,7 +51,7 @@ Vue.use(VueSweetalert2);
 
 Vue.use(vueDebounce);
 
-//import "bootstrap/dist/js/bootstrap";
+import "bootstrap/dist/js/bootstrap";
 
 new Vue({
   router,

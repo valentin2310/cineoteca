@@ -68,7 +68,7 @@
                             <div class="media">
                                 <div class="media-left">
                                     <img v-if="props.option.poster_path" width="32" :src="`https://image.tmdb.org/t/p/w500/${props.option.poster_path}`">
-                                    <img v-else src="./assets/img/poster_fail.png" alt="no tiene poster">
+                                    <img v-else src="./assets/img/poster_fail.png" alt="x">
                                 </div>
                                 <div class="media-content">
                                   <b-icon v-if="props.option.media_type == 'tv'" pack="fas" icon="tv"></b-icon>
@@ -106,16 +106,16 @@
                           class="navbar-item user-img"
                           role="button">
                           
-                          <span>{{ usuarioObj.username }}</span>
-                          <b-avatar v-if="usuarioObj.avatar.tmdb.avatar_path != null" class="mx-2 px-1" :src="'https://image.tmdb.org/t/p/w500'+usuarioObj.avatar.tmdb.avatar_path"></b-avatar>
-                          <b-avatar v-else class="mx-2 text-white text-center bg-primary" v-text="'AC'"></b-avatar>
+                          <span>{{ usuarioObj.usuario }}</span>
+                          <b-avatar v-if="usuarioObj.img_avatar != null" class="mx-2 px-1" :src="'https://image.tmdb.org/t/p/w500'+usuarioObj.img_avatar"></b-avatar>
+                          <b-avatar v-else class="mx-2 text-white text-center bg-dark"></b-avatar>
                           
                         </div>
                       </template>
                       
-                      <b-dropdown-item tag="router-link" :to="{ path: '/' }">Ver perfil</b-dropdown-item>
-                      <b-dropdown-item tag="router-link" :to="{ path: '/' }">Mis listas</b-dropdown-item>
-                      <b-dropdown-item tag="router-link" :to="{ path: '/' }">Crear lista</b-dropdown-item>
+                      <b-dropdown-item><router-link class="router-link-reset" to="/perfil">Ver perfil</router-link></b-dropdown-item>
+                      <b-dropdown-item><router-link class="router-link-reset" to="/">Mis listas</router-link></b-dropdown-item>
+                      <b-dropdown-item><router-link class="router-link-reset" to="/">Crear lista</router-link></b-dropdown-item>
                       <b-dropdown-item class="dropdawn-item" @click="cerrarSesion()">Cerrar sesion</b-dropdown-item>
 
                   </b-dropdown>
@@ -143,8 +143,11 @@ import { debounce } from 'vue-debounce'
         apiUrl: 'https://api.themoviedb.org/3',
         sessionId: null,
         access_token: null,
-        usuarioObj: null,
 
+        id_usuario: null,
+
+        usuarioObj: null,
+        usuarioTMDB: null,
 
         data: [],
                 selected: null,
@@ -155,7 +158,28 @@ import { debounce } from 'vue-debounce'
       }
     },
     methods: {
-      getDatosUsuario(){
+      getDatosUsuario() {
+        const data = {
+            id: this.id_usuario,
+        }
+        axios.post(`https://www.ieslamarisma.net/proyectos/2023/valentinandrei/php/getUsuario.php`, data, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then(response => {
+          console.log(response.data);
+
+          if(typeof response.data === "object" && response.data !== null) {
+            console.log("Exito");
+            this.usuarioObj = response.data;
+          }
+
+        })
+        .catch(error => console.log(error));
+      },
+      getDatosUsuarioTMDB(){
         axios.get(`${this.apiUrl}/account`, {
           params: {
             api_key: API_KEY,
@@ -164,8 +188,8 @@ import { debounce } from 'vue-debounce'
         })
         .then(response => {
           
-          this.usuarioObj = response.data;
-          console.log(this.usuarioObj);
+          this.usuarioTMDB = response.data;
+          console.log(this.usuarioTMDB);
 
         })
         .catch(error => console.log(error));
@@ -218,69 +242,81 @@ import { debounce } from 'vue-debounce'
         .catch(error => console.log(error));
       },
       getAsyncData: debounce(function (name) {
-                // String update
-                if (this.name !== name) {
-                    this.name = name
-                    this.data = []
-                    this.page = 1
-                    this.totalPages = 1
-                }
-                // String cleared
-                if (!name.length) {
-                    this.data = []
-                    this.page = 1
-                    this.totalPages = 1
-                    return
-                }
-                // Reached last page
-                if (this.page > this.totalPages) {
-                    return
-                }
-                this.isFetching = true
-                axios.get(`${this.apiUrl}/search/multi`, {
-                  params: {
-                    api_key: API_KEY,
-                    language: this.language,
-                    page: this.page,
-                    include_adult: true,
-                    query: this.name
-                  }
-                })
-                    .then(({ data }) => {
-                        data.results.forEach((item) => {
-                          if(item.media_type == 'movie' || item.media_type == 'tv')
-                            this.data.push(item)
-                        })
+          // String update
+          if (this.name !== name) {
+              this.name = name
+              this.data = []
+              this.page = 1
+              this.totalPages = 1
+          }
+          // String cleared
+          if (!name.length) {
+              this.data = []
+              this.page = 1
+              this.totalPages = 1
+              return
+          }
+          // Reached last page
+          if (this.page > this.totalPages) {
+              return
+          }
+          this.isFetching = true
+          axios.get(`${this.apiUrl}/search/multi`, {
+            params: {
+              api_key: API_KEY,
+              language: this.language,
+              page: this.page,
+              include_adult: true,
+              query: this.name
+            }
+          })
+              .then(({ data }) => {
+                  data.results.forEach((item) => {
+                    if(item.media_type == 'movie' || item.media_type == 'tv')
+                      this.data.push(item)
+                  })
 
-                        this.page++
-                        this.totalPages = data.total_pages
-                    })
-                    .catch((error) => {
-                        throw error
-                    })
-                    .finally(() => {
-                        this.isFetching = false
-                    })
-            }, 500),
-            getMoreAsyncData: debounce(function () {
-                this.getAsyncData(this.name)
-            }, 250)
+                  this.page++
+                  this.totalPages = data.total_pages
+              })
+              .catch((error) => {
+                  throw error
+              })
+              .finally(() => {
+                  this.isFetching = false
+              })
+      }, 500),
+      getMoreAsyncData: debounce(function () {
+          this.getAsyncData(this.name)
+      }, 250)
     },
     created () {
+      const id_usuario = this.$cookies.get('id_usuario');
       const sessionId = this.$cookies.get('sessionId') // 
       const access_token = this.$cookies.get('access_token') // 
 
-      if (sessionId) {
-        console.log('Ya esta iniciada la sesion, sessionId: '+sessionId);
-        this.sessionId = sessionId;
-        //mostrar info del usuario
+      if(id_usuario){
+        console.log("Ya esta iniciada la sesion");
+        console.log("Tu id_usuario es: "+id_usuario);
+
+        this.id_usuario = id_usuario;
         this.getDatosUsuario();
 
-      }
-    
-      if (access_token) {
-        this.access_token = access_token;
-        console.log('Ya esta iniciada la sesion, access_token: '+this.access_token);
+        // comprobar si tengo acceso a la cuenta de TMDB
+        if (sessionId && access_token) {
+          console.log('Ya tengo acceso a TMDB')
+          console.log('sessionId: '+sessionId);
+          console.log('access_token: '+access_token);
+  
+          this.sessionId = sessionId;
+          this.access_token = access_token;
+  
+          //mostrar info del usuario
+          //this.getDatosUsuarioTMDB();
+
+        }
+
+
       }
     }
   }

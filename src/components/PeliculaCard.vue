@@ -120,3 +120,12 @@ export default {
       /* Otros estilos personalizados */
     }
 </style>
+
+<style>
+
+  .bg-linear{
+    background: linear-gradient(30deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.5) 100%);
+    box-shadow: 0px 0px 3px black;
+  }
+
+</style>
