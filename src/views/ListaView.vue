@@ -153,7 +153,7 @@
                         </div>
 
                         <div v-else class="">
-                            <div v-for="item in itemsFiltrados" :key="item.id+item.title" class="lista rounded my-2 p-3 bg-dark text-white">
+                            <div v-for="item in itemsFiltrados" :key="item.id+(item.title?item.title:item.name)" class="lista rounded my-2 p-3 bg-dark text-white">
                                 <div class="lista-menu float-end" @click="alertDeleteItemLista(item)">
                                     <i class="fa-solid fa-trash-can text-danger" title="Eliminar item de la lista"></i>
                                 </div>
@@ -165,7 +165,7 @@
                                     </div>
                                     
                                     <div class="titulo p-2">
-                                        {{ item.title }}
+                                        {{ item.title?item.title:item.name }}
                                     </div>
                                 </div>
 
@@ -201,6 +201,7 @@ export default{
             idLista: null,
             lista: {},
             listaItems: [],
+            listaItemsObj: [],
 
             apiUrl: 'https://api.themoviedb.org/3',
             access_token: null,
@@ -270,8 +271,16 @@ export default{
                     console.log("Exito");
                     console.log("Lista items:")
                     this.listaItems = response.data;
-                    this.itemsFiltrados = this.listaItems;
-                    console.log(this.listaItems)
+                    console.log(this.listaItems);
+                    
+                    this.obtenerDetallesListaItems().then(() => {
+                        this.itemsFiltrados = this.listaItemsObj;
+                    });
+
+
+                    console.log("filtrados: ");
+                    console.log(this.itemsFiltrados)
+
                 }
 
             })
@@ -284,12 +293,7 @@ export default{
         const data = {
                 id_lista: this.idLista,
                 id_item: item.id,
-                media_type: item.media_type,
-                poster_path: item.poster_path,
-                backdrop_path: item.backdrop_path,
-                vote_average: item.vote_average,
-                overview: item.overview,
-                titulo: item.media_type == 'movie'?item.title:item.name
+                media_type: item.title?'movie':'tv',
             }
             axios.post(`https://www.ieslamarisma.net/proyectos/2023/valentinandrei/php/setItemLista.php`, data, {
                 headers: {
@@ -310,7 +314,7 @@ export default{
       },
       alertDeleteItemLista(item){
         this.$swal({
-            title: `Estas seguro que quieres eliminar ${item.title} de la lista?`,
+            title: `Estas seguro que quieres eliminar ${item.title?item.title:item.name} de la lista?`,
             icon: 'warning',
             showCancelButton: true,
             focusConfirm: false,
@@ -329,7 +333,7 @@ export default{
         const data = {
                 id_lista: this.idLista,
                 id_item: item.id,
-                media_type: item.media_type
+                media_type: item.title?'movie':'tv'
             }
             axios.post(`https://www.ieslamarisma.net/proyectos/2023/valentinandrei/php/eliminarItemLista.php`, data, {
                 headers: {
@@ -360,16 +364,80 @@ export default{
         },
         filtrarItems() {
             const textoBusqueda = this.filtro.toLowerCase();
-            this.itemsFiltrados = this.listaItems.filter(item => {
-                const tituloIncluyeTexto = item.title.toLowerCase().includes(textoBusqueda);
+
+            this.itemsFiltrados = this.listaItemsObj.filter(item => {
+                const tituloIncluyeTexto = item.title?item.title.toLowerCase().includes(textoBusqueda):item.name.toLowerCase().includes(textoBusqueda);
+                console.log("Texto busqueda: "+tituloIncluyeTexto)
+
                 if (this.mostrar == 0) {
                     return tituloIncluyeTexto;
                 } else if (this.mostrar == 1) {
-                    return tituloIncluyeTexto && item.media_type === 'tv';
+                    return tituloIncluyeTexto && item.name;
                 } else if (this.mostrar == 2) {
-                    return tituloIncluyeTexto && item.media_type === 'movie';
+                    return tituloIncluyeTexto && item.title;
                 }
             });
+        },
+        async getSerieDetalles(itemId) {
+
+            try{
+            const response = await axios.get(`${this.apiUrl}/tv/${itemId}`, {
+                params: {
+                    api_key: API_KEY,
+                    language: this.language
+                }
+            });
+
+            return response.data;
+
+            }catch (error){
+            console.log(error);
+            throw error;
+            }
+        },
+        async getPeliculaDetalles(itemId) {
+
+            try{
+                const response = await axios.get(`${this.apiUrl}/movie/${itemId}`, {
+                params: {
+                    api_key: API_KEY,
+                    language: this.language,
+                },
+                });
+
+                return response.data;
+
+            }catch(error){
+                console.log(error);
+                throw error;
+            }
+
+        },
+        async obtenerDetallesListaItems() {
+            const itemPromises = this.listaItems.map(async (item) => {
+                if (item.media_type === 'tv') {
+                try {
+                    return await this.getSerieDetalles(item.id_item);
+                } catch (error) {
+                    console.log(error);
+                }
+                } else if (item.media_type === 'movie') {
+                try {
+                    return await this.getPeliculaDetalles(item.id_item);
+                } catch (error) {
+                    console.log(error);
+                }
+                }
+            });
+
+            try {
+                const items = await Promise.all(itemPromises);
+                this.listaItemsObj = items.filter((item) => item !== null && item !== undefined);
+                console.log("Lista items obj");
+                console.log(this.listaItemsObj);
+            } catch (error) {
+                console.log(error);
+            }
         },
         getAsyncData: debounce(function (name) {
           // String update

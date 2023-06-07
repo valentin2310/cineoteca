@@ -21,11 +21,11 @@
                 <i class="fa-solid fa-star"></i> <span>{{ serie.vote_average }}</span>
               </div>
               <div class="info">
-                <i v-b-popover.hover.right="serie.overview" :title="serie.title?serie.title:serie.name" class="fa-solid fa-circle-info"></i>
+                <i v-b-popover.hover.right="serie.overview" :title="serie.name" class="fa-solid fa-circle-info"></i>
               </div>
             </div>
             <div class="card-title">
-              <span>{{ serie.title?serie.title:serie.name }}</span>
+              <span>{{ serie.name }}</span>
             </div>
           </div>
   

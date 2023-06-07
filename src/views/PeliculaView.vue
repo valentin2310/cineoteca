@@ -12,9 +12,6 @@
         <span id="titulo">{{ pelicula.title }}</span>
 
         <div v-if="usuarioObj" class="buttons botones">
-          <b-button id="btn-lista" type="is-info is-light" icon-pack="fas" icon-left="plus" @click="añadirLista()">
-              Añadir lista
-          </b-button>
           <b-button id="btn-favorito" :type="'is-danger '+ (enFavorito?'':'is-light')" icon-pack="fas" icon-left="heart" @click="favorito()">
               Favorito
           </b-button>

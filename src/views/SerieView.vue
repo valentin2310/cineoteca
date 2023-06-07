@@ -13,30 +13,24 @@
                 <span id="titulo">{{ serie.name }}</span>
 
                 <div v-if="usuarioObj" class="buttons botones">
-                <b-button id="btn-lista" type="is-info is-light" title="Añadir a una lista" class="rounded-circle" icon-pack="fas" icon-left="list" @click="añadirLista()">
+                <b-button id="btn-favorito" :type="'is-danger '+ (enFavorito?'':'is-light')" title="Añadir en favoritos" class="rounded" icon-pack="fas" icon-left="heart" @click="favorito()">
                     <!--
-
-                        Añadir lista
                     -->
-                </b-button>
-                <b-button id="btn-favorito" :type="'is-danger '+ (enFavorito?'':'is-light')" title="Añadir en favoritos" class="rounded-circle" icon-pack="fas" icon-left="heart" @click="favorito()">
-                    <!--
 
                         Favorito
-                    -->
                 </b-button>
-                <b-button id="btn-seguimiento" :type="'is-success '+ (enListaSeguimiento?'':'is-light')" title="Añadir a lista seguimiento" class="rounded-circle" icon-pack="fas" icon-left="calendar" @click="seguimiento()">
+                <b-button id="btn-seguimiento" :type="'is-success '+ (enListaSeguimiento?'':'is-light')" title="Añadir a lista seguimiento" class="rounded" icon-pack="fas" icon-left="calendar" @click="seguimiento()">
                     <!--
+                    -->
 
                         Lista seguimiento
-                    -->
                 </b-button>
-                <b-button id="btn-valorar" :type="'is-primary '+ (valoracion>0?'':'is-light')" class="rounded-circle" icon-pack="fas" icon-left="star" @click="valorar()"
+                <b-button id="btn-valorar" :type="'is-primary '+ (valoracion>0?'':'is-light')" class="rounded" icon-pack="fas" icon-left="star" @click="valorar()"
                     v-b-popover.hover.bottom="'Tu valoracion: '+ (valoracion>0?valoracion:'Aun no has hecho ninguna valoración')">
                     <!--
+                    -->
 
                         Valorar
-                    -->
                 </b-button>
                 </div>
             </b-col>
