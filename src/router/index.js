@@ -10,6 +10,7 @@ import SerieView from '../views/SerieView.vue';
 import SeriesPopularesView from '../views/SeriesPopulares.vue';
 import BuscarSeriesView from '../views/BuscarSeriesView.vue';
 import PerfilView from '../views/PerfilView.vue';
+import ListaView from '../views/ListaView.vue';
 
 Vue.use(VueRouter)
 
@@ -60,6 +61,11 @@ const routes = [
     component: BuscarSeriesView
   },
   {
+    path: '/listas/:id',
+    name: 'lista',
+    component: ListaView
+  },
+  {
     path: '/:catchAll(.*)',
     name: '404 Not found',
     component: Page404
@@ -67,8 +73,8 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
+  mode: 'hash',
+  //base: process.env.BASE_URL,
   routes
 })
 

@@ -25,6 +25,9 @@
             v-b-popover.hover.bottom="'Tu valoracion: '+ (valoracion>0?valoracion:'Aun no has hecho ninguna valoración')">
               Valorar
           </b-button>
+          <b-button id="btn-visto" :type="(enVisto?'is-dark':'is-white')" icon-pack="fas" :icon-left="(enVisto?'eye':'eye-slash')" @click="visto()">
+              {{ enVisto?'Visto':'No visto' }}
+          </b-button>
         </div>
       </b-col>
       
@@ -271,7 +274,7 @@
                       <div class="media-left">
                         <figure class="image is-48x48">
                           <b-avatar v-if="review.author_details.avatar_path" :src="obtenerImagenAvatar(review.author_details.avatar_path)" alt="Foto perfil"></b-avatar>
-                          <b-avatar v-else alt="Foto perfil" ></b-avatar>
+                          <b-avatar v-else class="text-white bg-dark"></b-avatar>
                         </figure>
                       </div>
                       <div class="media-content">
@@ -580,6 +583,10 @@ export default {
             }
         })
     },
+    visto(){
+        if(!this.enVisto) this.setVisto();
+        else this.deleteVisto();
+    },
     setFavorito(){
 
         //Si el item esta en favoritos que no siga ejecutando el metodo.
@@ -692,6 +699,42 @@ export default {
         })
         .catch(error => console.log(error));
     },
+    setVisto(){
+
+      //Si el item esta en visto que no siga ejecutando el metodo.
+      if(this.enVisto) return;
+
+      const data = {
+          id: this.id_usuario,
+          id_tmdb: this.peliculaId,
+          duracion: this.pelicula.runtime?? 0,
+          titulo: this.pelicula.title
+      }
+      axios.post(`https://www.ieslamarisma.net/proyectos/2023/valentinandrei/php/setPeliculaVisto.php`, data, {
+          headers: {
+          "Content-Type": "application/json",
+          },
+      }
+      )
+      .then(response => {
+          console.log(response.data);
+
+      if(!response.data.includes('Error')) {
+          console.log("Exito");
+          this.enVisto = true;
+          console.log("En visto: "+this.enVisto);
+          this.$swal({
+              title: 'Añadido exitosamente en peliculas vistas!',
+              icon: 'success',
+              position: 'top-end',
+              showConfirmaButton: false,
+              timer: 1200
+          })
+      }
+
+      })
+      .catch(error => console.log(error));
+    },
     deleteFavorito(){
 
         //Si el item no esta en favoritos que no siga ejecutando el metodo.
@@ -802,6 +845,40 @@ export default {
 
         })
         .catch(error => console.log(error));
+    },
+    deleteVisto(){
+
+      //Si el item esta en visto que no siga ejecutando el metodo.
+      if(!this.enVisto) return;
+
+      const data = {
+          id: this.id_usuario,
+          id_tmdb: this.peliculaId
+      }
+      axios.post(`https://www.ieslamarisma.net/proyectos/2023/valentinandrei/php/eliminarPeliculaVisto.php`, data, {
+          headers: {
+          "Content-Type": "application/json",
+          },
+      }
+      )
+      .then(response => {
+          console.log(response.data);
+
+      if(!response.data.includes('Error')) {
+          console.log("Exito");
+          this.enVisto = false;
+          console.log("En visto: "+this.enVisto);
+          this.$swal({
+              title: 'Eliminado exitosamente de peliculas vistas!',
+              icon: 'success',
+              position: 'top-end',
+              showConfirmaButton: false,
+              timer: 1200
+          })
+      }
+
+      })
+      .catch(error => console.log(error));
     },
     setFavoritoTMDB() {
         const options = {

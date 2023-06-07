@@ -13,18 +13,30 @@
                 <span id="titulo">{{ serie.name }}</span>
 
                 <div v-if="usuarioObj" class="buttons botones">
-                <b-button id="btn-lista" type="is-info is-light" icon-pack="fas" icon-left="plus" @click="añadirLista()">
-                    Añadir lista
+                <b-button id="btn-lista" type="is-info is-light" title="Añadir a una lista" class="rounded-circle" icon-pack="fas" icon-left="list" @click="añadirLista()">
+                    <!--
+
+                        Añadir lista
+                    -->
                 </b-button>
-                <b-button id="btn-favorito" :type="'is-danger '+ (enFavorito?'':'is-light')" icon-pack="fas" icon-left="heart" @click="favorito()">
-                    Favorito
+                <b-button id="btn-favorito" :type="'is-danger '+ (enFavorito?'':'is-light')" title="Añadir en favoritos" class="rounded-circle" icon-pack="fas" icon-left="heart" @click="favorito()">
+                    <!--
+
+                        Favorito
+                    -->
                 </b-button>
-                <b-button id="btn-seguimiento" :type="'is-success '+ (enListaSeguimiento?'':'is-light')" icon-pack="fas" icon-left="calendar" @click="seguimiento()">
-                    Lista seguimiento
+                <b-button id="btn-seguimiento" :type="'is-success '+ (enListaSeguimiento?'':'is-light')" title="Añadir a lista seguimiento" class="rounded-circle" icon-pack="fas" icon-left="calendar" @click="seguimiento()">
+                    <!--
+
+                        Lista seguimiento
+                    -->
                 </b-button>
-                <b-button id="btn-valorar" :type="'is-primary '+ (valoracion>0?'':'is-light')" icon-pack="fas" icon-left="star" @click="valorar()"
+                <b-button id="btn-valorar" :type="'is-primary '+ (valoracion>0?'':'is-light')" class="rounded-circle" icon-pack="fas" icon-left="star" @click="valorar()"
                     v-b-popover.hover.bottom="'Tu valoracion: '+ (valoracion>0?valoracion:'Aun no has hecho ninguna valoración')">
-                    Valorar
+                    <!--
+
+                        Valorar
+                    -->
                 </b-button>
                 </div>
             </b-col>
@@ -49,6 +61,7 @@
                     <ul class="mx-3 p-0 text-center fw-bold">
                         <li><a href="#detalles">Detalles</a></li>
                         <li><a href="#sinopsis">Sinopsis</a></li>
+                        <li><a href="#temporadas">Temporadas</a></li>
                         <li><a href="#multimedia">Multimedia</a></li>
                         <li><a href="#reparto">Reparto</a></li>
                         <li><a href="#comentarios">Comentarios</a></li>
@@ -165,7 +178,107 @@
                     <b-icon pack="fas" icon="hashtag"></b-icon> Sinopsis
                     </h4>
                     <div class="seccion-cuerpo">
-                    <span>{{ serie.overview }}</span>
+                        <span>{{ serie.overview }}</span>
+                    </div>
+                </div>
+
+                <div id="temporadas" class="session my-3">
+                    <h4 class="title is-4 text-dark ms-2">
+                        <b-icon pack="fas" icon="hashtag"></b-icon> Temporadas
+                    </h4>
+                    <div class="seccion-cuerpo">
+                        
+                        <div v-if="serie.seasons" class="temporadas">
+
+                            <div class="temporadas-titulo bg-dark text-white">
+                                <b-row >
+                                    <b-col sm="4">
+                                        <img :src="urlImg+temporadaSeleccionada.poster_path" class="w-100">
+                                    </b-col>
+                                    <b-col sm="8" class="temporada-info">
+                                        <p class="mt-2 d-flex flex-row flex-wrap align-items-baseline">
+                                            <span class="fw-bold fs-2 me-1">{{ temporadaSeleccionada.name }}</span> 
+                                            {{ temporadaSeleccionada.air_date?'('+temporadaSeleccionada.air_date+')':'' }}
+                                        </p>
+                                        <b-dropdown
+                                            class="mx-2 mt-2 mb-5"
+                                            :scrollable="true"
+                                            max-height="200px"
+                                            v-model="temporadaSeleccionada"
+                                            aria-role="list"
+                                        >
+                                            <template #trigger>
+                                                <b-button
+                                                    :label="'Temporada '+temporadaSeleccionada.season_number"
+                                                    type="is-dark"
+                                                    size="is-small"
+                                                    icon-pack="fas"
+                                                    icon-right="caret-down" />
+                                            </template>
+        
+        
+                                            <b-dropdown-item
+                                                v-for="temp in serie.seasons"
+                                                :key="temp.id"
+                                                :value="temp" aria-role="listitem">
+                                                <div class="media">
+                                                    <b-icon class="media-left" pack="fas" icon="diamond"></b-icon>
+                                                    <div class="media-content">
+                                                        <h3>Temporada {{temp.season_number}}</h3>
+                                                    </div>
+                                                </div>
+                                            </b-dropdown-item>
+                                        </b-dropdown>
+                                        <p><span class="fw-bold text-white-50">Episodios: </span>{{ temporadaSeleccionada.episode_count }}</p>
+                                        <div class="descripcion pe-3 pb-3">
+                                            <span class="fw-bold text-white-50">Descripción: </span>
+                                            {{ temporadaSeleccionada.overview?temporadaSeleccionada.overview:'No tiene descripción..' }}
+                                        </div>
+                                    </b-col>
+                                </b-row>
+                            </div>
+
+                            <div class="temporadas-cuerpo">
+                                <div class="episodios">
+
+                                    <div class="accordion" role="tablist">
+                                        <b-card no-body class="mb-1">
+                                        <b-card-header header-tag="header" class="px-3" role="tab">
+                                            <b-button block v-b-toggle.accordion-episodios expanded variant="info" icon-pack="fas" icon-right="caret-down" class="justify-content-between">
+                                                Episodios/ Temporada {{ temporadaSeleccionada.season_number }}
+                                            </b-button>
+                                        </b-card-header>
+                                        <b-collapse id="accordion-episodios" visible accordion="my-accordion" role="tabpanel">
+                                            <b-card-body>
+                                                <b-button @click="verTodosEpisodios()" class="p-3 rounded" type="is-dark" expanded>
+                                                    <span class="me-3">Marcar todos los episodios como vistos</span>
+                                                    <b-icon pack="fas" :icon="(isTemporadaVista()?'eye-slash':'eye')"></b-icon>
+                                                </b-button>
+                                                <div v-for="(ep, i) in episodiosTemporada" :key="ep.id">
+                                                    <div class="episodio-card p-3 d-flex justify-content-between" :class="(i%2==0?'bg-white':'bg-light')">
+                                                        <div class="texto">
+                                                            {{ ep.episode_number }} - {{ ep.name }}
+                                                            <span class="fst-italic" style="font-size: smaller;"> {{ `(${ep.air_date})` }}</span>
+                                                        </div>
+                                                        <b-button v-if="ep.air_date <= getFechaActual() || ep.air_date == null" type="is-dark" icon-pack="fas" :icon-left="isEpisodioVisto(ep)?'eye-slash':'eye'" @click="vistoEpisodio(ep)"></b-button>
+                                                        <!--
+                                                            <b-button v-if="(ep.air_date <= getFechaActual() || ep.air_date == null) && isEpisodioVisto(ep)" type="is-dark" icon-pack="fas" icon-left="eye-slash" @click="vistoEpisodio(ep)"></b-button>
+                                                            <b-button v-else-if="(ep.air_date <= getFechaActual() || ep.air_date == null) && !isEpisodioVisto(ep)" type="is-dark" icon-pack="fas" icon-left="eye" @click="vistoEpisodio(ep)"></b-button>
+                                                        -->
+                                                    </div>
+                                                </div>
+                                            </b-card-body>
+                                        </b-collapse>
+                                        </b-card>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                        
+
                     </div>
                 </div>
 
@@ -268,7 +381,7 @@
                         <figure class="media-left">
                             <p class="image is-64x64">
                                 <b-avatar v-if="usuarioObj.img_avatar" :src="urlImg+usuarioObj.img_avatar"></b-avatar>
-                                <b-avatar v-else></b-avatar>
+                                <b-avatar v-else class="text-white bg-dark"></b-avatar>
                             </p>
                         </figure>
                         <div class="media-content">
@@ -339,6 +452,7 @@
 
 <script>
 import axios from 'axios';
+import { BCollapse } from 'bootstrap-vue';
 
 const API_KEY = 'd5970548f1728e977459ef0ac8c8b5df';
 const TOKEN_LECTURA_V4 = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNTk3MDU0OGYxNzI4ZTk3NzQ1OWVmMGFjOGM4YjVkZiIsInN1YiI6IjYyYTc0NmI3ODc1ZDFhMDA2NmZmZDlhZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.4WOT6JsCCbc-ntV27ty9YseclVDBqcR3OESBENb55WE";
@@ -365,12 +479,25 @@ export default{
             similares: {},
             creditos: {},
 
+            temporadaSeleccionada: {},
+            episodiosTemporada: {},
+
             galleryFondo: false,
             galleryPortada: false,
 
             valoracion: 0,
             enFavorito: false,
             enListaSeguimiento: false,
+            temporadasEpisodiosVistos: {}
+        }
+    },
+    components: {
+        BCollapse,
+    },
+    watch: {
+        temporadaSeleccionada(nuevoValor){
+            console.log("Nueva temporada Seleccionada: "+nuevoValor)
+            this.getEpisodiosTemporada();
         }
     },
     methods: {
@@ -423,6 +550,7 @@ export default{
             }
             )
             .then(response => {
+                console.log("Estadisticas usuario:")
                 console.log(response.data);
 
             if(typeof response.data === "object" && response.data !== null) {
@@ -433,6 +561,10 @@ export default{
                 this.enFavorito = stats.favorito;
                 this.enListaSeguimiento = stats.seguimiento;
                 this.valoracion = stats.valoracion;
+                this.temporadasEpisodiosVistos = stats.temporadaEpisodios;
+
+                console.log("Temporada eps vistos: ");
+                console.log(this.temporadasEpisodiosVistos)
             }
 
             })
@@ -462,7 +594,12 @@ export default{
                     console.log(this.silimares)
                     this.creditos = this.serie.credits;
                     console.log("creditos");
-                    console.log(this.creditos)
+                    console.log(this.creditos);
+
+                    if(this.serie.seasons){
+                        this.temporadaSeleccionada = this.serie.seasons[0];
+                        this.getEpisodiosTemporada();
+                    }
 
                 })
                 .catch(error => {
@@ -470,7 +607,6 @@ export default{
                 });
         },
         getImagenes() {
-            this.serieId = this.$route.params.id;
             axios.get(`${this.apiUrl}/tv/${this.serieId}/images`, {
                 params: {
                     api_key: API_KEY,
@@ -485,6 +621,22 @@ export default{
                     console.error(error);
                 });
         },
+        getEpisodiosTemporada(){
+            axios.get(`${this.apiUrl}/tv/${this.serieId}/season/${this.temporadaSeleccionada.season_number}`, {
+                params: {
+                    api_key: API_KEY,
+                    language: this.language
+                },
+            })
+                .then(response => {
+                    this.episodiosTemporada = response.data.episodes;
+                    console.log("episodios")
+                    console.log(this.episodiosTemporada);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
         getFormatoDinero(dinero){
             let num = ""
 
@@ -493,12 +645,34 @@ export default{
             }
             return num;
         },
+        getFechaActual(){
+            return new Date().toISOString().split("T")[0];
+        },
         obtenerImagenAvatar(path) {
 
             if(path.includes('gravatar')){
                 return path.substring(1);
             }else{
                 return this.urlImg+path;
+            }
+        },
+        isEpisodioVisto(episodio) {
+            const temporada = this.temporadasEpisodiosVistos[episodio.season_number];
+            if (temporada) {
+                const episodioEncontrado = temporada.episodios.find(ep => ep.episode_number == episodio.episode_number);
+                return episodioEncontrado ? true : false;
+            }
+            return false;
+        },
+        isTemporadaVista(){
+            const temporada = this.temporadasEpisodiosVistos[this.temporadaSeleccionada.season_number];
+            if(temporada){
+                const todosVistos = temporada.episodios.length == this.episodiosTemporada.length;
+                if(todosVistos){
+                    return true;
+                }else{
+                    return false;
+                }
             }
         },
         obtenerFecha(fecha){
@@ -560,6 +734,27 @@ export default{
                 this.deleteValoracion();
                 }
             })
+        },
+        vistoEpisodio(episodio){
+
+            if(!this.isEpisodioVisto(episodio)) this.setEpisodioVisto(episodio);
+            else this.deleteEpisodioVisto(episodio);
+
+            // Luego de actualizar el estado, forzar el renderizado
+            this.$forceUpdate();
+        },
+        verTodosEpisodios(){
+            if(this.isTemporadaVista()) {
+                //Si se ha visto la temporada, eliminar todos los episodios de visto
+                this.episodiosTemporada.forEach(ep => {
+                    if(this.isEpisodioVisto(ep)) this.deleteEpisodioVisto(ep);
+                });
+            }else{
+                //Si quedan episodios por ver, marcar todos los episodios restantes en visto
+                this.episodiosTemporada.forEach(ep => {
+                    if(!this.isEpisodioVisto(ep)) this.setEpisodioVisto(ep);
+                });
+            }
         },
         setFavorito(){
 
@@ -673,6 +868,44 @@ export default{
             })
             .catch(error => console.log(error));
         },
+        setEpisodioVisto(episodio){
+
+            const data = {
+                id: this.id_usuario,
+                id_tmdb: this.serieId,
+                num_episodio: episodio.episode_number,
+                num_temporada: episodio.season_number,
+                duracion: episodio.runtime,
+                titulo: episodio.name,
+                titulo_serie: this.serie.name,
+            }
+            axios.post(`https://www.ieslamarisma.net/proyectos/2023/valentinandrei/php/setEpisodioVisto.php`, data, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+            )
+            .then(response => {
+                console.log(response.data);
+
+                if(!response.data.includes('Error')) {
+                    console.log("Exito");
+                    //añadir al arary de episodios vistos
+                    const temporada = this.temporadasEpisodiosVistos[episodio.season_number];
+                    if (temporada) {
+                        temporada.episodios.push(episodio);
+                    } else {
+                        this.temporadasEpisodiosVistos[episodio.season_number] = {
+                            episodios: [episodio]
+                        };
+                    }
+
+                    console.log(this.temporadasEpisodiosVistos)
+                }
+
+            })
+            .catch(error => console.log(error));
+        },
         deleteFavorito(){
 
             //Si el item no esta en favoritos que no siga ejecutando el metodo.
@@ -779,6 +1012,43 @@ export default{
 
                 //Si esta vinculada la cuenta de TMDB
                 this.deleteValoracionTMDB();
+            }
+
+            })
+            .catch(error => console.log(error));
+        },
+        deleteEpisodioVisto(episodio){
+
+            const data = {
+                id: this.id_usuario,
+                id_tmdb: this.serieId,
+                num_episodio: episodio.episode_number,
+                num_temporada: episodio.season_number,
+            }
+            axios.post(`https://www.ieslamarisma.net/proyectos/2023/valentinandrei/php/eliminarEpisodioVisto.php`, data, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+            )
+            .then(response => {
+                console.log(response.data);
+
+            if(!response.data.includes('Error')) {
+                console.log("Exito");
+                //eliminar el episodio del objeto episodios vistos
+                const temporada = this.temporadasEpisodiosVistos[episodio.season_number];
+
+                if (temporada) {
+                    const index = temporada.episodios.findIndex(ep => ep.episode_number == episodio.episode_number);
+                    if (index !== -1) {
+                        // Eliminar el episodio de la lista de episodios vistos
+                        temporada.episodios.splice(index, 1);
+                    }
+                }
+
+                console.log(this.temporadasEpisodiosVistos)
+        
             }
 
             })
@@ -986,6 +1256,10 @@ h4{
 }
 .tags{
     margin: 10px 0px;
+}
+.temporada-info{
+    overflow-y: auto;
+    max-height: 405px;
 }
 .carousel-item {
   /* Estilos personalizados para sobrescribir los estilos de BootstrapVue */

@@ -114,8 +114,7 @@
                       </template>
                       
                       <b-dropdown-item><router-link class="router-link-reset" to="/perfil">Ver perfil</router-link></b-dropdown-item>
-                      <b-dropdown-item><router-link class="router-link-reset" to="/">Mis listas</router-link></b-dropdown-item>
-                      <b-dropdown-item><router-link class="router-link-reset" to="/">Crear lista</router-link></b-dropdown-item>
+                      <b-dropdown-item><router-link class="router-link-reset" to="/perfil#listas">Mis listas</router-link></b-dropdown-item>
                       <b-dropdown-item class="dropdawn-item" @click="cerrarSesion()">Cerrar sesion</b-dropdown-item>
 
                   </b-dropdown>
@@ -150,11 +149,11 @@ import { debounce } from 'vue-debounce'
         usuarioTMDB: null,
 
         data: [],
-                selected: null,
-                isFetching: false,
-                name: '',
-                page: 1,
-                totalPages: 1
+        selected: null,
+        isFetching: false,
+        name: '',
+        page: 1,
+        totalPages: 1
       }
     },
     methods: {
@@ -328,7 +327,7 @@ import { debounce } from 'vue-debounce'
   .cabecera{
     box-shadow: black 0px 0px 5px;
     background: linear-gradient(0deg, rgba(255, 255, 255, 0.95) 0%, rgba(255,255,255,1) 100%) !important;
-    z-index: 2000;
+    z-index: 20;
     position: sticky !important;
     top: 0;
   }
