@@ -140,6 +140,7 @@ import { debounce } from 'vue-debounce'
     data() {
       return {
         apiUrl: 'https://api.themoviedb.org/3',
+        apiUrlv4: 'https://api.themoviedb.org/4',
         sessionId: null,
         access_token: null,
 
@@ -193,7 +194,32 @@ import { debounce } from 'vue-debounce'
         })
         .catch(error => console.log(error));
       },
-      cerrarSesion() {
+      cerrarSesion(){
+        //Intar eliminar el sessionid
+        try{
+          this.eliminarSessionId();
+        }catch(error){
+          console.log(error);
+        }
+        this.eliminarAccessToken();
+
+        //intentar eliminar el accessToken
+        try{
+          this.eliminarAccessToken();
+        }catch(error){
+          console.log(error);
+        }
+
+        //eliminar la cookie que verificada que esta iniciado sesion.
+        this.$cookies.remove('id_usuario');
+        this.id_usuario = null;
+
+        //devolver a la pagina de inicio
+        debounce(function() {
+          location.reload();
+        }, 250)
+      },
+      eliminarSessionId() {
         axios.delete(`${this.apiUrl}/authentication/session`, {
             params: {
               api_key: API_KEY
@@ -208,15 +234,11 @@ import { debounce } from 'vue-debounce'
             //eliminar session_id
             this.$cookies.remove('sessionId');
             this.sessionId = null;
-
-            //eliminar access_token
-            this.eliminarAccessToken();
-            
-            //devolver a la pagina de inicio
-            location.reload();
             
           })
-          .catch(error => console.log(error));
+          .catch(error => {
+            console.log(error);
+          });
       },
       eliminarAccessToken() {
         axios.delete(`https://api.themoviedb.org/4/auth/access_token`, {

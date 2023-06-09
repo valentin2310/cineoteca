@@ -3,7 +3,7 @@
 
         <div v-if="usuarioObj">
             
-            <b-row align-v="end" id="banner" class="mx-0" v-bind:style="{
+            <b-row id="banner" class="mx-0" v-bind:style="{
                 'background-image': usuarioObj.img_fondo?`linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,8) 100%), url(https://image.tmdb.org/t/p/original/${usuarioObj.img_fondo})`:'',
                 'background-color': '#17202A',
                 'background-size': 'cover',
@@ -11,20 +11,46 @@
                 'background-position': 'center center'
             }">
 
+                <div class="editar-fondo">
+                    <ModalBuscadorImg @img="cambiarFondo">
+                        <b-button type="is-primary is-light" size="is-small" class="float-end m-2 rounded-circle shadow" title="Editar el fondo" icon-pack="fas" icon-left="camera-rotate"></b-button>
+                    </ModalBuscadorImg>
+                </div>
+
                 <b-col class="banner-usuario text-start">
                     
                     <div class="text-white">
 
-                        <b-avatar v-if="usuarioObj.img_avatar" :src="urlImg+usuarioObj.img_avatar" size="9em" class="usuario-img"></b-avatar>
-                        <b-avatar v-else size="9em" class="usuario-img"></b-avatar>
+                        <ModalBuscadorImg @img="cambiarAvatar" :usuarioTMDB="usuarioTMDB?usuarioTMDB:null">
+                            <div class="m-0 p-0" @mouseover="isHoverAvatar = true" @mouseleave="isHoverAvatar = false">
+                                <b-avatar v-if="usuarioObj.img_avatar" :src="urlImg+usuarioObj.img_avatar" size="9em" class="usuario-img">
+                                    <div v-if="isHoverAvatar" class="fs-4 fw-bold text-white-50 d-flex flex-column align-items-center">
+                                        Editar avatar 
+                                        <b-icon class="mt-2" pack="fas" icon="camera-rotate"></b-icon>
+                                    </div>
+                                </b-avatar>
+                                <b-avatar v-else size="9em" class="usuario-img">
+                                    <div v-if="isHoverAvatar" class="fs-4 fw-bold text-white-50 d-flex flex-column align-items-center">
+                                        Editar avatar 
+                                        <b-icon class="mt-2" pack="fas" icon="camera-rotate"></b-icon>
+                                    </div>
+                                </b-avatar>
+    
+                            </div>
+                        </ModalBuscadorImg>
 
                         <div class="info-usuario">
                             <p>
+                                <span v-if="usuarioObj.sexo == 0" class="usuario-sexo"><b-icon pack="fas" icon="mars"></b-icon></span>
+                                <span v-if="usuarioObj.sexo == 1" class="usuario-sexo"><b-icon pack="fas" icon="venus"></b-icon></span>
+                                <span v-if="usuarioObj.sexo == 2" class="usuario-sexo"><b-icon pack="fas" icon="genderless"></b-icon></span>
                               <span class="usuario-nombre fw-bold">{{ capitalizarPrimeraLetra(usuarioObj.nombre) }}</span>
                               <span class="usuario-username fw-bold text-white-50"> @{{ usuarioObj.usuario }}</span>
+                              <b-button type="is-primary is-light" size="is-small" class="rounded-circle ms-2 shadow" title="Editar usuario" icon-pack="fas" icon-left="pen-to-square" @click="isModalEditarUsuario = true"></b-button>
                             </p>
                             <p><span class="span-miembro">Miembro desde: </span>{{ obtenerFecha(usuarioObj.fecha_alta) }}</p>
                             
+                           
                         </div>
                         
                     </div>
@@ -34,78 +60,76 @@
             </b-row>
             
             <b-tabs type="" expanded class="menu-tabs">
-                
-                <!--
-                -->
-                    <b-tab-item label="Estadisticas" icon-pack="fas" icon="chart-line">
+
+                <b-tab-item label="Estadisticas" icon-pack="fas" icon="chart-line">
                         
                         
-                        <h2 class="title is-2 border-custom border-custom-color-1">Estadisticas</h2>
+                    <h2 class="title is-2 border-custom border-custom-color-1">Estadisticas</h2>
+                    
+                    <div class="estadisticas text-white-50">
                         
-                        <div class="estadisticas text-white-50">
-                            
-                            <div class="tiempo-eps apartado text-center">
-                                Tiempo de episodios
-                                <div class="valor-tiempo">
-                                    <div class="dias">
-                                        <span>
-                        {{ convertirMinutosDHM(estadisticas.tiempo_visto_episodios).dias }}
-                    </span>
-                    Días
-                </div>
-                <div class="horas">
-                    <span>
-                        {{ convertirMinutosDHM(estadisticas.tiempo_visto_episodios).horas }}
-                    </span>
-                    Horas
-                </div>
-                <div class="minutos">
-                    <span>
-                        {{ convertirMinutosDHM(estadisticas.tiempo_visto_episodios).minutos }}
-                    </span>
-                    Minutos
-                </div>
-            </div>
-        </div>
-        
-        <div class="num-eps apartado text-center">
-            Número de episodios
-            <span>
-                {{ estadisticas.cantidad_episodios_vistos }}
-            </span>
-        </div>
-        
-        <div class="tiempo-pel apartado text-center">
-            Tiempo de peliculas
-            <div class="valor-tiempo">
-                <div class="dias">
-                    <span>
-                        {{ convertirMinutosDHM(estadisticas.tiempo_visto_peliculas).dias }}
-                    </span>
-                    Días
-                </div>
-                <div class="horas">
-                    <span>
-                        {{ convertirMinutosDHM(estadisticas.tiempo_visto_peliculas).horas }}
-                    </span>
-                    Horas
-                </div>
-                <div class="minutos">
-                    <span>
-                        {{ convertirMinutosDHM(estadisticas.tiempo_visto_peliculas).minutos }}
-                    </span>
-                    Minutos
-                </div>
-            </div>
-        </div>
-        
-        <div class="num-pel apartado text-center">
-            Número de peliculas
-            <span>
-                {{ estadisticas.cantidad_peliculas_vistas }}
-            </span>
-        </div>
+                        <div class="tiempo-eps apartado text-center">
+                            Tiempo de episodios
+                            <div class="valor-tiempo">
+                                <div class="dias">
+                                    <span>
+                                        {{ convertirMinutosDHM(estadisticas.tiempo_visto_episodios).dias }}
+                                    </span>
+                                    Días
+                                </div>
+                                <div class="horas">
+                                    <span>
+                                        {{ convertirMinutosDHM(estadisticas.tiempo_visto_episodios).horas }}
+                                    </span>
+                                    Horas
+                                </div>
+                                <div class="minutos">
+                                    <span>
+                                        {{ convertirMinutosDHM(estadisticas.tiempo_visto_episodios).minutos }}
+                                    </span>
+                                    Minutos
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="num-eps apartado text-center">
+                            Número de episodios
+                            <span>
+                                {{ estadisticas.cantidad_episodios_vistos }}
+                            </span>
+                        </div>
                         
+                        <div class="tiempo-pel apartado text-center">
+                            Tiempo de peliculas
+                            <div class="valor-tiempo">
+                                <div class="dias">
+                                    <span>
+                                        {{ convertirMinutosDHM(estadisticas.tiempo_visto_peliculas).dias }}
+                                    </span>
+                                    Días
+                                </div>
+                                <div class="horas">
+                                    <span>
+                                        {{ convertirMinutosDHM(estadisticas.tiempo_visto_peliculas).horas }}
+                                    </span>
+                                    Horas
+                                </div>
+                                <div class="minutos">
+                                    <span>
+                                        {{ convertirMinutosDHM(estadisticas.tiempo_visto_peliculas).minutos }}
+                                    </span>
+                                    Minutos
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="num-pel apartado text-center">
+                            Número de peliculas
+                            <span>
+                                {{ estadisticas.cantidad_peliculas_vistas }}
+                            </span>
+                        </div>
+                                            
                     </div>
                     
                 </b-tab-item>
@@ -140,6 +164,8 @@
                     
                     <h2 class="title is-2 border-custom border-custom-color-4">Favoritos</h2>
 
+                    <FiltroPantallaLista :listaItems="listaFavoritos"></FiltroPantallaLista>
+
                 </b-tab-item>
 
                 <b-tab-item  label="Valoraciones" icon-pack="fas" icon="star">
@@ -150,6 +176,82 @@
 
             </b-tabs>
 
+
+             <!-- modal editar usuario -->
+            <b-modal
+                v-model="isModalEditarUsuario"
+                has-modal-card
+                trap-focus
+                :destroy-on-hide="false"
+                aria-role="dialog"
+                aria-label="Editar Usuario"
+                close-button-aria-label="Close"
+                aria-modal
+            >
+                <form @submit.prevent="editarUsuario">
+                    <div class="modal-card" style="max-width: 400px;">
+                        <header class="modal-card-head">
+                            <p class="modal-card-title">Editar Usuario</p>
+                        </header>
+                        <section class="modal-card-body">
+                            <b-field label="Usuario" type="is-primary">
+                                <b-input 
+                                  v-model="username_edit"
+                                  maxlength="20"
+                                  minlenght="5"
+                                  validation-message="El usuario debe tener entre 5 y 20 letras y numeros"
+                                  pattern="[A-Za-zÑñ0-9_]{5,20}"
+                                  required
+                                  icon-pack="fas"
+                                  icon="user"
+                                >
+                                </b-input>
+                            </b-field>
+                            <b-field label="Nombre completo" type="is-primary">
+                                <b-input 
+                                  v-model="nombre_edit"
+                                  maxlength="30"
+                                  required
+                                  icon-pack="fas"
+                                  icon="user-pen"
+                                  validation_message="Tu nombre no es válido, solo se permiten letras y espacios"
+                                  pattern="[A-Za-zÑñ]{3}[A-Za-zÑñ ]{0,27}"
+                                >
+                                </b-input>
+                            </b-field>
+
+                            <b-field label="Sexo" type="primary"></b-field>
+                              <div class="block">
+                                <b-radio v-model="sexo_edit" name="name" native-value="0">
+                                  Hombre
+                                </b-radio>
+                                <b-radio v-model="sexo_edit" name="name" native-value="1">
+                                  Mujer
+                                </b-radio>
+                                <b-radio v-model="sexo_edit" name="name" native-value="2">
+                                  Otro
+                                </b-radio>
+                              </div>
+                            <b-field label="Fecha nacimiento">
+                                <b-datepicker
+                                    v-model="fecha_edit"
+                                    placeholder="Click para seleccionar..."
+                                    icon-pack="fas"
+                                    icon="calendar"
+                                    icon-right="close-circle"
+                                    @icon-right-clickable="clearDate"
+                                    :min-date="minDate"
+                                    :max-date="maxDate">
+                                </b-datepicker>
+                            </b-field>
+                            <div class="btnLogin my-5">
+                                <b-button native-type="submit" type="is-primary" class="fw-bold py-2 w-50">Guardar Cambios</b-button>
+                                <b-button @click="isModalEditarUsuario = false" class="fw-bold bg-secondary text-white py-2 w-50">Cancelar</b-button>
+                            </div>
+                        </section>
+                    </div>
+                </form>
+            </b-modal>
 
         </div>
 
@@ -162,9 +264,13 @@ import axios from 'axios';
 import ListaUsuario from '@/components/ListaUsuario.vue';
 import BtnCrearLista from '@/components/BtnCrearLista.vue';
 //import PantallaItems from '@/components/PantallaItems.vue';
+import FiltroPantallaLista from '@/components/FiltroPantallaLista.vue';
+import ModalBuscadorImg from '@/components/ModalBuscadorImg.vue';
 
 const API_KEY = 'd5970548f1728e977459ef0ac8c8b5df';
 //const TOKEN_LECTURA_V4 = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNTk3MDU0OGYxNzI4ZTk3NzQ1OWVmMGFjOGM4YjVkZiIsInN1YiI6IjYyYTc0NmI3ODc1ZDFhMDA2NmZmZDlhZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.4WOT6JsCCbc-ntV27ty9YseclVDBqcR3OESBENb55WE";
+
+const today = new Date();
 
 export default {
     data() {
@@ -175,6 +281,7 @@ export default {
 
             estadisticas: {},
             listasCreadas: {},
+            listaFavoritos: [],
             
             sessionId: null,
             access_token: null,
@@ -184,12 +291,26 @@ export default {
             mostrar: "0",
             elegirOpcionBuscar: false,
             elegirOpcionEliminar: false,
+
+            isHoverAvatar: false,
+            isModalEditarUsuario: false,
+            isModalBuscarImg: false,
+
+            username_edit: null,
+            nombre_edit: null,
+            sexo_edit: "2",
+            fecha_edit: null,
+
+            
+            minDate: new Date(today.getFullYear() - 120, today.getMonth(), today.getDate()),
+            maxDate: new Date(today.getFullYear() - 5, today.getMonth(), today.getDate()),
         }
     },
     components: {
-    ListaUsuario,
-    BtnCrearLista,
-    //PantallaItems
+        ListaUsuario,
+        BtnCrearLista,
+        FiltroPantallaLista,
+        ModalBuscadorImg
 },
     methods: {
       getDatosUsuario() {
@@ -208,6 +329,11 @@ export default {
               if(typeof response.data === "object" && response.data !== null) {
                   console.log("Exito");
                   this.usuarioObj = response.data;
+
+                  this.username_edit = this.usuarioObj.usuario;
+                  this.nombre_edit = this.usuarioObj.nombre;
+                  this.sexo_edit = this.usuarioObj.sexo;
+                  this.fecha_edit = new Date(this.usuarioObj.fecha_nac);
               }
 
           })
@@ -245,7 +371,7 @@ export default {
               if(typeof response.data === "object" && response.data !== null) {
                   console.log("Exito");
                   this.estadisticas = response.data;
-                  this.itemsFiltrados = this.estadisticas.favoritos;
+                  this.listaFavoritos = this.estadisticas.favoritos;
               }
 
           })
@@ -302,6 +428,126 @@ export default {
             minutos
         };
       },
+      editarUsuario() {
+        const data = {
+            id: this.id_usuario,
+            nombre: this.nombre_edit,
+            usuario: this.username_edit,
+            sexo: this.sexo_edit,
+            fecha_nac: this.fecha_edit
+        }
+        axios.post(`https://www.ieslamarisma.net/proyectos/2023/valentinandrei/php/editUsuario.php`, data, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then(response => {
+          
+          console.log(response.data);
+
+          if(!response.data.includes('Error')) {
+            console.log("Exito");
+
+            this.$buefy.notification.open({
+                message: 'Los datos se han modificado exitosamente :)',
+                type: 'is-success',
+                'icon-pack': 'fas',
+                position: 'is-top-right'
+            })
+
+            this.getDatosUsuario();
+            this.isModalEditarUsuario = false;
+
+          }else{
+            this.notifError(response.data);
+          }
+
+        })
+        .catch(error => console.log(error));
+    },
+    cambiarAvatar(img){
+        const data = {
+            id: this.id_usuario,
+            img: img
+        }
+        axios.post(`https://www.ieslamarisma.net/proyectos/2023/valentinandrei/php/cambiarAvatarUsuario.php`, data, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then(response => {
+          
+          console.log(response.data);
+
+          if(!response.data.includes('Error')) {
+            console.log("Exito");
+
+            this.$buefy.notification.open({
+                message: 'Los datos se han modificado exitosamente :)',
+                type: 'is-success',
+                'icon-pack': 'fas',
+                position: 'is-top-right'
+            })
+
+            this.getDatosUsuario();
+            this.isModalEditarUsuario = false;
+
+          }else{
+            this.notifError(response.data);
+          }
+
+        })
+        .catch(error => console.log(error));
+    },
+    cambiarFondo(img){
+        const data = {
+            id: this.id_usuario,
+            img: img
+        }
+        axios.post(`https://www.ieslamarisma.net/proyectos/2023/valentinandrei/php/cambiarFondoUsuario.php`, data, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then(response => {
+          
+          console.log(response.data);
+
+          if(!response.data.includes('Error')) {
+            console.log("Exito");
+
+            this.$buefy.notification.open({
+                message: 'Los datos se han modificado exitosamente :)',
+                type: 'is-success',
+                'icon-pack': 'fas',
+                position: 'is-top-right'
+            })
+
+            this.getDatosUsuario();
+            this.isModalEditarUsuario = false;
+
+          }else{
+            this.notifError(response.data);
+          }
+
+        })
+        .catch(error => console.log(error));
+    },
+    clearDate() {
+      this.fecha_reg = null;
+    },
+    notifError(error){
+      this.$buefy.notification.open({
+        message: error,
+        type: 'is-danger',
+        'icon-pack': 'fas',
+        position: 'is-top-right',
+        indefinite: true
+      })
+    }
       
     },
     mounted () {

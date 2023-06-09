@@ -8,10 +8,16 @@
                 'background-position': 'center center'
             }">
 
-            <div v-if="idUsuario == lista.id_creador" class="botones-gestion-lista">
+            <div v-if="idUsuario == lista.id_creador" class="botones-gestion-lista float-end d-flex flex-column align-items-end">
                 <!-- BtnEditarLista -->
                 <BtnEditarLista v-if="access_token" class="float-end" @listaEditada="editarLista" :lista="lista" :access_token="access_token"></BtnEditarLista>
                 <BtnEditarLista v-else class="float-end" @listaEditada="editarLista" :lista="lista"></BtnEditarLista>
+
+                <ModalBuscadorImg @img="cambiarImg">
+                    <b-button type="is-primary is-light" size="is-small" rounded class="float-end shadow mt-1" title="Editar el fondo" icon-pack="fas" icon-left="camera-rotate">
+                        Cambiar Fondo
+                    </b-button>
+                </ModalBuscadorImg>
             </div>
             <p class="mb-3 d-flex flex-row flex-wrap align-items-baseline">
                 <span class="title fw-bold me-1 mb-0">
@@ -86,7 +92,7 @@
 
                     <div class="contenido-cabecera bg-dark p-3 text-white rounded-top">
 
-                        <b-field class="my-2">
+                        <b-field v-if="idUsuario == lista.id_creador" class="my-2">
                             <b-switch v-model="elegirOpcionBuscar">
                                 {{ !elegirOpcionBuscar?'Buscar en la lista':'Buscar para agregar items a la lista' }}
                             </b-switch>
@@ -142,7 +148,7 @@
                     
                     <div class="items pt-5 pb-5 px-3 rounded-bottom bg-gris">
                         
-                        <b-field class="mb-2">
+                        <b-field v-if="idUsuario == lista.id_creador" class="mb-2">
                             <b-switch type="is-danger" v-model="elegirOpcionEliminar">
                                 Eliminar items lista?
                             </b-switch>
@@ -191,6 +197,7 @@ import axios from 'axios';
 import { debounce } from 'vue-debounce';
 import PantallaItems from '@/components/PantallaItems.vue';
 import BtnEditarLista from '@/components/BtnEditarLista.vue';
+import ModalBuscadorImg from '@/components/ModalBuscadorImg.vue';
 
 const API_KEY = 'd5970548f1728e977459ef0ac8c8b5df';
 
@@ -224,7 +231,8 @@ export default{
     },
     components: {
         PantallaItems,
-        BtnEditarLista
+        BtnEditarLista,
+        ModalBuscadorImg
 },
     watch: {
         mostrar: {
@@ -288,6 +296,28 @@ export default{
       },
       editarLista(valor){
         if(valor) this.getLista();
+      },
+      cambiarImg(img){
+        const data = {
+                id_lista: this.idLista,
+                img: img
+            }
+            axios.post(`https://www.ieslamarisma.net/proyectos/2023/valentinandrei/php/cambiarFondoLista.php`, data, {
+                headers: {
+                "Content-Type": "application/json",
+                },
+            }
+            )
+            .then(response => {
+                console.log(response.data);
+
+                if(!response.data.includes('Error')) {
+                    console.log("Exito");
+                    this.getLista();
+                }
+
+            })
+            .catch(error => console.log(error));
       },
       addItemLista(item){
         const data = {

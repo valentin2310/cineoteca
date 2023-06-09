@@ -117,30 +117,6 @@
                                     </b-input>
                                 </b-field>
                               </div>
-                              <!--
-
-                                <div class="col-12 seccion">
-                                  <b-field class="file is-primary" :class="{'has-name': !!img_avatar}">
-                                    <b-upload 
-                                    v-model="img_avatar" 
-                                    class="file-label" 
-                                    accept="image/*" 
-                                    @input="cambiarImagenAvatar"
-                                    >
-                                        <span class="file-cta">
-                                            <b-icon pack="fas" class="file-icon" icon="upload"></b-icon>
-                                            <span class="file-label">Click para subir imagen</span>
-                                          </span>
-                                          <span class="file-name" v-if="img_avatar">
-                                            {{ img_avatar.name }}
-                                          </span>
-                                        </b-upload>
-                                      </b-field>
-                                    </div>
-                                    <div class="col-md-6 seccion mx-auto my-3">
-                                      <div v-show="img_avatar" id="preview" :style="{ backgroundImage: 'url(' + img_preview + ')' }"></div>
-                                    </div>
-                                  -->
                                 <div class="col-md-12 seccion">
                                   <b-field label="Nombre completo" :type="type_nombre_reg">
                                     <b-input 
@@ -409,8 +385,8 @@ export default {
             nombre: this.nombre_reg,
             usuario: this.username_reg,
             password: this.password_reg,
+            password2: this.password2_reg,
             sexo: this.sexo_reg,
-            img_avatar: this.img_avatar,
             fecha_nac: this.fecha_reg
         }
         axios.post(`https://www.ieslamarisma.net/proyectos/2023/valentinandrei/php/insertarUsuario.php`, data, {
@@ -425,6 +401,7 @@ export default {
 
           if(!response.data.includes('Error')) {
             console.log("Exito");
+            location.reload();
           }else{
             this.notifErrorRegistro(response.data);
           }
@@ -434,19 +411,6 @@ export default {
     },
     clearDate() {
       this.fecha_reg = null;
-    },
-    cambiarImagenAvatar() {
-
-      if(!this.img_avatar) return;
-
-      const reader = new FileReader();
-
-      reader.onload = (e) => {
-        this.img_preview = e.target.result;
-        console.log("Se ha subido: "+e);
-      };
-
-      reader.readAsDataURL(this.img_avatar);
     },
     notifErrorLogin(){
       this.$buefy.notification.open({
