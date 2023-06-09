@@ -215,9 +215,8 @@ import { debounce } from 'vue-debounce'
         this.id_usuario = null;
 
         //devolver a la pagina de inicio
-        debounce(function() {
-          location.reload();
-        }, 250)
+        this.$router.push('/');
+        location.reload();
       },
       eliminarSessionId() {
         axios.delete(`${this.apiUrl}/authentication/session`, {
