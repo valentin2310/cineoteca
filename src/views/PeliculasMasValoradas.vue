@@ -1,11 +1,11 @@
 <template>
-    <div class="series-populares">
+    <div class="peliculas-populares">
 
         <!-- Contenido -->
-        <PantallaSeries :series="listaSeries" :titulo="'Series populares'" :total_paginas="total_paginas"/>
+        <PantallaPeliculas :peliculas="listaPeliculas" :titulo="'Peliculas populares'" :total_paginas="total_paginas"/>
 
         <b-pagination
-            @change="getListaSeries()"
+            @change="getListaPeliculas()"
             :total="total_paginas"
             v-model="pagina_actual"
             range-before="2"
@@ -33,7 +33,7 @@
 
 <script>
 import axios from 'axios';
-import PantallaSeries from '@/components/PantallaSeries.vue';
+import PantallaPeliculas from '@/components/PantallaPeliculas.vue';
 
 
 const API_KEY = 'd5970548f1728e977459ef0ac8c8b5df';
@@ -44,7 +44,7 @@ export default {
         apiUrl: 'https://api.themoviedb.org/3',
         laguage: 'es-ES',
 
-        listaSeries: [],
+        listaPeliculas: [],
         total_paginas: 0,
 
         pagina_actual: 1,
@@ -52,14 +52,14 @@ export default {
     }
   },
   components: {
-    PantallaSeries
+    PantallaPeliculas
   },
   created () {
-    this.getListaSeries();
+    this.getListaPeliculas();
   },
   methods: {
-    getListaSeries() {
-      axios.get(`${this.apiUrl}/tv/popular`, {
+    getListaPeliculas() {
+      axios.get(`${this.apiUrl}/movie/top_rated`, {
         params: {
           api_key: API_KEY,
           language: this.language,
@@ -68,7 +68,7 @@ export default {
       })
         .then(response => {
           //console.log(response.data);
-          this.listaSeries = response.data.results;
+          this.listaPeliculas = response.data.results;
           this.total_paginas = response.data.total_pages > 500 ? 500 : response.data.total_pages;
 
           //console.log(this.peliculasPopulares);

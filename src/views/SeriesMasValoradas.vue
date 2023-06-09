@@ -59,7 +59,7 @@ export default {
   },
   methods: {
     getListaSeries() {
-      axios.get(`${this.apiUrl}/tv/popular`, {
+      axios.get(`${this.apiUrl}/tv/top_rated`, {
         params: {
           api_key: API_KEY,
           language: this.language,

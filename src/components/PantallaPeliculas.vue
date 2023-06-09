@@ -57,5 +57,14 @@ export default {
         margin: 5px 0px;
     }
 
+    @media screen and (max-width: 480px) {
+      .box{
+        padding: 0;
+      }
+      h1{
+        padding: 10px;
+      }
+    }
+
 
 </style>

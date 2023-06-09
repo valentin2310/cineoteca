@@ -186,24 +186,24 @@
                     
                     <!-- ♂Carousel de videos -->
                     <b-carousel
-                    class="carousel-videos"
-                    :arrow="true"
-                    :autoplay="false"
-                    :repeat="true"
-                    :arrow-hover="true"
-                    icon-pack="fas">
-                    <b-carousel-item v-for="(video, i) in videos" :key="i">
-                        <div class="hero-body">
-                          <b-embed
-                            type="iframe"
-                            aspect="16by9"
-                            :src="'https://www.youtube.com/embed/'+video.key"
-                            allowfullscreen
-                            >
-                          </b-embed>
-                        </div>
-                    </b-carousel-item>
-                  </b-carousel>
+                      class="carousel-videos"
+                      :arrow="true"
+                      :autoplay="false"
+                      :repeat="true"
+                      :arrow-hover="true"
+                      icon-pack="fas">
+                      <b-carousel-item v-for="(video, i) in videos" :key="i">
+                          <div class="hero-body">
+                            <b-embed
+                              type="iframe"
+                              aspect="16by9"
+                              :src="'https://www.youtube.com/embed/'+video.key"
+                              allowfullscreen
+                              >
+                            </b-embed>
+                          </div>
+                      </b-carousel-item>
+                    </b-carousel>
   
   
                   </b-tab-item>
@@ -1119,6 +1119,9 @@ h4{
   .menu-pelicula{
     position: sticky;
     top: 100px;
+  }
+  .info-pelicula{
+    padding: 0px 10px 20px !important;
   }
 }
 

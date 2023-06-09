@@ -11,8 +11,9 @@
                         <p class="mx-5 my-1">Para poder acceder a todas las funcionalidades que ofrecemos en nuestra página, como guardar tus películas y series favoritas, crear listas personalizadas y más, te recomendamos registrarte en MiCineoteca.</p>
                         <p class="mx-5 my-1">Si deseas vincular tu cuenta de TMDB para guardar tu información puedes seguir estos pasos:</p>
                         <ol class="mx-5 mt-1 mb-3">
-                          <li class="mx-5">Inicia sesión en MiCineoteca con tu usuario</li>
-                          <li class="mx-5">Una vez que hayas iniciado sesión, aparecerá una notificación que te preguntará para darnos permiso para acceder a tus datos de TMDB.</li>
+                          <li class="mx-5">Haz click en el enlace del login, dar permisos para usar cuenta de TMDB</li>
+                          <li class="mx-5">Aparecerá una notificación que te preguntará para darnos permiso para acceder a tus datos de TMDB.</li>
+                          <li class="mx-5">Por último inicia sesión con tu usuario y listo.</li>
                           <li class="mx-5">Si aún no tienes una cuenta en TMDB, puedes hacer click <a href="https://www.themoviedb.org/signup?language=es" target="_blank" class="is-primary fw-bold">AQUÍ</a>.</li>
                         </ol>
                         <p class="mx-5 my-1">Recuerda que la vinculación con TMDB es opcional, puedes disfrutar de MiCineoteca sin necesidad de iniciar sesión en TMDB.</p>
@@ -476,7 +477,7 @@ export default {
     background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
-    height: 100vh;
+    height: 90vh;
   }
 
   .welcome-body{
@@ -489,7 +490,7 @@ export default {
   }
 
   .loginsignup{
-    height: 100vh;
+    height: 90vh;
     background: linear-gradient(30deg, rgba(0,0,0,1) 0%, rgba(25,25,25,1) 49%, rgba(62,62,62,1) 100%);
     box-shadow: black 0px 0px 5px;
     overflow-y: scroll;

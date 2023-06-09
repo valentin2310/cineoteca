@@ -59,7 +59,7 @@
                                 native-value="0"
                                 type="is-dark"
                             >
-                                Todo
+                                Todo ({{ listaItems.length }})
                             </b-radio>
                         </b-field>
                         <b-field>
@@ -68,7 +68,7 @@
                                 native-value="1"
                                 type="is-info"
                             >
-                                Series
+                                Series ({{ listaItems.filter(item => item.media_type == 'tv').length }})
                             </b-radio>
                         </b-field>
                         <b-field>
@@ -77,7 +77,7 @@
                                 native-value="2"
                                 type="is-success"
                             >
-                                Peliculas
+                                Peliculas ({{ listaItems.filter(item => item.media_type == 'movie').length }})
                             </b-radio>
                         </b-field>
 
@@ -148,7 +148,7 @@
                     
                     <div class="items pt-5 pb-5 px-3 rounded-bottom bg-gris">
                         
-                        <b-field v-if="idUsuario == lista.id_creador" class="mb-2">
+                        <b-field v-if="idUsuario == lista.id_creador" class="switch-borrar mb-2">
                             <b-switch type="is-danger" v-model="elegirOpcionEliminar">
                                 Eliminar items lista?
                             </b-switch>
@@ -547,7 +547,24 @@ export default{
     box-shadow: black 0px 0px 5px;
 }
 
+@media (max-width: 335px) {
+    .items{
+      padding-left: 0px !important;
+      padding-right: 0px !important;
+    }
 
+    .switch-borrar{
+        padding-left: 10px !important;
+      padding-right: 10px !important;
+    }
+
+    .lista-view{
+        padding: 0 !important;
+    }
+    .botones-gestion-lista{
+        float: none;
+    }
+  }
 
 </style>
 

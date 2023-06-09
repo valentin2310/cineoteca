@@ -594,6 +594,9 @@ export default {
     transform: translate(0px, 40px);
     background-color: black;
 }
+.usuario-img:hover{
+    cursor: pointer;
+}
 .banner-usuario{
     display: flex;
     flex-flow: row wrap;
@@ -649,7 +652,6 @@ export default {
     display: flex;
     flex-flow: row nowrap;
     align-content: center;
-    justify-content: center;
     overflow-x: auto;
 }
 .apartado{
@@ -684,7 +686,7 @@ export default {
     justify-content: center;
 }
 
-@media (max-width: 650px) {
+@media (max-width: 745px) {
     .usuario-img{
       transform: translate(0px, 0px);
     }
@@ -693,6 +695,31 @@ export default {
     }
     .span-miembro{
         display: none;
+    }
+    .banner-usuario{
+        padding: 0;
+    }
+    .menu-tabs{
+        padding: 30px 20px 0px 20px !important;
+    }
+
+    #banner{
+        height: 55vh;
+    }
+}
+
+@media (max-width: 400px) {
+    .info-usuario{
+        display: flex;
+        flex-flow: column wrap;
+        align-items: flex-start;
+
+    }
+    .menu-tabs{
+        padding: 30px 5px 0px 5px !important;
+    }
+    #banner{
+        height: auto;
     }
 }
 

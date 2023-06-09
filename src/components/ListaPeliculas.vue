@@ -3,7 +3,7 @@
 
 
     <div class="seccion-titulo">
-      <h2 class="title mx-5">{{ titulo }} <b-button v-if="ruta" type="is-primary is-light" class="m-2" tag="router-link" :to="ruta">Ver mas ...</b-button></h2>
+      <h2 class="title mx-5 d-flex flex-row flex-wrap align-items-baseline">{{ titulo }} <b-button v-if="ruta" type="is-primary is-light" rounded class="m-2" tag="router-link" :to="ruta">Ver más ...</b-button></h2>
     </div>
 
 
@@ -68,6 +68,19 @@ export default {
   overflow-x: auto;
   display: flex;
   flex-flow: row nowrap;
-  padding: 5px 20px 20px 20px;
+  padding: 5px 0px 20px 0px;
+}
+
+@media screen and (max-width: 400px) {
+  .seccion{
+    padding: 10px 2px;
+  }
+  .seccion-cuerpo{
+    margin: 5px 2px;
+  }
+  .seccion-cuerpo, .peliculas{
+  padding: 5px 2px 20px 2px;
+}
+
 }
 </style>

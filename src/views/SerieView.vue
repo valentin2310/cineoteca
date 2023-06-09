@@ -244,8 +244,8 @@
                                         </b-card-header>
                                         <b-collapse id="accordion-episodios" visible accordion="my-accordion" role="tabpanel">
                                             <b-card-body>
-                                                <b-button @click="verTodosEpisodios()" class="p-3 rounded" type="is-dark" expanded>
-                                                    <span class="me-3">Marcar todos los episodios como vistos</span>
+                                                <b-button @click="verTodosEpisodios()" class="p-2 rounded" type="is-dark" expanded>
+                                                    <span class="me-1">Marcar todos como vistos</span>
                                                     <b-icon pack="fas" :icon="(isTemporadaVista()?'eye-slash':'eye')"></b-icon>
                                                 </b-button>
                                                 <div v-for="(ep, i) in episodiosTemporada" :key="ep.id">
@@ -1296,6 +1296,16 @@ h4{
     position: sticky;
     top: 100px;
   }
+
+  .info-pelicula{
+    padding: 0px 10px 20px !important;
+  }
+}
+
+@media (max-width: 580px) {
+    .temporada-info{
+        padding: 30px !important;
+    }
 }
 
 </style>

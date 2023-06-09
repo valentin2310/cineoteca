@@ -11,6 +11,8 @@ import SeriesPopularesView from '../views/SeriesPopulares.vue';
 import BuscarSeriesView from '../views/BuscarSeriesView.vue';
 import PerfilView from '../views/PerfilView.vue';
 import ListaView from '../views/ListaView.vue';
+import PelisMasValoradasView from '../views/PeliculasMasValoradas.vue';
+import SeriesMasValoradasView from '../views/SeriesMasValoradas.vue';
 
 Vue.use(VueRouter)
 
@@ -46,9 +48,19 @@ const routes = [
     component: PelisPopularesView
   },
   {
+    path: '/peliculas/masvaloradas',
+    name: 'peliculas mas valoradas',
+    component: PelisMasValoradasView
+  },
+  {
     path: '/series/populares',
     name: 'series populares',
     component: SeriesPopularesView
+  },
+  {
+    path: '/series/masvaloradas',
+    name: 'series mas valradas',
+    component: SeriesMasValoradasView
   },
   {
     path: '/peliculas/buscar',

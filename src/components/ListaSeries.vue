@@ -1,9 +1,15 @@
 <template>
-    <div class="seccion">
+    <div class="seccion" v-bind:style="{
+                'background-image': series[0]?`linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,8) 100%), url(https://image.tmdb.org/t/p/original/${series[0].backdrop_path})`:'',
+                'background-color': '#17202A',
+                'background-size': 'cover',
+                'background-repeat': 'no-repeat',
+                'background-position': 'center center'
+            }">
   
   
       <div class="seccion-titulo">
-        <h2 class="title mx-5">{{ titulo }} <b-button v-if="ruta" type="is-primary is-light" class="m-2" tag="router-link" :to="ruta">Ver mas ...</b-button></h2>
+        <h2 class="title mx-5 text-white d-flex flex-row flex-wrap align-items-baseline">{{ titulo }} <b-button v-if="ruta" type="is-primary is-light" class="m-2" rounded tag="router-link" :to="ruta">Ver más ...</b-button></h2>
       </div>
   
   
@@ -68,6 +74,19 @@
     overflow-x: auto;
     display: flex;
     flex-flow: row nowrap;
-    padding: 5px 20px 20px 20px;
+    padding: 5px 0px 20px 0px;
   }
+
+  @media screen and (max-width: 400px) {
+    .seccion{
+      padding: 10px 2px;
+    }
+    .seccion-cuerpo{
+      margin: 5px 2px;
+    }
+    .seccion-cuerpo, .series{
+    padding: 5px 2px 20px 2px;
+    }
+  }
+
   </style>
