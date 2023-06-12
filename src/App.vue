@@ -78,7 +78,7 @@
                       </template>
                       
                       <b-dropdown-item><router-link class="router-link-reset" to="/perfil">Ver perfil</router-link></b-dropdown-item>
-                      <b-dropdown-item><router-link class="router-link-reset" to="/perfil#listas">Mis listas</router-link></b-dropdown-item>
+                      <b-dropdown-item><router-link class="router-link-reset" to="/perfil/configuracion">Configuración</router-link></b-dropdown-item>
                       <b-dropdown-item class="dropdawn-item" @click="cerrarSesion()">Cerrar sesion</b-dropdown-item>
 
                   </b-dropdown>

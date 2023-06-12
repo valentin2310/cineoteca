@@ -13,6 +13,7 @@ import PerfilView from '../views/PerfilView.vue';
 import ListaView from '../views/ListaView.vue';
 import PelisMasValoradasView from '../views/PeliculasMasValoradas.vue';
 import SeriesMasValoradasView from '../views/SeriesMasValoradas.vue';
+import PerfilConfiguracionView from '../views/PerfilConfiguracion.vue';
 
 Vue.use(VueRouter)
 
@@ -31,6 +32,11 @@ const routes = [
     path: '/perfil',
     name: 'perfil',
     component: PerfilView
+  },
+  {
+    path: '/perfil/configuracion',
+    name: 'perfil configuracion',
+    component: PerfilConfiguracionView
   },
   {
     path: '/pelicula/:id',

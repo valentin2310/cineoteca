@@ -547,7 +547,7 @@ export default{
     box-shadow: black 0px 0px 5px;
 }
 
-@media (max-width: 335px) {
+@media (max-width: 370px) {
     .items{
       padding-left: 0px !important;
       padding-right: 0px !important;
@@ -559,7 +559,7 @@ export default{
     }
 
     .lista-view{
-        padding: 0 !important;
+        padding: 5px !important;
     }
     .botones-gestion-lista{
         float: none;

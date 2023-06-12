@@ -137,6 +137,37 @@
                 <b-tab-item  label="Historial" icon-pack="fas" icon="hourglass-half">
                     
                     <h2 class="title is-2 border-custom border-custom-color-2">Historial</h2>
+
+                    <div class="historial">
+
+                        <!--
+
+                        -->
+                        <PantallaEpisodios :episodios="listaEpisodiosVistos"></PantallaEpisodios>
+                        <b-pagination
+                            @change="getEpisodiosUsuario()"
+                            :total="estadisticas.cantidad_episodios_vistos"
+                            v-model="pagina_episodios"
+                            range-before="2"
+                            range-after="1"
+                            order="is-centered"
+                            size="default"
+                            :simple="false"
+                            :rounded="true"
+                            :per-page="50"
+                            icon-pack="fas"
+                            icon-prev="chevron-left"
+                            icon-next="chevron-right"
+                            aria-next-label="Next page"
+                            aria-previous-label="Previous page"
+                            aria-page-label="Page"
+                            aria-current-label="Current page"
+                            :page-input="true"
+                            page-input-position="dafault"
+                            :debounce-page-input="0">
+                        </b-pagination>
+
+                    </div>
                     
                 </b-tab-item>
                 
@@ -266,6 +297,7 @@ import BtnCrearLista from '@/components/BtnCrearLista.vue';
 //import PantallaItems from '@/components/PantallaItems.vue';
 import FiltroPantallaLista from '@/components/FiltroPantallaLista.vue';
 import ModalBuscadorImg from '@/components/ModalBuscadorImg.vue';
+import PantallaEpisodios from '@/components/PantallaEpisodios.vue';
 
 const API_KEY = 'd5970548f1728e977459ef0ac8c8b5df';
 //const TOKEN_LECTURA_V4 = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNTk3MDU0OGYxNzI4ZTk3NzQ1OWVmMGFjOGM4YjVkZiIsInN1YiI6IjYyYTc0NmI3ODc1ZDFhMDA2NmZmZDlhZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.4WOT6JsCCbc-ntV27ty9YseclVDBqcR3OESBENb55WE";
@@ -282,6 +314,8 @@ export default {
             estadisticas: {},
             listasCreadas: {},
             listaFavoritos: [],
+            listaEpisodiosVistos: [],
+            listaValoraciones: [],
             
             sessionId: null,
             access_token: null,
@@ -301,16 +335,19 @@ export default {
             sexo_edit: "2",
             fecha_edit: null,
 
+            pagina_episodios: 1,
+            pagina_valoraciones: 1,
             
             minDate: new Date(today.getFullYear() - 120, today.getMonth(), today.getDate()),
             maxDate: new Date(today.getFullYear() - 5, today.getMonth(), today.getDate()),
         }
     },
     components: {
-        ListaUsuario,
-        BtnCrearLista,
-        FiltroPantallaLista,
-        ModalBuscadorImg
+    ListaUsuario,
+    BtnCrearLista,
+    FiltroPantallaLista,
+    ModalBuscadorImg,
+    PantallaEpisodios
 },
     methods: {
       getDatosUsuario() {
@@ -366,6 +403,7 @@ export default {
           }
           )
           .then(response => {
+                console.log("estadisticas");
               console.log(response.data);
 
               if(typeof response.data === "object" && response.data !== null) {
@@ -393,6 +431,52 @@ export default {
               if(typeof response.data === "object" && response.data !== null) {
                   console.log("Exito");
                   this.listasCreadas = response.data;
+              }
+
+          })
+          .catch(error => console.log(error));
+      },
+      getEpisodiosUsuario() {
+        const data = {
+              id: this.id_usuario,
+              page: this.pagina_episodios
+          }
+          axios.post(`https://www.ieslamarisma.net/proyectos/2023/valentinandrei/php/getEpisodiosVistos.php`, data, {
+              headers: {
+              "Content-Type": "application/json",
+              },
+          }
+          )
+          .then(response => {
+            console.log("episodios:")
+              console.log(response.data);
+
+              if(typeof response.data === "object" && response.data !== null) {
+                  console.log("Exito");
+                  this.listaEpisodiosVistos = response.data;
+              }
+
+          })
+          .catch(error => console.log(error));
+      },
+      getValoracionesUsuario() {
+        const data = {
+              id: this.id_usuario,
+              page: this.pagina_valoraciones
+          }
+          axios.post(`https://www.ieslamarisma.net/proyectos/2023/valentinandrei/php/getValoraciones.php`, data, {
+              headers: {
+              "Content-Type": "application/json",
+              },
+          }
+          )
+          .then(response => {
+            console.log("valoraciones:")
+              console.log(response.data);
+
+              if(typeof response.data === "object" && response.data !== null) {
+                  console.log("Exito");
+                  this.listaValoraciones = response.data;
               }
 
           })
@@ -560,6 +644,8 @@ export default {
           this.getDatosUsuario();
           this.getEstadisticasUsuario();
           this.getListasUsuario();
+          this.getEpisodiosUsuario();
+          this.getValoracionesUsuario();
 
           // comprobar si tengo acceso a la cuenta de TMDB
           if (sessionId && access_token) {
