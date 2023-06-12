@@ -155,10 +155,8 @@ export default {
           }
           )
           .then(response => {
-              console.log(response.data);
 
               if(typeof response.data === "object" && response.data !== null) {
-                  console.log("Exito");
                   this.lista = response.data;
                   this.editarListaTitulo = this.lista.titulo;
                   this.editarListaDescripcion = this.lista.descripcion;
@@ -178,10 +176,8 @@ export default {
             }
             )
             .then(response => {
-                console.log(response.data);
 
                 if(typeof response.data === "object" && response.data !== null) {
-                    console.log("Exito");
                     this.listaItems = response.data;
                 }
 
@@ -202,7 +198,6 @@ export default {
           }
           )
           .then(response => {
-              console.log(response.data);
 
               if(!response.data.includes('Error')) {
 
@@ -211,7 +206,6 @@ export default {
                 }
 
                 this.getLista();
-                console.log("Se ha modificado correctamente")
 
                 this.isModalEditarLista = false;
               }
@@ -247,10 +241,8 @@ export default {
             }
             )
             .then(response => {
-                console.log(response.data);
 
                 if(!response.data.includes('Error')) {
-                    console.log("Exito");
 
                     if(this.access_token && this.lista.id_tmdb){
                         this.deleteListaTMDB();

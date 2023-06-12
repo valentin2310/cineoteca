@@ -88,7 +88,6 @@
             if (this.access_token) {
                 try {
                     id_tmdb = await this.crearListaTMDB();
-                    console.log("El id de la lista tmdb: " + id_tmdb);
 
                     
                 } catch (error) {
@@ -110,10 +109,8 @@
             }
             )
             .then(response => {
-                console.log(response.data);
 
                 if(typeof response.data === "object" && response.data !== null) {
-                    console.log("Exito");
                     this.listas = response.data;
                 }
 
@@ -135,10 +132,8 @@
             }
             )
             .then(response => {
-                console.log(response.data);
 
                 if(!response.data.includes('Error')) {
-                    console.log("Exito");
 
                     ///emitir el cambio
                     this.$emit('listaCreada', true);
@@ -185,7 +180,6 @@
 
             try {
                 const response = await axios.request(options);
-                console.log(response.data);
                 id_tmdb = response.data.id; // Asignar el ID a la variable auxiliar
             } catch (error) {
                 console.error(error);

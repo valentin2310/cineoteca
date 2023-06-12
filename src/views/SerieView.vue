@@ -496,8 +496,7 @@ export default{
         RepartoCard
     },
     watch: {
-        temporadaSeleccionada(nuevoValor){
-            console.log("Nueva temporada Seleccionada: "+nuevoValor)
+        temporadaSeleccionada(){
             this.getEpisodiosTemporada();
         }
     },
@@ -513,10 +512,8 @@ export default{
             }
             )
             .then(response => {
-                console.log(response.data);
 
                 if(typeof response.data === "object" && response.data !== null) {
-                    console.log("Exito");
                     this.usuarioObj = response.data;
                 }
 
@@ -533,8 +530,6 @@ export default{
             .then(response => {
                 
                 this.usuarioTMDB = response.data;
-                console.log("Usuario:");
-                console.log(this.usuarioTMDB);
 
             })
             .catch(error => console.log(error));
@@ -551,21 +546,14 @@ export default{
             }
             )
             .then(response => {
-                console.log("Estadisticas usuario:")
-                console.log(response.data);
 
             if(typeof response.data === "object" && response.data !== null) {
-                console.log("Exito");
                 const stats = response.data;
-                console.log(stats);
 
                 this.enFavorito = stats.favorito;
                 this.enListaSeguimiento = stats.seguimiento;
                 this.valoracion = stats.valoracion;
                 this.temporadasEpisodiosVistos = stats.temporadaEpisodios;
-
-                console.log("Temporada eps vistos: ");
-                console.log(this.temporadasEpisodiosVistos)
             }
 
             })
@@ -581,21 +569,11 @@ export default{
             })
                 .then(response => {
                     this.serie = response.data;
-                    console.log("serie")
-                    console.log(this.serie);
 
                     this.videos = this.serie.videos.results;
-                    console.log("videos");
-                    console.log(this.videos)
                     this.reviews = this.serie.reviews.results;
-                    console.log("reviews");
-                    console.log(this.reviews)
                     this.silimares = this.serie.similar.results;
-                    console.log("silimares");
-                    console.log(this.silimares)
                     this.creditos = this.serie.credits;
-                    console.log("creditos");
-                    console.log(this.creditos);
 
                     if(this.serie.seasons){
                         this.temporadaSeleccionada = this.serie.seasons[0];
@@ -615,8 +593,6 @@ export default{
             })
                 .then(response => {
                     this.imagenes = response.data;
-                    console.log("imagenes")
-                    console.log(this.imagenes);
                 })
                 .catch(error => {
                     console.error(error);
@@ -631,8 +607,6 @@ export default{
             })
                 .then(response => {
                     this.episodiosTemporada = response.data.episodes;
-                    console.log("episodios")
-                    console.log(this.episodiosTemporada);
                 })
                 .catch(error => {
                     console.error(error);
@@ -774,12 +748,8 @@ export default{
             }
             )
             .then(response => {
-                console.log(response.data);
 
             if(!response.data.includes('Error')) {
-                console.log("Exito");
-                this.enFavorito = true;
-                console.log("En favorito: "+this.enFavorito);
                 this.$swal({
                     title: 'Añadido exitosamente en favoritos!',
                     icon: 'success',
@@ -787,9 +757,10 @@ export default{
                     showConfirmaButton: false,
                     timer: 1200
                 })
-
+                
                 //Si esta vinculada la cuenta de TMDB
                 this.setFavoritoTMDB();
+                this.enFavorito = true;
             }
 
             })
@@ -812,12 +783,8 @@ export default{
             }
             )
             .then(response => {
-                console.log(response.data);
 
                 if(!response.data.includes('Error')) {
-                    console.log("Exito");
-                    this.enListaSeguimiento = true;
-                    console.log("En seguimiento: "+this.enListaSeguimiento);
                     this.$swal({
                         title: 'Añadido a la lista de seguimiento exitosamente!',
                         icon: 'success',
@@ -825,9 +792,10 @@ export default{
                         showConfirmaButton: false,
                         timer: 1200
                     })
-
+                    
                     //Si esta vinculada la cuenta de TMDB
                     this.setSeguimientoTMDB();
+                    this.enListaSeguimiento = true;
                 }
 
             })
@@ -848,12 +816,9 @@ export default{
             }
             )
             .then(response => {
-                console.log(response.data);
 
                 if(!response.data.includes('Error')) {
-                    console.log("Exito");
                     this.valoracion = value;
-                    console.log("Valoracion: "+this.valoracion);
                     this.$swal({
                         title: 'Valoracion guardada exitosamente!',
                         icon: 'success',
@@ -887,10 +852,8 @@ export default{
             }
             )
             .then(response => {
-                console.log(response.data);
 
                 if(!response.data.includes('Error')) {
-                    console.log("Exito");
                     //añadir al arary de episodios vistos
                     const temporada = this.temporadasEpisodiosVistos[episodio.season_number];
                     if (temporada) {
@@ -900,8 +863,6 @@ export default{
                             episodios: [episodio]
                         };
                     }
-
-                    console.log(this.temporadasEpisodiosVistos)
                 }
 
             })
@@ -924,12 +885,8 @@ export default{
             }
             )
             .then(response => {
-                console.log(response.data);
 
             if(!response.data.includes('Error')) {
-                console.log("Exito");
-                this.enFavorito = false;
-                console.log("En favorito: "+this.enFavorito);
                 this.$swal({
                     title: 'Eliminado de favoritos exitosamente!',
                     icon: 'success',
@@ -937,9 +894,10 @@ export default{
                     showConfirmaButton: false,
                     timer: 1200
                 })
-
+                
                 //Si esta vinculada la cuenta de TMDB
                 this.setFavoritoTMDB();
+                this.enFavorito = false;
             }
 
             })
@@ -962,12 +920,8 @@ export default{
             }
             )
             .then(response => {
-                console.log(response.data);
 
             if(!response.data.includes('Error')) {
-                console.log("Exito");
-                this.enListaSeguimiento = false;
-                console.log("En Seguimiento: "+this.enListaSeguimiento);
                 this.$swal({
                     title: 'Eliminado de la lista de seguimiento exitosamente!',
                     icon: 'success',
@@ -975,9 +929,10 @@ export default{
                     showConfirmaButton: false,
                     timer: 1200
                 })
-
+                
                 //Si esta vinculada la cuenta de TMDB
                 this.setSeguimientoTMDB();
+                this.enListaSeguimiento = false;
             }
 
             })
@@ -997,12 +952,9 @@ export default{
             }
             )
             .then(response => {
-                console.log(response.data);
 
             if(!response.data.includes('Error')) {
-                console.log("Exito");
                 this.valoracion = 0;
-                console.log("Valoracion: "+this.valoracion);
                 this.$swal({
                     title: 'Valoracion eliminada exitosamente!',
                     icon: 'success',
@@ -1033,10 +985,8 @@ export default{
             }
             )
             .then(response => {
-                console.log(response.data);
 
             if(!response.data.includes('Error')) {
-                console.log("Exito");
                 //eliminar el episodio del objeto episodios vistos
                 const temporada = this.temporadasEpisodiosVistos[episodio.season_number];
 
@@ -1047,8 +997,6 @@ export default{
                         temporada.episodios.splice(index, 1);
                     }
                 }
-
-                console.log(this.temporadasEpisodiosVistos)
         
             }
 
@@ -1126,8 +1074,8 @@ export default{
                 .request(options)
                 .then(response => {
                     console.log(response);
-                    //this.$swal('Guardado!', '', 'success')
-                    //this.valoracion = value;
+                    this.$swal('Guardado!', '', 'success')
+                    this.valoracion = value;
                 })
                 .catch(error => {
                     console.error(error);

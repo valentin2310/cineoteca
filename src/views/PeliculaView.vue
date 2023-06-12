@@ -364,10 +364,8 @@ export default {
         }
         )
         .then(response => {
-            console.log(response.data);
 
             if(typeof response.data === "object" && response.data !== null) {
-                console.log("Exito");
                 this.usuarioObj = response.data;
             }
 
@@ -384,8 +382,6 @@ export default {
       .then(response => {
         
         this.usuarioTMDB = response.data;
-        console.log("Usuario:");
-        console.log(this.usuarioTMDB);
 
         //this.obtenerEstadisticasPelicula();
 
@@ -404,12 +400,9 @@ export default {
         }
         )
         .then(response => {
-            console.log(response.data);
 
         if(typeof response.data === "object" && response.data !== null) {
-            console.log("Exito");
             const stats = response.data;
-            console.log(stats);
 
             this.enFavorito = stats.favorito;
             this.enListaSeguimiento = stats.seguimiento;
@@ -430,7 +423,6 @@ export default {
       })
         .then(response => {
           this.pelicula = response.data;
-          console.log(this.pelicula);
         })
         .catch(error => {
           console.log(error);
@@ -452,8 +444,6 @@ export default {
       })
         .then(response => {
           this.imagenes = response.data;
-          console.log("imagenes:")
-          console.log(this.imagenes);
         })
         .catch(error => {
           console.error(error);
@@ -467,8 +457,6 @@ export default {
       })
         .then(response => {
           this.videos = response.data.results;
-          console.log("videos:")
-          console.log(this.videos);
         })
         .catch(error => {
           console.error(error);
@@ -482,8 +470,6 @@ export default {
       })
         .then(response => {
           this.reviews = response.data.results;
-          console.log("reviews:")
-          console.log(this.reviews);
         })
         .catch(error => {
           console.error(error);
@@ -497,8 +483,6 @@ export default {
       })
         .then(response => {
           this.similares = response.data.results;
-          console.log("similares:")
-          console.log(this.similares);
         })
         .catch(error => {
           console.error(error);
@@ -512,8 +496,6 @@ export default {
       })
         .then(response => {
           this.creditos = response.data;
-          console.log("creditos:")
-          console.log(this.creditos);
         })
         .catch(error => {
           console.error(error);
@@ -608,22 +590,19 @@ export default {
         }
         )
         .then(response => {
-            console.log(response.data);
 
         if(!response.data.includes('Error')) {
-            console.log("Exito");
-            this.enFavorito = true;
-            console.log("En favorito: "+this.enFavorito);
-            this.$swal({
-                title: 'Añadido exitosamente en favoritos!',
-                icon: 'success',
-                position: 'top-end',
-                showConfirmaButton: false,
-                timer: 1200
-            })
-
-            //Si esta vinculada la cuenta de TMDB
-            this.setFavoritoTMDB();
+          this.$swal({
+            title: 'Añadido exitosamente en favoritos!',
+            icon: 'success',
+            position: 'top-end',
+            showConfirmaButton: false,
+            timer: 1200
+          })
+          
+          //Si esta vinculada la cuenta de TMDB
+          this.setFavoritoTMDB();
+          this.enFavorito = true;
         }
 
         })
@@ -646,22 +625,19 @@ export default {
         }
         )
         .then(response => {
-            console.log(response.data);
 
             if(!response.data.includes('Error')) {
-                console.log("Exito");
-                this.enListaSeguimiento = true;
-                console.log("En seguimiento: "+this.enListaSeguimiento);
-                this.$swal({
-                    title: 'Añadido a la lista de seguimiento exitosamente!',
-                    icon: 'success',
-                    position: 'top-end',
-                    showConfirmaButton: false,
-                    timer: 1200
-                })
-
-                //Si esta vinculada la cuenta de TMDB
-                this.setSeguimientoTMDB();
+              this.$swal({
+                title: 'Añadido a la lista de seguimiento exitosamente!',
+                icon: 'success',
+                position: 'top-end',
+                showConfirmaButton: false,
+                timer: 1200
+              })
+              
+              //Si esta vinculada la cuenta de TMDB
+              this.setSeguimientoTMDB();
+              this.enListaSeguimiento = true;
             }
 
         })
@@ -682,12 +658,9 @@ export default {
         }
         )
         .then(response => {
-            console.log(response.data);
 
             if(!response.data.includes('Error')) {
-                console.log("Exito");
                 this.valoracion = value;
-                console.log("Valoracion: "+this.valoracion);
                 this.$swal({
                     title: 'Valoracion guardada exitosamente!',
                     icon: 'success',
@@ -721,12 +694,9 @@ export default {
       }
       )
       .then(response => {
-          console.log(response.data);
 
       if(!response.data.includes('Error')) {
-          console.log("Exito");
           this.enVisto = true;
-          console.log("En visto: "+this.enVisto);
           this.$swal({
               title: 'Añadido exitosamente en peliculas vistas!',
               icon: 'success',
@@ -756,22 +726,19 @@ export default {
         }
         )
         .then(response => {
-            console.log(response.data);
 
         if(!response.data.includes('Error')) {
-            console.log("Exito");
-            this.enFavorito = false;
-            console.log("En favorito: "+this.enFavorito);
-            this.$swal({
-                title: 'Eliminado de favoritos exitosamente!',
-                icon: 'success',
-                position: 'top-end',
-                showConfirmaButton: false,
-                timer: 1200
-            })
-
-            //Si esta vinculada la cuenta de TMDB
-            this.setFavoritoTMDB();
+          this.$swal({
+            title: 'Eliminado de favoritos exitosamente!',
+            icon: 'success',
+            position: 'top-end',
+            showConfirmaButton: false,
+            timer: 1200
+          })
+          
+          //Si esta vinculada la cuenta de TMDB
+          this.setFavoritoTMDB();
+          this.enFavorito = false;
         }
 
         })
@@ -794,22 +761,19 @@ export default {
         }
         )
         .then(response => {
-            console.log(response.data);
 
         if(!response.data.includes('Error')) {
-            console.log("Exito");
-            this.enListaSeguimiento = false;
-            console.log("En Seguimiento: "+this.enListaSeguimiento);
-            this.$swal({
-                title: 'Eliminado de la lista de seguimiento exitosamente!',
-                icon: 'success',
-                position: 'top-end',
-                showConfirmaButton: false,
-                timer: 1200
-            })
-
-            //Si esta vinculada la cuenta de TMDB
-            this.setSeguimientoTMDB();
+          this.$swal({
+            title: 'Eliminado de la lista de seguimiento exitosamente!',
+            icon: 'success',
+            position: 'top-end',
+            showConfirmaButton: false,
+            timer: 1200
+          })
+          
+          //Si esta vinculada la cuenta de TMDB
+          this.setSeguimientoTMDB();
+          this.enListaSeguimiento = false;
         }
 
         })
@@ -829,12 +793,9 @@ export default {
         }
         )
         .then(response => {
-            console.log(response.data);
 
         if(!response.data.includes('Error')) {
-            console.log("Exito");
             this.valoracion = 0;
-            console.log("Valoracion: "+this.valoracion);
             this.$swal({
                 title: 'Valoracion eliminada exitosamente!',
                 icon: 'success',
@@ -866,12 +827,9 @@ export default {
       }
       )
       .then(response => {
-          console.log(response.data);
 
       if(!response.data.includes('Error')) {
-          console.log("Exito");
           this.enVisto = false;
-          console.log("En visto: "+this.enVisto);
           this.$swal({
               title: 'Eliminado exitosamente de peliculas vistas!',
               icon: 'success',

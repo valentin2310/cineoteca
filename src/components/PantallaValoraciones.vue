@@ -45,6 +45,15 @@ export default {
     .valoracion{
         margin: 5px;
     }
+    .itemCard{
+      height: 100%;
+    }
+    .valoracionCard{
+      height: 100%;
+    }
+    .valoracionCard .valoracion{
+      height: 100%;
+    }
 
     @media screen and (max-width: 480px) {
       .box{

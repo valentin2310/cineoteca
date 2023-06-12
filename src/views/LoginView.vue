@@ -289,7 +289,6 @@ export default {
       try {
         const response = await axios.request(options);
         this.tokenV4 = response.data.request_token
-        console.log(response);
 
       } catch (error) {
         console.error(error)
@@ -311,7 +310,6 @@ export default {
       try {
         const response = await axios.request(options);
         const access_token = response.data.access_token;
-        console.log(response);
 
         this.$cookies.set('access_token', access_token, 60 * 60 * 24 * 7) // la sessionId caduca despues de 7 dias
         this.access_token = access_token;
@@ -336,7 +334,6 @@ export default {
       try {
         const response = await axios.request(options);
         const sessionId = response.data.session_id;
-        console.log(response);
 
         this.$cookies.set('sessionId', sessionId, 60 * 60 * 24 * 7) // la sessionId caduca despues de 7 dias
         this.access_token = sessionId;
@@ -358,7 +355,6 @@ export default {
         )
         .then(response => {
           
-          console.log(response);
 
           if(!response.data.includes('Error')) {
             //guardar id usuario en cookies
@@ -397,11 +393,8 @@ export default {
           }
         )
         .then(response => {
-          
-          console.log(response.data);
 
           if(!response.data.includes('Error')) {
-            console.log("Exito");
             location.reload();
           }else{
             this.notifErrorRegistro(response.data);
@@ -438,11 +431,9 @@ export default {
 
     if (sessionId) {
       this.sessionId = sessionId
-      console.log('Ya esta iniciada la sesion, sessionId: '+this.sessionId);
     }
     if (access_token) {
       this.access_token = access_token
-      console.log('Ya esta iniciada la sesion, access_token: '+this.access_token);
       
     }
     //pedir request_token V4

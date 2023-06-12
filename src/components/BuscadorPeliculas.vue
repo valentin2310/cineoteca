@@ -272,13 +272,9 @@ export default {
             }
             })
             .then(response => {
-                //console.log(response.data.results);
                 this.paises = response.data.results;
 
                 this.paises.sort((a, b) => a.native_name.localeCompare(b.native_name));
-
-                console.log("paises:");
-                console.log(this.paises);
             })
             .catch(error => console.log(error));
     },
@@ -293,11 +289,8 @@ export default {
             }
             })
             .then(response => {
-                //console.log(response.data.results);
                 this.proveedores = response.data.results;
                 this.proveedores_filtro = this.proveedores;
-                console.log("Proveedores para la region: "+watch_region);
-                console.log(this.proveedores)
             })
             .catch(error => console.log(error));
     },
@@ -309,10 +302,7 @@ export default {
             }
             })
             .then(response => {
-                console.log("generos")
-                //console.log(response);
                 this.generos = response.data.genres;
-                console.log(this.generos)
             })
             .catch(error => console.log(error));
     },
@@ -323,10 +313,7 @@ export default {
             }
             })
             .then(response => {
-                console.log("certificaciones:")
-                //console.log(response);
                 this.certificaciones = response.data.certifications.ES;
-                console.log(this.certificaciones)
             })
             .catch(error => console.log(error));
     },
@@ -337,19 +324,14 @@ export default {
             }
             })
             .then(response => {
-                console.log("Idiomas")
-                //console.log(response);
                 this.idiomas = response.data;
 
                 this.idiomas.sort((a, b) => a.english_name.localeCompare(b.english_name));
-
-                console.log(this.idiomas)
             })
             .catch(error => console.log(error));
     },
     getProveedoresFiltrados(text) {
         this.proveedores_filtro = this.proveedores.filter((option) => {
-            //console.log(option);
             return option.provider_name
                 .toString()
                 .toLowerCase()
@@ -364,9 +346,6 @@ export default {
         let keywords = this.b_palabras_clave.join(',');
         let certification_country = "ES";
         let certification = this.b_certificados.map(certificado => certificado.certification).join(',');
-
-        console.log("Certificados: ");
-        console.log(certification);
 
         axios.get(`${this.apiUrl}/discover/movie`, {
             params: {
@@ -390,10 +369,8 @@ export default {
             }
             })
             .then(response => {
-                console.log("listaPeliculas")
                //console.log(response);
                 this.listaPeliculas = response.data.results;
-                console.log(this.listaPeliculas)
             })
             .catch(error => console.log(error));
     },

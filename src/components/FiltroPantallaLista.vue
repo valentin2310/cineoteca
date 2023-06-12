@@ -126,7 +126,6 @@ export default {
 
             this.itemsFiltrados = this.listaItemsObj.filter(item => {
                 const tituloIncluyeTexto = item.title?item.title.toLowerCase().includes(textoBusqueda):item.name.toLowerCase().includes(textoBusqueda);
-                console.log("Texto busqueda: "+tituloIncluyeTexto)
 
                 if (this.mostrar == 0) {
                     return tituloIncluyeTexto;

@@ -212,7 +212,6 @@ export default {
       })
         .then(response => {
           this.peliculasPopulares = response.data.results;
-          //console.log(this.peliculasPopulares);
         }
 
         )
@@ -227,7 +226,6 @@ export default {
       })
         .then(response => {
           this.peliculasRecientes = response.data.results;
-          //console.log(this.peliculasRecientes);
         }
 
         )
@@ -242,7 +240,6 @@ export default {
       })
         .then(response => {
           this.peliculasMasValoradas = response.data.results;
-          //console.log(this.peliculasMasValoradas);
         }
 
         )
@@ -257,7 +254,6 @@ export default {
       })
         .then(response => {
           this.seriesPopulares = response.data.results;
-          //console.log(this.seriesPopulares[0].id);
         }
 
         )
@@ -272,7 +268,6 @@ export default {
       })
         .then(response => {
           this.seriesMasValoradas = response.data.results;
-          //console.log(this.seriesPopulares[0].id);
         }
 
         )
@@ -287,7 +282,6 @@ export default {
       })
         .then(response => {
           this.seriesTransmitiendoHoy = response.data.results;
-          //console.log(this.seriesPopulares[0].id);
         }
 
         )

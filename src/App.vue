@@ -140,10 +140,8 @@ import BuscadorItem from './components/BuscadorItem.vue';
                     "Content-Type": "application/json",
                 },
             })
-                .then(response => {
-                console.log(response.data);
+                .then(response => { 
                 if (typeof response.data === "object" && response.data !== null) {
-                    console.log("Exito");
                     this.usuarioObj = response.data;
                 }
             })
@@ -158,7 +156,6 @@ import BuscadorItem from './components/BuscadorItem.vue';
             })
                 .then(response => {
                 this.usuarioTMDB = response.data;
-                console.log(this.usuarioTMDB);
             })
                 .catch(error => console.log(error));
         },
@@ -194,8 +191,7 @@ import BuscadorItem from './components/BuscadorItem.vue';
                     session_id: this.sessionId
                 }
             })
-                .then(response => {
-                console.log(response.data);
+                .then(() => {
                 //eliminar session_id
                 this.$cookies.remove("sessionId");
                 this.sessionId = null;
@@ -215,8 +211,7 @@ import BuscadorItem from './components/BuscadorItem.vue';
                     access_token: this.access_token
                 }
             })
-                .then(response => {
-                console.log(response.data);
+                .then(() => {
                 //eliminar access_token
                 this.$cookies.remove("access_token");
                 this.access_token = null;
@@ -230,15 +225,10 @@ import BuscadorItem from './components/BuscadorItem.vue';
         const sessionId = this.$cookies.get("sessionId"); // 
         const access_token = this.$cookies.get("access_token"); // 
         if (id_usuario) {
-            console.log("Ya esta iniciada la sesion");
-            console.log("Tu id_usuario es: " + id_usuario);
             this.id_usuario = id_usuario;
             this.getDatosUsuario();
             // comprobar si tengo acceso a la cuenta de TMDB
             if (sessionId && access_token) {
-                console.log("Ya tengo acceso a TMDB");
-                console.log("sessionId: " + sessionId);
-                console.log("access_token: " + access_token);
                 this.sessionId = sessionId;
                 this.access_token = access_token;
                 //mostrar info del usuario

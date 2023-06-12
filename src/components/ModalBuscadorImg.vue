@@ -235,8 +235,6 @@
             })
                 .then(response => {
                     const imagenes = response.data;
-                    console.log("imagenes:")
-                    console.log(imagenes);
 
                     this.resultadosBackground = imagenes.backdrops;
                     this.resultadosPoster = imagenes.posters;

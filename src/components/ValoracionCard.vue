@@ -1,7 +1,7 @@
 <template>
     <div class="itemCard custom-shadow rounded">
   
-        <div class="valoracion bg-dark p-2 rounded d-flex flex-row flex-nowrap align-items-center justify-content-evently">
+        <div class="valoracion h-100 bg-dark p-2 rounded d-flex flex-row flex-nowrap align-items-center justify-content-evently">
             <div v-if="valoracion.media_type == 'tv'" class="item">
                 <SerieCard2 :serie="item"></SerieCard2>
             </div>

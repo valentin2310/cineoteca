@@ -116,10 +116,8 @@
             }
             )
             .then(response => {
-                console.log(response.data);
 
                 if(!response.data.includes('Error')) {
-                    console.log("Exito");
 
                     if (this.access_token && this.lista.id_tmdb) {
                         this.editarListaTMDB();
