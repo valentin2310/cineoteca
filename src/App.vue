@@ -36,11 +36,11 @@
                 </b-navbar-item>
             </b-navbar-dropdown>
 
-            <b-navbar-item tag="router-link" :to="{ path: '/' }">
+            <b-navbar-item tag="router-link" :to="{ path: '/about' }">
                 Sobre nosotros
             </b-navbar-item>
 
-            <b-navbar-item tag="router-link" :to="{ path: '/' }">
+            <b-navbar-item tag="router-link" :to="{ path: '/contacto' }">
                 Contacto
             </b-navbar-item>
         </template>

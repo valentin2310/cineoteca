@@ -14,6 +14,9 @@ import ListaView from '../views/ListaView.vue';
 import PelisMasValoradasView from '../views/PeliculasMasValoradas.vue';
 import SeriesMasValoradasView from '../views/SeriesMasValoradas.vue';
 import PerfilConfiguracionView from '../views/PerfilConfiguracion.vue';
+import Page403 from '../views/Page403View.vue';
+import AboutView from '../views/AboutView.vue';
+import ContactoView from "../views/ContactoView.vue";
 
 Vue.use(VueRouter)
 
@@ -22,6 +25,16 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomeView
+  },
+  {
+    path: '/about',
+    name: 'sobre nosotros',
+    component: AboutView
+  },
+  {
+    path: '/contacto',
+    name: 'contacto',
+    component: ContactoView
   },
   {
     path: '/login',
@@ -82,6 +95,11 @@ const routes = [
     path: '/listas/:id',
     name: 'lista',
     component: ListaView
+  },
+  {
+    path: '/403',
+    name: 'sin acceso',
+    component: Page403
   },
   {
     path: '/:catchAll(.*)',

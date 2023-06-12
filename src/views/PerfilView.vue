@@ -391,10 +391,8 @@ export default {
           }
           )
           .then(response => {
-              console.log(response.data);
 
               if(typeof response.data === "object" && response.data !== null) {
-                  console.log("Exito");
                   this.usuarioObj = response.data;
 
                   this.username_edit = this.usuarioObj.usuario;
@@ -416,8 +414,6 @@ export default {
           .then(response => {
               
               this.usuarioTMDB = response.data;
-              console.log("Usuario:");
-              console.log(this.usuarioTMDB);
 
           })
           .catch(error => console.log(error));
@@ -433,11 +429,8 @@ export default {
           }
           )
           .then(response => {
-                console.log("estadisticas");
-              console.log(response.data);
 
               if(typeof response.data === "object" && response.data !== null) {
-                  console.log("Exito");
                   this.estadisticas = response.data;
                   this.listaFavoritos = this.estadisticas.favoritos;
               }
@@ -456,10 +449,8 @@ export default {
           }
           )
           .then(response => {
-              console.log(response.data);
 
               if(typeof response.data === "object" && response.data !== null) {
-                  console.log("Exito");
                   this.listasCreadas = response.data;
               }
 
@@ -478,11 +469,8 @@ export default {
           }
           )
           .then(response => {
-            console.log("episodios:")
-              console.log(response.data);
 
               if(typeof response.data === "object" && response.data !== null) {
-                  console.log("Exito");
                   this.listaEpisodiosVistos = response.data;
               }
 
@@ -501,11 +489,8 @@ export default {
           }
           )
           .then(response => {
-            console.log("valoraciones:")
-              console.log(response.data);
 
               if(typeof response.data === "object" && response.data !== null) {
-                  console.log("Exito");
                   this.listaValoraciones = response.data;
               }
 
@@ -558,10 +543,8 @@ export default {
         )
         .then(response => {
           
-          console.log(response.data);
 
           if(!response.data.includes('Error')) {
-            console.log("Exito");
 
             this.$buefy.notification.open({
                 message: 'Los datos se han modificado exitosamente :)',
@@ -593,10 +576,7 @@ export default {
         )
         .then(response => {
           
-          console.log(response.data);
-
           if(!response.data.includes('Error')) {
-            console.log("Exito");
 
             this.$buefy.notification.open({
                 message: 'Los datos se han modificado exitosamente :)',
@@ -627,11 +607,8 @@ export default {
           }
         )
         .then(response => {
-          
-          console.log(response.data);
 
           if(!response.data.includes('Error')) {
-            console.log("Exito");
 
             this.$buefy.notification.open({
                 message: 'Los datos se han modificado exitosamente :)',
@@ -688,6 +665,9 @@ export default {
 
           }
 
+      }else{
+        this.$router.push('/403');
+        console.log("Sin acceso");
       }
 
     },

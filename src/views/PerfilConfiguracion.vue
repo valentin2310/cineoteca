@@ -297,10 +297,8 @@ export default {
           }
           )
           .then(response => {
-              console.log(response.data);
 
               if(typeof response.data === "object" && response.data !== null) {
-                  console.log("Exito");
                   this.usuarioObj = response.data;
 
                   this.username_edit = this.usuarioObj.usuario;
@@ -322,8 +320,6 @@ export default {
           .then(response => {
               
               this.usuarioTMDB = response.data;
-              console.log("Usuario:");
-              console.log(this.usuarioTMDB);
 
           })
           .catch(error => console.log(error));
@@ -353,11 +349,8 @@ export default {
           }
         )
         .then(response => {
-          
-          console.log(response.data);
 
           if(!response.data.includes('Error')) {
-            console.log("Exito");
 
             this.$buefy.notification.open({
                 message: 'Los datos se han modificado exitosamente :)',
@@ -390,11 +383,8 @@ export default {
           }
         )
         .then(response => {
-          
-          console.log(response.data);
 
           if(!response.data.includes('Error')) {
-            console.log("Exito");
 
             this.$buefy.notification.open({
                 message: 'La contraseña se ha modificado exitosamente :)',
@@ -427,11 +417,8 @@ export default {
           }
         )
         .then(response => {
-          
-          console.log(response.data);
 
           if(!response.data.includes('Error')) {
-            console.log("Exito");
 
             this.$buefy.notification.open({
                 message: 'Los datos se han modificado exitosamente :)',
@@ -462,11 +449,8 @@ export default {
           }
         )
         .then(response => {
-          
-          console.log(response.data);
 
           if(!response.data.includes('Error')) {
-            console.log("Exito");
 
             this.$buefy.notification.open({
                 message: 'Los datos se han modificado exitosamente :)',
@@ -519,6 +503,9 @@ export default {
 
           }
 
+      }else{
+        this.$router.push('/403');
+        console.log("Sin acceso");
       }
 
     },

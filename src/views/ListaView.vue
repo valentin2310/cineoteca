@@ -252,11 +252,11 @@ export default{
             }
             )
             .then(response => {
-                console.log(response.data);
 
                 if(typeof response.data === "object" && response.data !== null) {
-                    console.log("Exito");
                     this.lista = response.data;
+
+                    this.validarAcceso();
                 }
 
             })
@@ -273,21 +273,13 @@ export default{
             }
             )
             .then(response => {
-                console.log(response.data);
 
                 if(typeof response.data === "object" && response.data !== null) {
-                    console.log("Exito");
-                    console.log("Lista items:")
                     this.listaItems = response.data;
-                    console.log(this.listaItems);
                     
                     this.obtenerDetallesListaItems().then(() => {
                         this.itemsFiltrados = this.listaItemsObj;
                     });
-
-
-                    console.log("filtrados: ");
-                    console.log(this.itemsFiltrados)
 
                 }
 
@@ -309,10 +301,8 @@ export default{
             }
             )
             .then(response => {
-                console.log(response.data);
 
                 if(!response.data.includes('Error')) {
-                    console.log("Exito");
                     this.getLista();
                 }
 
@@ -332,10 +322,8 @@ export default{
             }
             )
             .then(response => {
-                console.log(response.data);
 
                 if(!response.data.includes('Error')) {
-                    console.log("Exito");
                     this.getListaItems();
                 }
 
@@ -372,10 +360,8 @@ export default{
             }
             )
             .then(response => {
-                console.log(response.data);
 
                 if(!response.data.includes('Error')) {
-                    console.log("Exito");
                     this.getListaItems();
                 }
 
@@ -397,7 +383,6 @@ export default{
 
             this.itemsFiltrados = this.listaItemsObj.filter(item => {
                 const tituloIncluyeTexto = item.title?item.title.toLowerCase().includes(textoBusqueda):item.name.toLowerCase().includes(textoBusqueda);
-                console.log("Texto busqueda: "+tituloIncluyeTexto)
 
                 if (this.mostrar == 0) {
                     return tituloIncluyeTexto;
@@ -407,6 +392,16 @@ export default{
                     return tituloIncluyeTexto && item.title;
                 }
             });
+        },
+        validarAcceso(){
+             //Comprobar que la lista sea privada o no, en caso de que sea privada permitir el acceso solo al creador
+
+                if(this.lista.privacidad == 0 && this.lista.id_creador != this.idUsuario){
+                    //devolver a la pagina de sin acceso
+                    this.$router.push('/403');
+                    console.log("Sin acceso");
+
+                }
         },
         async getSerieDetalles(itemId) {
 
@@ -421,7 +416,7 @@ export default{
             return response.data;
 
             }catch (error){
-            console.log(error);
+                console.log(error);
             throw error;
             }
         },
@@ -463,8 +458,6 @@ export default{
             try {
                 const items = await Promise.all(itemPromises);
                 this.listaItemsObj = items.filter((item) => item !== null && item !== undefined);
-                console.log("Lista items obj");
-                console.log(this.listaItemsObj);
             } catch (error) {
                 console.log(error);
             }
