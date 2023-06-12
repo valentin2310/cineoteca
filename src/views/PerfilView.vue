@@ -203,6 +203,34 @@
 
                     <h2 class="title is-2 border-custom border-custom-color-5">Valoraciones</h2>
 
+                    <div class="valoraciones">
+
+                        <PantallaValoraciones :valoraciones="listaValoraciones"></PantallaValoraciones>
+                        <b-pagination
+                            @change="getValoracionesUsuario()"
+                            :total="estadisticas.numero_valoraciones"
+                            v-model="pagina_valoraciones"
+                            range-before="2"
+                            range-after="1"
+                            order="is-centered"
+                            size="default"
+                            :simple="false"
+                            :rounded="true"
+                            :per-page="50"
+                            icon-pack="fas"
+                            icon-prev="chevron-left"
+                            icon-next="chevron-right"
+                            aria-next-label="Next page"
+                            aria-previous-label="Previous page"
+                            aria-page-label="Page"
+                            aria-current-label="Current page"
+                            :page-input="true"
+                            page-input-position="dafault"
+                            :debounce-page-input="0">
+                        </b-pagination>
+
+                    </div>
+
                 </b-tab-item>
 
             </b-tabs>
@@ -298,6 +326,7 @@ import BtnCrearLista from '@/components/BtnCrearLista.vue';
 import FiltroPantallaLista from '@/components/FiltroPantallaLista.vue';
 import ModalBuscadorImg from '@/components/ModalBuscadorImg.vue';
 import PantallaEpisodios from '@/components/PantallaEpisodios.vue';
+import PantallaValoraciones from '@/components/PantallaValoraciones.vue';
 
 const API_KEY = 'd5970548f1728e977459ef0ac8c8b5df';
 //const TOKEN_LECTURA_V4 = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNTk3MDU0OGYxNzI4ZTk3NzQ1OWVmMGFjOGM4YjVkZiIsInN1YiI6IjYyYTc0NmI3ODc1ZDFhMDA2NmZmZDlhZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.4WOT6JsCCbc-ntV27ty9YseclVDBqcR3OESBENb55WE";
@@ -343,12 +372,13 @@ export default {
         }
     },
     components: {
-    ListaUsuario,
-    BtnCrearLista,
-    FiltroPantallaLista,
-    ModalBuscadorImg,
-    PantallaEpisodios
-},
+        ListaUsuario,
+        BtnCrearLista,
+        FiltroPantallaLista,
+        ModalBuscadorImg,
+        PantallaEpisodios,
+        PantallaValoraciones
+    },
     methods: {
       getDatosUsuario() {
           const data = {

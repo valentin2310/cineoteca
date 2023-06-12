@@ -2,7 +2,7 @@
     <div class="listaUsuario">
 
         
-        <div v-if="lista" class="lista rounded my-2 p-3 bg-dark text-white" v-bind:style="{
+        <div v-if="lista" class="lista rounded custom-shadow my-2 p-3 bg-dark text-white" v-bind:style="{
                 'background-image': lista.backdrop_path?`linear-gradient(52deg, rgba(0,0,0,0.94) 29%, rgba(61,61,61,0.5) 100%), url(https://image.tmdb.org/t/p/original/${lista.backdrop_path})`:'',
                 'background-size': 'cover',
                 'background-repeat': 'no-repeat',

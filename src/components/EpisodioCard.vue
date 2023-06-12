@@ -1,7 +1,7 @@
 <template>
     <div class="episodioCard">
   
-        <div v-if="episodio" class="lista rounded m-1 p-3 bg-dark text-white">
+        <div v-if="episodio" class="lista rounded m-1 p-3 bg-dark text-white custom-shadow rounded">
           
             <div class="portada d-flex flex-row flex-nowrap">
                 <img v-if="temporada.poster_path" :src="`https://image.tmdb.org/t/p/w500/${temporada.poster_path}`" class="rounded">
