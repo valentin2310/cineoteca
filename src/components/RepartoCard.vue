@@ -4,25 +4,25 @@
         <div class="card d-block">
           <div v-if="persona.profile_path" class="card-poster"
             v-bind:style="{ 'background-image': 'url(https://image.tmdb.org/t/p/w500/' + persona.profile_path + ')' }">
-            <b-icon pack="fas" icon="film" class="rounded float-end mx-1 p-1 bg-linear" type="is-white"></b-icon>
+            <b-icon pack="fas" icon="user-astronaut" class="rounded float-end mx-1 p-1 bg-linear" type="is-white"></b-icon>
           </div>
           <div v-else class="card-poster">
-            <b-icon pack="fas" icon="film" class="rounded float-end mx-1 p-1 bg-linear" type="is-white"></b-icon>
+            <b-icon pack="fas" icon="user-astronaut" class="rounded float-end mx-1 p-1 bg-linear" type="is-white"></b-icon>
           </div>
 
         
         <div class="card-body p-2">
           
-          <div class="detalles float-end">
+          <div class="detalles ps-2 float-end">
             <div class="info">
               <i v-b-popover.hover.right="persona.known_for_department" :title="persona.name" class="fa-solid fa-circle-info"></i>
             </div>
           </div>
           <div class="card-title">
-            <span class="fw-bold">{{ persona.character }}</span>
+            <span class="fw-bold">{{ persona.character?persona.character:'N/A' }}</span>
           </div>
           <div class="card-cuerpo">
-            <span>{{ persona.name }}</span>
+            <span>{{ persona.name?persona.name:'N/A' }}</span>
           </div>
         </div>
 

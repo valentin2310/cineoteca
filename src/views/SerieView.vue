@@ -360,7 +360,12 @@
                     <b-icon pack="fas" icon="hashtag"></b-icon> Reparto
                     </h4>
                     <div class="seccion-cuerpo">
-                    {{ creditos }}
+                        <div v-if="creditos.cast" class="reparto">
+                            <div v-for="persona in creditos.cast" :key="persona.id" class="persona">
+                            <RepartoCard :persona="persona"></RepartoCard>
+                            </div>
+                            <div v-if="creditos.cast.length < 1" class="reparto">No hay ningún datos..</div>
+                        </div>
                     </div>
                 </div>
 
@@ -447,6 +452,7 @@
 <script>
 import axios from 'axios';
 import { BCollapse } from 'bootstrap-vue';
+import RepartoCard from '@/components/RepartoCard.vue';
 
 const API_KEY = 'd5970548f1728e977459ef0ac8c8b5df';
 const TOKEN_LECTURA_V4 = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNTk3MDU0OGYxNzI4ZTk3NzQ1OWVmMGFjOGM4YjVkZiIsInN1YiI6IjYyYTc0NmI3ODc1ZDFhMDA2NmZmZDlhZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.4WOT6JsCCbc-ntV27ty9YseclVDBqcR3OESBENb55WE";
@@ -487,6 +493,7 @@ export default{
     },
     components: {
         BCollapse,
+        RepartoCard
     },
     watch: {
         temporadaSeleccionada(nuevoValor){
@@ -1285,6 +1292,16 @@ h4{
 .embed-responsive{
   display: flex;
   justify-content: center;
+}
+
+.reparto{
+  display: flex;
+  flex-flow: row nowrap;
+  overflow-x: auto;
+  padding: 5px;
+}
+.reparto .repartoCard{
+  height: 100%;
 }
 
 @media (max-width: 800px) {

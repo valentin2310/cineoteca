@@ -223,8 +223,8 @@
                 <div v-for="persona in creditos.cast" :key="persona.id" class="persona">
                   <RepartoCard :persona="persona"></RepartoCard>
                 </div>
+                <div v-if="creditos.cast.length < 1" class="reparto">No hay ningún datos..</div>
               </div>
-              <div v-else class="reparto">No hay ningún datos..</div>
             </div>
           </div>
 
