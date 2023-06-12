@@ -127,6 +127,42 @@
     <ListaPeliculas :peliculas="peliculasMasValoradas" :titulo="'Peliculas mas valoradas'" ruta="/peliculas/masvaloradas" />
     <ListaSeries :series="seriesMasValoradas" :titulo="'Series mas valoradas'" ruta="/series/masvaloradas" />
 
+    <!-- Registrate -->
+    <section class="hero is-info custom-shadow">
+      <div class="hero-body text-white">
+        <b-row>
+          <b-col sm="5" class="mb-3 px-3 has-text-centered d-flex flex-column align-items-center justify-content-center">
+            <b-icon pack="fas" icon="right-to-bracket" size="is-large" type="is-white"></b-icon>
+            <br>
+            <span class="fs-2 fw-bold is-dark">
+              Registrate
+            </span>
+            <b-button type="is-dark" tag="router-link" to="/login#registro" expanded class="my-2 fw-bold text-white">Ir al registro</b-button>
+          </b-col>
+          <b-col sm="7" class="bg-dark text-dark rounded p-3 custom-shadow">
+            <div class="fw-bold">
+              <span class="is-dark ">
+                <p class="my-3 text-white-50 has-text-centered">
+                  Al registrarte en nuestra página, disfrutarás de las siguientes características:
+                </p>
+                <ul class="mx-5 my-3 text-white" style="list-style: inside">
+                  <li class="mx-5">Favoritos: Agrega películas y series a tu lista de favoritos para acceder rápidamente a tu contenido preferido.</li>
+                  <li class="mx-5">Valoraciones: Otorga calificaciones y comparte tus opiniones sobre las películas y series que has visto.</li>
+                  <li class="mx-5">Lista de seguimiento: Crea una lista personalizada de películas y series que deseas ver en el futuro.</li>
+                  <li class="mx-5">Marcar como visto: Lleva un historial detallado de los episodios vistos y marca tu progreso en las series.</li>
+                  <li class="mx-5">Crear listas personalizadas: Organiza tu contenido a tu manera, creando listas temáticas y personalizadas.</li>
+                  <li class="mx-5">Actividad en tu perfil: Visualiza toda tu actividad en la aplicación, incluyendo el contenido visto y las valoraciones realizadas.</li>
+                </ul>
+                <p class="my-3 text-white-50 has-text-centered">
+                  ¡Regístrate ahora y aprovecha estas características para personalizar tu experiencia en nuestra página!
+                </p>
+              </span>
+            </div>
+          </b-col>
+        </b-row>
+      </div>
+    </section>
+
   </div>
 </template>
 

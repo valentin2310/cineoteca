@@ -39,7 +39,7 @@
                     <div class="tab-content">
                       <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
 
-                        <div class="login px-3 py-2">
+                        <div id="login" class="login px-3 py-2">
         
                             <div class="login-img">
                                 <img src="../assets/img/logo_banner.png" alt="banner logo">
@@ -97,7 +97,7 @@
                       <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                         
                         
-                        <div class="signup px-3 my-5">
+                        <div id="registro" class="signup px-3 my-5">
                           <h4 class="title is-4 text-center is-primary">Registrate</h4>
             
                           <form @submit.prevent="registrarse" method="POST" enctype="multipart/form-data">
