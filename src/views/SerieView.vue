@@ -712,6 +712,23 @@ export default{
         },
         vistoEpisodio(episodio){
 
+            if(this.usuarioObj == null){
+
+                this.$buefy.snackbar.open({
+                    message: 'Para realizar esta acción debes iniciar sesión',
+                    type: 'is-danger',
+                    position: 'is-top-right',
+                    actionText: 'Ir al login',
+                    pauseOnHover: true,
+                    duration: 5000,
+                    onAction: () => {
+                        this.$router.push('/login');
+                    }
+                })
+
+                return;
+            }
+
             if(!this.isEpisodioVisto(episodio)) this.setEpisodioVisto(episodio);
             else this.deleteEpisodioVisto(episodio);
 
@@ -719,6 +736,25 @@ export default{
             this.$forceUpdate();
         },
         verTodosEpisodios(){
+
+            if(this.usuarioObj == null){
+
+                this.$buefy.snackbar.open({
+                    message: 'Para realizar esta acción debes iniciar sesión',
+                    type: 'is-danger',
+                    position: 'is-top-right',
+                    actionText: 'Ir al login',
+                    pauseOnHover: true,
+                    duration: 5000,
+                    onAction: () => {
+                        this.$router.push('/login');
+                    }
+                })
+
+                return;
+            }
+
+
             if(this.isTemporadaVista()) {
                 //Si se ha visto la temporada, eliminar todos los episodios de visto
                 this.episodiosTemporada.forEach(ep => {
@@ -730,6 +766,8 @@ export default{
                     if(!this.isEpisodioVisto(ep)) this.setEpisodioVisto(ep);
                 });
             }
+
+            this.getEpisodiosTemporada();
         },
         setFavorito(){
 
@@ -857,7 +895,8 @@ export default{
                     //añadir al arary de episodios vistos
                     const temporada = this.temporadasEpisodiosVistos[episodio.season_number];
                     if (temporada) {
-                        temporada.episodios.push(episodio);
+                        //temporada.episodios.push(episodio);
+                        this.temporadasEpisodiosVistos[episodio.season_number].episodios.push(episodio);
                     } else {
                         this.temporadasEpisodiosVistos[episodio.season_number] = {
                             episodios: [episodio]
@@ -997,6 +1036,7 @@ export default{
                         temporada.episodios.splice(index, 1);
                     }
                 }
+                this.getEpisodiosTemporada();
         
             }
 
